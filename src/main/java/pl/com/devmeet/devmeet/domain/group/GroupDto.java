@@ -1,7 +1,9 @@
 package pl.com.devmeet.devmeet.domain.group;
 
 import lombok.*;
+import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain.group_meeting.GroupMeetingDto;
+import pl.com.devmeet.devmeet.domain.member.MemberDto;
 import pl.com.devmeet.devmeet.domain.user.UserDto;
 
 import java.util.List;
@@ -13,8 +15,14 @@ import java.util.List;
 @Getter
 public class GroupDto {
 
-    private List<UserDto> users;
-    private List<UserDto> organizers;
+    private String groupName;
+
+    private List<MemberDto> members;
+    private List<MemberDto> organizers;
     private List<GroupMeetingDto> meetings;
 
+    private DateTime creationTime;
+    private DateTime modificationTime;
+
+    private boolean isActive;
 }

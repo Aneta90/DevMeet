@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.domain.place;
 
 import lombok.*;
+import org.joda.time.DateTime;
 
 @Builder
 @AllArgsConstructor
@@ -9,10 +10,11 @@ import lombok.*;
 @Getter
 public class PlaceDto {
 
-    private String placeName;
+    private String placeUserName;
     private String placeDescription;
-    private Double gpsLatitude;
-    private Double gpsLongitude;
+    private String placeWebsite;
+    private String location;
+    private DateTime creationTime;
     private boolean isActive;
 
 }
