@@ -19,5 +19,10 @@ public class GroupMeetingDto {
     private PlaceDto place;
     private String description;
     private GroupDto group;
-    private
+
+    private DateTime modificationTime;
+    private DateTime createdTime;
+
+    private boolean isActive;
+
 }
