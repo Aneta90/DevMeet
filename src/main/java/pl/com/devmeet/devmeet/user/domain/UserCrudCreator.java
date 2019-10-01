@@ -24,7 +24,7 @@ class UserCrudCreator {
             userActive = user.isActive();
 
             if (!userActive && user.getModificationTime() != null) {
-                user.setCreationTime(DateTime.now());
+                user.setModificationTime(DateTime.now());
                 user.setActive(true);
 
                 return saveUserEntity(user);
@@ -33,7 +33,7 @@ class UserCrudCreator {
         } catch (IllegalArgumentException e) {
             user = createEntityWithUserLogin(dto, defaultLoginType);
 
-            return saveUserEntity(setDefaultValuesToNewUser(user));
+            return saveUserEntity(user);
         }
         return null;
     }
@@ -47,13 +47,13 @@ class UserCrudCreator {
 
             if (phoneLogin != null && !phoneLogin.equals("") && emailLogin != null && !emailLogin.equals("")) {
                 entity.setLogin(defaultLoginType);
-                return entity;
+                return setDefaultValuesToNewUserEntity(entity);
             }
         }
         throw new IllegalArgumentException(defaultLoginTypeErrMessage);
     }
 
-    private UserEntity setDefaultValuesToNewUser(UserEntity user) {
+    private UserEntity setDefaultValuesToNewUserEntity(UserEntity user) {
         user.setCreationTime(DateTime.now());
         user.setModificationTime(null);
         user.setActive(false);
@@ -65,20 +65,5 @@ class UserCrudCreator {
 
     private UserDto saveUserEntity(UserEntity entity) {
         return UserCrudInterface.map(repository.save(entity));
-    }
-
-    public UserDto activation(UserDto dto) {
-        UserEntity found;
-
-        found = userFinder.findEntity(dto);
-
-        if (!found.isActive()) {
-            found.setActive(true);
-            found.setModificationTime(DateTime.now());
-
-            return saveUserEntity(found);
-
-        } else
-            return null;
     }
 }
