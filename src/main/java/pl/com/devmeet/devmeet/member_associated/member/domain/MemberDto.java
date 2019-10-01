@@ -1,8 +1,9 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.group_associated.GroupDto;
-import pl.com.devmeet.devmeet.user_associated.user.UserDto;
+
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
+import pl.com.devmeet.devmeet.user.domain.UserDto;
 
 import java.util.List;
 

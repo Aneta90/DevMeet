@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated.place;
+package pl.com.devmeet.devmeet.member_associated.place.domain;
 
 class PlaceMapper {
 

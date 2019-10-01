@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.user_associated.user;
+package pl.com.devmeet.devmeet.user.domain;
 
 import org.joda.time.DateTime;
 
