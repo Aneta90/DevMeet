@@ -24,7 +24,7 @@ class UserCrudCreator {
             userActive = user.isActive();
 
             if (!userActive && user.getModificationTime() != null) {
-                user.setCreationTime(DateTime.now());
+                user.setModificationTime(DateTime.now());
                 user.setActive(true);
 
                 return saveUserEntity(user);
@@ -33,7 +33,7 @@ class UserCrudCreator {
         } catch (IllegalArgumentException e) {
             user = createEntityWithUserLogin(dto, defaultLoginType);
 
-            return saveUserEntity(setDefaultValuesToNewUser(user));
+            return saveUserEntity(user);
         }
         return null;
     }
@@ -47,7 +47,7 @@ class UserCrudCreator {
 
             if (phoneLogin != null && !phoneLogin.equals("") && emailLogin != null && !emailLogin.equals("")) {
                 entity.setLogin(defaultLoginType);
-                return entity;
+                return setDefaultValuesToNewUser(entity);
             }
         }
         throw new IllegalArgumentException(defaultLoginTypeErrMessage);
