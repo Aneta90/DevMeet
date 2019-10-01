@@ -23,6 +23,7 @@ public class UserCrudFacadeTest {
 
     private String userNotFoundMessage = "User not found";
     private String defaultLoginTypeErrMessage = "User default login type not defined";
+    private String userAlreadyActivatedMessage = "User has been activated";
 
     @Before
     public void setUp() throws Exception {
@@ -118,16 +119,21 @@ public class UserCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_activate_activated_user_THEN_return_null() {
+    public void WHEN_try_to_activate_activated_user_THEN_return_IllegalArgumentException() {
         UserDto created = userFacade.create(testDto, DefaultUserLoginTypeEnum.PHONE);
         UserDto activated = userFacade.activation(testDto);
 
         assertThat(created).isNotNull();
         assertThat(activated).isNotNull();
 
-        UserDto secondActivate = userFacade.activation(testDto);
-
-        assertThat(secondActivate).isNull();
+        try {
+            userFacade.activation(testDto);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            assertThat(e)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage(userAlreadyActivatedMessage);
+        }
     }
 
     @Test
