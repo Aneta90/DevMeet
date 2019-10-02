@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 
 class UserCrudActivator {
 
-    private UserRepository repository;
+    private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
     private String userAlreadyActivatedMessage = "User has been activated";
 
     public UserCrudActivator(UserRepository repository) {
-        this.repository = repository;
+        this.userSaver = new UserCrudSaver(repository);
         this.userFinder = new UserCrudFinder(repository);
     }
 
@@ -28,7 +28,8 @@ class UserCrudActivator {
         } else
             throw new IllegalArgumentException(userAlreadyActivatedMessage);
     }
+
     private UserDto saveUserEntity(UserEntity entity) {
-        return UserCrudInterface.map(repository.save(entity));
+        return userSaver.saveEntity(entity);
     }
 }

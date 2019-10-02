@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 
 class UserCrudCreator {
 
-    private UserRepository repository;
+    private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
     private String defaultLoginTypeErrMessage = "User default login type not defined";
 
     public UserCrudCreator(UserRepository repository) {
-        this.repository = repository;
+        this.userSaver = new UserCrudSaver(repository);
         this.userFinder = new UserCrudFinder(repository);
     }
 
@@ -64,6 +64,6 @@ class UserCrudCreator {
     }
 
     private UserDto saveUserEntity(UserEntity entity) {
-        return UserCrudInterface.map(repository.save(entity));
+        return userSaver.saveEntity(entity);
     }
 }
