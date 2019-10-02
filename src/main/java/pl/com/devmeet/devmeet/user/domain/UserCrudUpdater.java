@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 
 class UserCrudUpdater {
 
-    private UserRepository repository;
+    private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
     private String userNotFoundMessage = "User not found";
 
     public UserCrudUpdater(UserRepository repository) {
-        this.repository = repository;
+        this.userSaver = new UserCrudSaver(repository);
         this.userFinder = new UserCrudFinder(repository);
     }
 
@@ -68,6 +68,6 @@ class UserCrudUpdater {
     }
 
     private UserDto saveUserEntity(UserEntity entity) {
-        return UserCrudInterface.map(repository.save(entity));
+        return userSaver.saveEntity(entity);
     }
 }

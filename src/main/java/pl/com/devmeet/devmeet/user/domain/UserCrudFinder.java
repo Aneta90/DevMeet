@@ -1,8 +1,10 @@
 package pl.com.devmeet.devmeet.user.domain;
 
+import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
+
 import java.util.Optional;
 
-class UserCrudFinder {
+class UserCrudFinder implements CrudEntityFinder <UserDto, UserEntity> {
 
     private UserRepository repository;
 
@@ -12,6 +14,7 @@ class UserCrudFinder {
         this.repository = repository;
     }
 
+    @Override
     public UserEntity findEntity(UserDto dto) {
         Optional<UserEntity> foundUser = Optional.empty();
         String phone = dto.getPhone();
@@ -29,9 +32,10 @@ class UserCrudFinder {
     }
 
     public UserDto read(UserDto dto) {
-        return getUserDtoFromEntity(findEntity(dto));
+        return getDtoFromEntity(findEntity(dto));
     }
 
+    @Override
     public boolean isExist(UserDto dto) {
         try {
             return findEntity(dto) != null;
@@ -40,7 +44,7 @@ class UserCrudFinder {
         }
     }
 
-    private UserDto getUserDtoFromEntity(UserEntity entity) {
+    private UserDto getDtoFromEntity(UserEntity entity) {
         return UserCrudInterface.map(entity);
     }
 }
