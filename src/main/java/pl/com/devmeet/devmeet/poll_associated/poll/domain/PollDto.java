@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.group_associated.poll.domain;
+package pl.com.devmeet.devmeet.poll_associated.poll.domain;
 
 import lombok.*;
 import org.joda.time.DateTime;

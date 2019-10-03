@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated.member;
+package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
