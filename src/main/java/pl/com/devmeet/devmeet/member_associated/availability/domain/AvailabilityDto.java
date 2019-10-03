@@ -13,9 +13,12 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
 public class AvailabilityDto {
 
     private MemberDto member;
+//    private PoolDto pool;
     private DateTime beginTime;
     private DateTime endTime;
     private PlaceDto place;
+    private boolean remoteWork;
+    private DateTime creationTime;
     private boolean isActive;
 
 }
