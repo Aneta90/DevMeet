@@ -13,14 +13,12 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
 public class MeetingDto {
 
     private GroupDto group;
-    private String meetingName;
+    private Integer meetingNumber;
 
     private DateTime beginTime;
     private DateTime endTime;
     private PlaceDto place;
 
-    private DateTime modificationTime;
-    private DateTime createdTime;
-
+    private DateTime creationTime;
     private boolean isActive;
 }

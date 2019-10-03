@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.group_associated.meeting;
+package pl.com.devmeet.devmeet.group_associated.meeting.domain;
 
 enum MeetingStatus {
 
