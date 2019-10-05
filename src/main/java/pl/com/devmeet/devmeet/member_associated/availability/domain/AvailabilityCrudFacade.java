@@ -38,9 +38,11 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
         return map(initCreator().createEntity(dto));
     }
 
+
+    //po co castowanie tutaj było
     @Override
     public AvailabilityDto read(AvailabilityDto dto) {
-        return map(initFinder().findEntities(dto));
+        return map((AvailabilityEntity) initFinder().findEntity(dto));
     }
 
     @Override
@@ -68,20 +70,20 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
         return null;
     }
 
-    private AvailabilityDto map(AvailabilityEntity entity) {
+   public static AvailabilityDto map(AvailabilityEntity entity) {
         return AvailabilityCrudMapper.map(entity);
     }
 
-    private List<AvailabilityDto> mapDtoList(List<AvailabilityEntity> entities) {
+    public static List<AvailabilityDto> mapDtoList(List<AvailabilityEntity> entities) {
         return AvailabilityCrudMapper.mapDtoList(entities);
     }
 
-    private AvailabilityEntity map(AvailabilityDto dto) {
+    public static AvailabilityEntity map(AvailabilityDto dto) {
         return AvailabilityCrudMapper.map(dto);
 
     }
 
-    private List<AvailabilityDto> mapEntityList(List<AvailabilityDto> dtos) {
+    public static List<AvailabilityEntity> mapEntityList(List<AvailabilityDto> dtos) {
         return AvailabilityCrudMapper.mapEntityList(dtos);
     }
 }
