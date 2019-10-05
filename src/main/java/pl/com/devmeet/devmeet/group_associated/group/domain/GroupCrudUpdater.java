@@ -11,7 +11,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupEntity updateEntity(GroupDto dto) {
+    public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) {
         return null;
     }
 }
