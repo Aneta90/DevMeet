@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
 
-class GroupCrudSaver implements CrudEntitySaver<GroupDto, GroupEntity> {
+class GroupCrudSaver implements CrudEntitySaver<GroupEntity, GroupEntity> {
 
     private GroupCrudRepository repository;
 
@@ -11,7 +11,7 @@ class GroupCrudSaver implements CrudEntitySaver<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupDto saveEntity(GroupEntity entity) {
-        return null;
+    public GroupEntity saveEntity(GroupEntity entity) {
+        return repository.save(entity);
     }
 }
