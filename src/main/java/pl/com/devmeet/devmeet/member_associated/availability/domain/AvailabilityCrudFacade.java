@@ -76,8 +76,9 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
         return AvailabilityCrudMapper.mapDtoList(entities);
     }
 
-    private AvailabilityDto map(AvailabilityDto dto) {
+    private AvailabilityEntity map(AvailabilityDto dto) {
         return AvailabilityCrudMapper.map(dto);
+
     }
 
     private List<AvailabilityDto> mapEntityList(List<AvailabilityDto> dtos) {
