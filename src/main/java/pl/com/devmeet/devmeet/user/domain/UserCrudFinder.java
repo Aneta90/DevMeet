@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.user.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 
+import java.util.List;
 import java.util.Optional;
 
 class UserCrudFinder implements CrudEntityFinder <UserDto, UserEntity> {
@@ -29,6 +30,11 @@ class UserCrudFinder implements CrudEntityFinder <UserDto, UserEntity> {
             return foundUser.get();
         else
             throw new IllegalArgumentException(userNotFoundMessage);
+    }
+
+    @Override
+    public List<UserEntity> findEntities(UserDto dto) {
+        return null;
     }
 
     public UserDto read(UserDto dto) {

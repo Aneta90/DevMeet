@@ -54,7 +54,7 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
 
     @Override
     public GroupDto delete(GroupDto dto) {
-        return null;
+        return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
