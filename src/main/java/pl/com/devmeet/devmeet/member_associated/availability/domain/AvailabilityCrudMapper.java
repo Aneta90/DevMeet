@@ -1,5 +1,7 @@
 package pl.com.devmeet.devmeet.member_associated.availability.domain;
 
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,11 +12,11 @@ class AvailabilityCrudMapper {
 
     public static AvailabilityDto map(AvailabilityEntity entity) {
         return new AvailabilityDto().builder()
-               .member(entity.getMember())
+               .member(MemberCrudFacade.map(entity.getMember()))
                 .beginTime(entity.getBeginTime())
                 .endTime(entity.getEndTime())
                         .remoteWork(entity.isRemoteWork())
-                        .place(entity.getPlace())
+//                        .place(entity.getPlace())
     //                    .poll(entity.getPoll())
                         .creationTime(entity.getCreationTime())
                         .modificationTime(entity.getModificationTime())
