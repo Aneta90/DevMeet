@@ -2,10 +2,7 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.Type;
@@ -22,6 +19,9 @@ import java.util.UUID;
 @Builder
 @Table(name = "availabilities")
 @Entity
+@Getter
+@Setter
+
 public class AvailabilityEntity {
 
     @javax.persistence.Id

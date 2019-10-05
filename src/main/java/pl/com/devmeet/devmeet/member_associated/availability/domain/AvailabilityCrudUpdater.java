@@ -10,5 +10,6 @@ public class AvailabilityCrudUpdater {
 
 
     public AvailabilityEntity updateEntity(AvailabilityDto oldDto, AvailabilityDto newDto) {
+        return null;
     }
 }

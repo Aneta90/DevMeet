@@ -52,4 +52,3 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
     }
 }
 
-}

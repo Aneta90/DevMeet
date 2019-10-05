@@ -7,9 +7,9 @@ class AvailabilityCrudMapper {
 
     public static AvailabilityDto map(AvailabilityEntity entity) {
         return new AvailabilityDto().builder()
-                        .member(entity.getMember())
-                        .beginTime(entity.getBeginTime())
-                        .endTime(entity.getEndTime()
+                .member(entity.getMember())
+                .beginTime(entity.getBeginTime())
+                .endTime(entity.getEndTime()
                         .remoteWork(entity.getRemoteWork())
                         .place(entity.getPlace())
                         .poll(entity.getPoll())
@@ -20,7 +20,7 @@ class AvailabilityCrudMapper {
     }
 
 
-    public static AvailabilityDto map (AvailabilityDto dto {
+    public static AvailabilityEntity map (AvailabilityDto dto) {
         return new AvailabilityEntity().builder()
                         .member(dto.getMember())
                         .beginTime(dto.getBeginTime())
@@ -40,7 +40,7 @@ class AvailabilityCrudMapper {
                         .collect(Collectors.toList());
     }
 
-    public static List<AvailabilityDto> mapEntityList(List<AvailabilityDto> dtos) {
+    public static List<AvailabilityEntity> mapEntityList(List<AvailabilityDto> dtos) {
         return dtos.stream()
                 .map(dto -> map(dto))
                 .collect(Collectors.toList());
