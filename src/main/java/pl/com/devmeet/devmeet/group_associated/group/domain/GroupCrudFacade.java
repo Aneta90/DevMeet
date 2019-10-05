@@ -44,12 +44,12 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
 
     @Override
     public List<GroupDto> readAll(GroupDto dto) {
-        return mapList(initFinder().findEntities(dto));
+        return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
     public GroupDto update(GroupDto oldDto, GroupDto newDto) {
-        return null;
+        return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
@@ -71,11 +71,15 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
         return GroupCrudMapper.map(entity);
     }
 
-    private List<GroupDto> mapList(List<GroupEntity> entities){
+    private List<GroupDto> mapDtoList(List<GroupEntity> entities) {
         return GroupCrudMapper.mapDtoList(entities);
     }
 
     private GroupEntity map(GroupDto dto) {
         return GroupCrudMapper.map(dto);
+    }
+
+    private List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
+        return GroupCrudMapper.mapEntityList(dtos);
     }
 }
