@@ -16,22 +16,35 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
         this.repository = repository;
     }
 
-    private GroupCrudCreator initCreator(){return new GroupCrudCreator(repository);}
-    private GroupCrudFinder initFinder(){return new GroupCrudFinder(repository);}
-    private GroupCrudUpdater initUpdater(){return new GroupCrudUpdater(repository);}
-    private GroupCrudDeleter initDeleter(){return new GroupCrudDeleter(repository);}
+    private GroupCrudCreator initCreator() {
+        return new GroupCrudCreator(repository);
+    }
+
+    private GroupCrudFinder initFinder() {
+        return new GroupCrudFinder(repository);
+    }
+
+    private GroupCrudUpdater initUpdater() {
+        return new GroupCrudUpdater(repository);
+    }
+
+    private GroupCrudDeleter initDeleter() {
+        return new GroupCrudDeleter(repository);
+    }
 
     @Override
-    public GroupDto create(GroupDto dto) { return null;}
+    public GroupDto create(GroupDto dto) {
+        return map(initCreator().createEntity(dto));
+    }
 
     @Override
     public GroupDto read(GroupDto dto) {
-        return null;
+        return map(initFinder().findEntity(dto));
     }
 
     @Override
     public List<GroupDto> readAll(GroupDto dto) {
-        return null;
+        return mapList(initFinder().findEntities(dto));
     }
 
     @Override
@@ -52,5 +65,17 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
     @Override
     public List<GroupEntity> findEntities(GroupDto dto) {
         return null;
+    }
+
+    private GroupDto map(GroupEntity entity) {
+        return GroupCrudMapper.map(entity);
+    }
+
+    private List<GroupDto> mapList(List<GroupEntity> entities){
+        return GroupCrudMapper.mapDtoList(entities);
+    }
+
+    private GroupEntity map(GroupDto dto) {
+        return GroupCrudMapper.map(dto);
     }
 }

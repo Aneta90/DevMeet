@@ -1,8 +1,13 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 class GroupCrudMapper {
 
-    public static GroupDto map(GroupEntity entity){
+    public static GroupDto map(GroupEntity entity) {
         return new GroupDto().builder()
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
@@ -17,7 +22,7 @@ class GroupCrudMapper {
                 .build();
     }
 
-    public static GroupEntity map(GroupDto dto){
+    public static GroupEntity map(GroupDto dto) {
         return new GroupEntity().builder()
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
@@ -30,5 +35,17 @@ class GroupCrudMapper {
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
                 .build();
+    }
+
+    public static List<GroupDto> mapDtoList(List<GroupEntity> entities) {
+        return entities.stream()
+                .map(entity -> map(entity))
+                .collect(Collectors.toList());
+    }
+
+    public static List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
+        return dtos.stream()
+                .map(dto -> map(dto))
+                .collect(Collectors.toList());
     }
 }
