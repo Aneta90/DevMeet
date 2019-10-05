@@ -40,8 +40,8 @@ public class GroupEntity {
     @OneToOne(mappedBy = "group", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MessengerDto messenger;
 
+    private Integer membersLimit;
     private Integer memberCounter;
-    private Integer membersMax;
     private Integer meetingCounter;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

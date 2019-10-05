@@ -24,7 +24,7 @@ public class GroupDto {
     private MessengerDto messenger;
 
     private Integer memberCounter;
-    private Integer membersMax;
+    private Integer membersLimit;
     private Integer meetingCounter;
 
     private List<MemberDto> members;

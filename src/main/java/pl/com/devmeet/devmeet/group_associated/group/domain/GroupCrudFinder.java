@@ -1,8 +1,16 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
+import lombok.AllArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 
 class GroupCrudFinder implements CrudEntityFinder<GroupDto, GroupEntity> {
+
+    private GroupCrudSaver groupCrudSaver;
+
+    public GroupCrudFinder(GroupCrudRepository repository) {
+        this.groupCrudSaver = new GroupCrudSaver(repository);
+    }
+
     @Override
     public GroupEntity findEntity(GroupDto dto) {
         return null;
