@@ -34,7 +34,7 @@ public class AvailabilityEntity {
     @JoinColumn(name = "member")
     private MemberEntity member;
 
-//    private PoolEntity pool;
+//    private PollEntity poll;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -53,6 +53,10 @@ public class AvailabilityEntity {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime creationTime;
+
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private DateTime modificationTime;
 
     private boolean isActive;
 }
