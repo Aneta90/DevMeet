@@ -59,27 +59,27 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
 
     @Override
     public GroupEntity findEntity(GroupDto dto) {
-        return null;
+        return initFinder().findEntity(dto);
     }
 
     @Override
     public List<GroupEntity> findEntities(GroupDto dto) {
-        return null;
+        return initFinder().findEntities(dto);
     }
 
-    private GroupDto map(GroupEntity entity) {
+    public static GroupDto map(GroupEntity entity) {
         return GroupCrudMapper.map(entity);
     }
 
-    private List<GroupDto> mapDtoList(List<GroupEntity> entities) {
+    public static List<GroupDto> mapDtoList(List<GroupEntity> entities) {
         return GroupCrudMapper.mapDtoList(entities);
     }
 
-    private GroupEntity map(GroupDto dto) {
+    public static GroupEntity map(GroupDto dto) {
         return GroupCrudMapper.map(dto);
     }
 
-    private List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
+    public static List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
         return GroupCrudMapper.mapEntityList(dtos);
     }
 }
