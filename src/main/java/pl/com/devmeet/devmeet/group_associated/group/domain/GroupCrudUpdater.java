@@ -19,7 +19,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntity(oldDto));
         GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
 
-        return updateValues(foundOldGroup, newGroup);
+        return groupCrudSaver.saveEntity(updateValues(foundOldGroup, newGroup));
     }
 
     private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup){
@@ -28,7 +28,6 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         else
             throw new IllegalArgumentException(GroupCrudInfoStatusEnum
                     .GROUP_FOUND_BUT_NOT_ACTIVE.toString());
-
     }
 
     private GroupDto checkIsNewGroupHasAName(GroupDto newGroup, GroupEntity oldGroup) {
