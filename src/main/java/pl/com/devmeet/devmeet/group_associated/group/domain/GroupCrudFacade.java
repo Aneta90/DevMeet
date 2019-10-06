@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeMode;
 import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
 
     private GroupCrudRepository repository;
+    private CrudFacadeMode facadeMode;
 
     @Autowired
     public GroupCrudFacade(GroupCrudRepository repository) {
