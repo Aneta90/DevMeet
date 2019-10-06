@@ -3,12 +3,11 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
 
 @AllArgsConstructor
 class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
 
-    private CrudEntitySaver saver;
+    private GroupCrudSaver saver;
     private GroupCrudFinder finder;
 
     public GroupCrudCreator(GroupCrudRepository repository) {
@@ -18,7 +17,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
 
     @Override
     public GroupEntity createEntity(GroupDto dto) {
-        GroupEntity group = null;
+        GroupEntity group;
         boolean groupActivity;
 
         try {
@@ -26,14 +25,14 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
             groupActivity = group.isActive();
 
             if (!groupActivity && group.getModificationTime() != null)
-                return (GroupEntity) saver.saveEntity(setDefaultValuesWhenGroupExists(group));
+                return saver.saveEntity(setDefaultValuesWhenGroupExists(group));
 
 
         } catch (IllegalArgumentException e) {
-            return (GroupEntity) saver.saveEntity(setDefaultValuesWhenGroupNotExists(group));
+            return saver.saveEntity(setDefaultValuesWhenGroupNotExists(GroupCrudFacade.map(dto)));
         }
 
-        return group;
+        return null;
     }
 
 
