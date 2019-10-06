@@ -11,8 +11,9 @@ import java.util.UUID;
 @Repository
 interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UUID> {
 
-    Optional<List<GroupEntity>> findAllByGroupNameAndActive(String groupName,
-                                                            boolean isActive);
+    Optional<GroupEntity> findByGroupName(String groupName);
+
+    Optional<List<GroupEntity>> findAllByGroupName(String groupName);
 
     Optional<List<GroupEntity>> findAllByMember(MemberEntity member);
 

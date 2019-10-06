@@ -32,7 +32,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
             return setDefaultValuesWhenGroupNotExists(group);
         }
 
-        return null;
+        return group;
     }
 
 

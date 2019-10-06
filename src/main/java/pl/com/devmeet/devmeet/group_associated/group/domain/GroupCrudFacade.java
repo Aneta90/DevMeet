@@ -38,48 +38,48 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupDto read(GroupDto dto) {
+    public GroupDto read(GroupDto dto) throws IllegalArgumentException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<GroupDto> readAll(GroupDto dto) {
+    public List<GroupDto> readAll(GroupDto dto) throws IllegalArgumentException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
-    public GroupDto update(GroupDto oldDto, GroupDto newDto) {
+    public GroupDto update(GroupDto oldDto, GroupDto newDto) throws IllegalArgumentException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public GroupDto delete(GroupDto dto) {
+    public GroupDto delete(GroupDto dto) throws IllegalArgumentException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public GroupEntity findEntity(GroupDto dto) {
-        return null;
+    public GroupEntity findEntity(GroupDto dto) throws IllegalArgumentException {
+        return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<GroupEntity> findEntities(GroupDto dto) {
-        return null;
+    public List<GroupEntity> findEntities(GroupDto dto) throws IllegalArgumentException {
+        return initFinder().findEntities(dto);
     }
 
-    private GroupDto map(GroupEntity entity) {
+    public static GroupDto map(GroupEntity entity) {
         return GroupCrudMapper.map(entity);
     }
 
-    private List<GroupDto> mapDtoList(List<GroupEntity> entities) {
+    public static List<GroupDto> mapDtoList(List<GroupEntity> entities) {
         return GroupCrudMapper.mapDtoList(entities);
     }
 
-    private GroupEntity map(GroupDto dto) {
+    public static GroupEntity map(GroupDto dto) {
         return GroupCrudMapper.map(dto);
     }
 
-    private List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
+    public static List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
         return GroupCrudMapper.mapEntityList(dtos);
     }
 }

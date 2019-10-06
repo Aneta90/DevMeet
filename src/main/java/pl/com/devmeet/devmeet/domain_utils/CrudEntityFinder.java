@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface CrudEntityFinder<D, E> {
 
-    E findEntity(D dto);
+    E findEntity(D dto) throws IllegalArgumentException;
 
-    List<E> findEntities(D dto);
+    List<E> findEntities(D dto) throws IllegalArgumentException;
 
     boolean isExist(D dto);
 }
