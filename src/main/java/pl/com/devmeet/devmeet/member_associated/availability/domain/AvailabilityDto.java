@@ -21,8 +21,9 @@ public class AvailabilityDto {
 
     private PlaceDto place;
 
-    private PollDto pool;
+    private PollDto poll;
 
     private DateTime creationTime;
+    private DateTime modificationTime;
     private boolean isActive;
 }

@@ -25,5 +25,6 @@ public class PlaceDto {
     private PollDto poll;
 
     private DateTime creationTime;
+    private DateTime modificationTime;
     private boolean isActive;
 }
