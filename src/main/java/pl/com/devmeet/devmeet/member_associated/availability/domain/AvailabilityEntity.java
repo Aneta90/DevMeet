@@ -2,16 +2,14 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceEntity;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -22,6 +20,9 @@ import java.util.UUID;
 @Builder
 @Table(name = "availabilities")
 @Entity
+@Getter
+@Setter
+
 public class AvailabilityEntity {
 
     @javax.persistence.Id
@@ -34,7 +35,7 @@ public class AvailabilityEntity {
     @JoinColumn(name = "member")
     private MemberEntity member;
 
-//    private PoolEntity pool;
+   private PollEntity poll;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -53,6 +54,10 @@ public class AvailabilityEntity {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime creationTime;
+
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private DateTime modificationTime;
 
     private boolean isActive;
 }

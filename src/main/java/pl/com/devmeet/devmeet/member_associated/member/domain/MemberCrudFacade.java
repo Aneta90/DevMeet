@@ -44,7 +44,7 @@ public class MemberCrudFacade implements CrudInterface<MemberDto, MemberEntity> 
         return MemberMapper.map(dto);
     }
 
-    private MemberDto map(MemberEntity entity) {
+    public static MemberDto map(MemberEntity entity) {
         return MemberMapper.map(entity);
     }
 }
