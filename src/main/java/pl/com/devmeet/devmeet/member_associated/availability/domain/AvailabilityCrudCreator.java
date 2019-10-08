@@ -2,8 +2,6 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-
 
 
 @AllArgsConstructor

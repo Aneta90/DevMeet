@@ -1,8 +1,5 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-
 class MemberMapper {
 
     public static MemberEntity map (MemberDto dto){
