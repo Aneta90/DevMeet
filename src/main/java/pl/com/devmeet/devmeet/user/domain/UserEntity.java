@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -34,6 +35,9 @@ public class UserEntity {
     private String email;
 
     private String phone;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private MemberEntity member;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
