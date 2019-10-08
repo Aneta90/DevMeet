@@ -30,13 +30,13 @@ public class PollEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToMany(mappedBy = "polls", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GroupEntity group;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PlaceVoteEntity> placeVotes;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<AvailabilityVoteEntity> availabilityVotes;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

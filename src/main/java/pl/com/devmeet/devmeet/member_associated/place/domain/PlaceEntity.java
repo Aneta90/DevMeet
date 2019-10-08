@@ -31,7 +31,7 @@ public class PlaceEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToMany(mappedBy = "places", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;
 
     private String placeName;

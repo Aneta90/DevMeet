@@ -25,10 +25,10 @@ public class PermissionEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToMany(mappedBy = "permissions", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;
 
-    @OneToMany(mappedBy = "permissions", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GroupEntity group;
 
     private PermissionTypeEnum type;

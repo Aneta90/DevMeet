@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingDto;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingEntity;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionDto;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
@@ -51,13 +52,13 @@ public class GroupEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<MemberEntity> members;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<PermissionDto> permissions;
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PermissionEntity> permissions;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PollEntity> polls;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MeetingEntity> meetings;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

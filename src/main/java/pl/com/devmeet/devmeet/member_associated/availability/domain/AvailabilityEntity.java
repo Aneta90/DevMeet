@@ -31,7 +31,7 @@ public class AvailabilityEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToMany(mappedBy = "availabilities",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")

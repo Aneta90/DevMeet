@@ -29,7 +29,7 @@ public class PlaceVoteEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToMany(mappedBy = "placeVotes",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private PollEntity poll;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
