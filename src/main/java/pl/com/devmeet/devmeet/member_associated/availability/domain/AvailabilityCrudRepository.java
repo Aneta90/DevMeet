@@ -5,6 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,15 @@ public interface AvailabilityCrudRepository extends PagingAndSortingRepository<A
     // Optional<AvailabilityEntity> findByDateTime(DateTime beginTime, DateTime endTime);
     // Optional<AvailabilityEntity> findByBeginTime(DateTime beginTime);
    // Optional<AvailabilityEntity> findByEndTime(DateTime endTime);
+
+ //   Optional<AvailabilityEntity> findByMember(MemberEntity member);
+ /*
+ a może
+
+     //   Optional<AvailabilityEntity> findByMember(MemberDto member);
+
+  */
+      Optional<AvailabilityEntity> findByMember(String nick);
 
     Optional<List<AvailabilityEntity>> findAllByMember(MemberEntity member);
 }

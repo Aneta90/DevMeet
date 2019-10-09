@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import lombok.Getter;
 import org.joda.time.DateTime;
 
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -9,7 +10,7 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 
 import java.util.List;
-
+@Getter
 public class MemberDto {
 
     private UserDto user;
@@ -26,4 +27,6 @@ public class MemberDto {
     private DateTime modificationTime;
 
     private boolean isActive;
+
+
 }

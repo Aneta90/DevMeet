@@ -3,7 +3,8 @@ import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-
+import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
 
 
 @AllArgsConstructor
@@ -29,13 +30,12 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
 
             if (!availabilityActivity && availability.getModificationTime() != null)
                 return setDefaultValuesWhenAvailabilityExists(saver.saveEntity(availability));
-
-
+            else
+                throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
         } catch (IllegalArgumentException e) {
-            return setDefaultValuesWhenAvailabilityNotExists(availability);
+        //    return setDefaultValuesWhenAvailabilityNotExists(availability);
+            return saver.saveEntity(setDefaultValuesWhenAvailabilityNotExists(AvailabilityCrudFacade.map(dto)));
         }
-
-        return null;
     }
 
 
