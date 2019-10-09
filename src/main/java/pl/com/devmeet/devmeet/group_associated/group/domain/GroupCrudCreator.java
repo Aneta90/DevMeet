@@ -27,12 +27,12 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
 
             if (!groupActivity && group.getModificationTime() != null)
                 return saver.saveEntity(setDefaultValuesWhenGroupExists(group));
-            else
-                throw new IllegalArgumentException(GroupCrudInfoStatusEnum.GROUP_ALREADY_EXISTS.toString());
 
         } catch (IllegalArgumentException e) {
             return saver.saveEntity(setDefaultValuesWhenGroupNotExists(GroupCrudFacade.map(dto)));
         }
+        
+        throw new IllegalArgumentException(GroupCrudInfoStatusEnum.GROUP_ALREADY_EXISTS.toString());
     }
 
 
