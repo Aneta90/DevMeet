@@ -35,7 +35,7 @@ public class PlaceVoteEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private PlaceEntity place;
 
-    @OneToOne(mappedBy = "placeVotes", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

@@ -31,13 +31,13 @@ public class PermissionEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GroupEntity group;
 
-    private PermissionTypeEnum type;
+//    private PermissionTypeEnum type;
 
-//    private boolean possibleToVote;
-//
-//    private boolean possibleToMessaging;
-//
-//    private boolean possibleToChangeGroupName;
-//
-//    private boolean possibleToBanMember;
+    private boolean possibleToVote;
+
+    private boolean possibleToMessaging;
+
+    private boolean possibleToChangeGroupName;
+
+    private boolean possibleToBanMember;
 }

@@ -59,7 +59,7 @@ public class MemberEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<AvailabilityVoteEntity> availabilityVotes;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PlaceVoteEntity> placeVotes;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

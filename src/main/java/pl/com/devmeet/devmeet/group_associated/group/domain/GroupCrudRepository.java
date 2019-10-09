@@ -15,6 +15,6 @@ interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UU
 
     Optional<List<GroupEntity>> findAllByGroupName(String groupName);
 
-    Optional<List<GroupEntity>> findAllByMember(MemberEntity member);
+    Optional<List<GroupEntity>> findAllByMembers(MemberEntity member);
 
 }
