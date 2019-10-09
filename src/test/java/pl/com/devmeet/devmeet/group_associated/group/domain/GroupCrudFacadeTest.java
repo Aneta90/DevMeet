@@ -167,10 +167,15 @@ public class GroupCrudFacadeTest {
 
     @Test
     public void findEntity() {
+        GroupDto created = createGroup();
+        GroupEntity foundEntity = facade.findEntity(created);
 
+        assertThat(foundEntity).isNotNull();
+        assertThat(foundEntity.getGroupName()).isEqualTo(created.getGroupName());
+        assertThat(foundEntity.getCreationTime()).isEqualTo(created.getCreationTime());
     }
 
-
+    @Ignore
     @Test
     public void findEntities() {
     }
