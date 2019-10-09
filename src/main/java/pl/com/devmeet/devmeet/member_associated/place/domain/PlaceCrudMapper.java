@@ -13,7 +13,7 @@ class PlaceCrudMapper {
     public static PlaceDto map(PlaceEntity entity) {
         return new PlaceDto().builder()
 
-         //      .member(MemberCrudFacade.map(entity.getMember()))
+                .member(MemberCrudFacade.map(entity.getMember()))
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
                 .website(entity.getWebsite())

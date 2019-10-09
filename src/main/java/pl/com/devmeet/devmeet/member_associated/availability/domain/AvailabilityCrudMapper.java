@@ -12,37 +12,36 @@ class AvailabilityCrudMapper {
 
     public static AvailabilityDto map(AvailabilityEntity entity) {
         return new AvailabilityDto().builder()
-               .member(MemberCrudFacade.map(entity.getMember()))
+                .member(MemberCrudFacade.map(entity.getMember()))
                 .beginTime(entity.getBeginTime())
                 .endTime(entity.getEndTime())
-                        .remoteWork(entity.isRemoteWork())
+                .remoteWork(entity.isRemoteWork())
 //                        .place(entity.getPlace())
-    //                    .poll(entity.getPoll())
-                        .creationTime(entity.getCreationTime())
-                        .modificationTime(entity.getModificationTime())
-                        .isActive(entity.isActive())
-                        .build();
+                //                    .poll(entity.getPoll())
+                .creationTime(entity.getCreationTime())
+                .modificationTime(entity.getModificationTime())
+                .isActive(entity.isActive())
+                .build();
     }
 
-
-    public static AvailabilityEntity map (AvailabilityDto dto) {
+    public static AvailabilityEntity map(AvailabilityDto dto) {
         return new AvailabilityEntity().builder()
-     //                   .member(dto.getMember())
-                        .beginTime(dto.getBeginTime())
-                        .endTime(dto.getEndTime())
-                        .remoteWork(dto.isRemoteWork())
-       //                 .place(dto.getPlace())
-         //               .poll(dto.getPoll())
-                        .creationTime(dto.getCreationTime())
-                        .modificationTime(dto.getModificationTime())
-                        .isActive(dto.isActive())
-                        .build();
+                .member(MemberCrudFacade.map(dto.getMember()))
+                .beginTime(dto.getBeginTime())
+                .endTime(dto.getEndTime())
+                .remoteWork(dto.isRemoteWork())
+                //                 .place(dto.getPlace())
+                //               .poll(dto.getPoll())
+                .creationTime(dto.getCreationTime())
+                .modificationTime(dto.getModificationTime())
+                .isActive(dto.isActive())
+                .build();
     }
 
     public static List<AvailabilityDto> mapDtoList(List<AvailabilityEntity> entities) {
         return entities.stream()
-                        .map(entity -> map(entity))
-                        .collect(Collectors.toList());
+                .map(entity -> map(entity))
+                .collect(Collectors.toList());
     }
 
     public static List<AvailabilityEntity> mapEntityList(List<AvailabilityDto> dtos) {
@@ -51,5 +50,5 @@ class AvailabilityCrudMapper {
                 .collect(Collectors.toList());
     }
 
-    }
+}
 

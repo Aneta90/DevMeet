@@ -1,23 +1,23 @@
-package pl.com.devmeet.devmeet.group_associated.permission.domain;
+package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
-import java.util.PrimitiveIterator;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "permission")
+@Table(name = "messengers")
 @Entity
-@Getter
-@Setter
-public class PermissionEntity {
+public class MessengerEntity {
 
     @javax.persistence.Id
     @GeneratedValue(generator = "uuid2")
@@ -25,19 +25,9 @@ public class PermissionEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private GroupEntity group;
-
-//    private PermissionTypeEnum type;
-
-    private boolean possibleToVote;
-
-    private boolean possibleToMessaging;
-
-    private boolean possibleToChangeGroupName;
-
-    private boolean possibleToBanMember;
 }

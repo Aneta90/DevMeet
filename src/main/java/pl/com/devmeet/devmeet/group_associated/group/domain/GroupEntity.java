@@ -10,10 +10,15 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingDto;
+import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingEntity;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionDto;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,34 +42,30 @@ public class GroupEntity {
     private String website;
     private String description;
 
-    @OneToOne(mappedBy = "group", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private MessengerDto messenger;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private MessengerEntity messenger;
 
     private Integer membersLimit;
     private Integer memberCounter;
     private Integer meetingCounter;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member")
-    private List<MemberDto> members;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<MemberEntity> members;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "permission")
-    private List<PermissionDto> permissions;
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PermissionEntity> permissions;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "poll")
-    private List<PollDto> polls;
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PollEntity> polls;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "meeting")
-    private List<MeetingDto> meetings;
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<MeetingEntity> meetings;
 
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime creationTime;
 
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime modificationTime;
     private boolean isActive;
