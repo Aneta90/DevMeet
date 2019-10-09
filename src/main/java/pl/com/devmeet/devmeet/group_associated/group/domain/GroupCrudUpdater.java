@@ -19,7 +19,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntity(oldDto));
         GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
 
-        return groupCrudSaver.saveEntity(updateValues(foundOldGroup, newGroup));
+        return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
     }
 
     private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup){
@@ -42,10 +42,14 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         return GroupCrudFacade.map(dto);
     }
 
-    private GroupEntity updateValues(GroupEntity oldEntity, GroupEntity newEntity) {
-        newEntity.setId(oldEntity.getId());
-        newEntity.setModificationTime(DateTime.now());
+    private GroupEntity updateAllowedParameters(GroupEntity oldEntity, GroupEntity newEntity) {
+        oldEntity.setGroupName(newEntity.getGroupName());
 
-        return newEntity;
+        oldEntity.setWebsite(newEntity.getWebsite());
+        oldEntity.setDescription(newEntity.getDescription());
+        oldEntity.setMembersLimit(newEntity.getMembersLimit());
+
+        oldEntity.setModificationTime(DateTime.now());
+        return oldEntity;
     }
 }
