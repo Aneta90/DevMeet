@@ -96,6 +96,18 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
+    public void WHEN_group_not_found_THEN_return_Illegal_Argument_Exception_group_not_found() {
+        try {
+            facade.findEntity(testGroup);
+            Assert.fail();
+        } catch (IllegalArgumentException e){
+            assertThat(e)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+        }
+    }
+
+    @Test
     public void readAll() {
     }
 
