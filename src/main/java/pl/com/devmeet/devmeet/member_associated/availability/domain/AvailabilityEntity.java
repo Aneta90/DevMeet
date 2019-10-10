@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceEntity;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.AvailabilityVoteEntity;
+import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 
 import javax.persistence.*;
@@ -22,7 +23,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-
 public class AvailabilityEntity {
 
     @javax.persistence.Id
@@ -32,10 +32,7 @@ public class AvailabilityEntity {
     private UUID Id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member")
     private MemberEntity member;
-
-   private PollEntity poll;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -45,11 +42,13 @@ public class AvailabilityEntity {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime endTime;
 
-    @OneToOne(mappedBy = "availability", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinColumn(name = "place")
+    private boolean remoteWork;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private PlaceEntity place;
 
-    private boolean remoteWork;
+    @OneToOne(mappedBy = "availability", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private AvailabilityVoteEntity availabilityVote;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)

@@ -2,9 +2,12 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
+<<<<<<< HEAD
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
+=======
+>>>>>>> develop
 
 
 @AllArgsConstructor
