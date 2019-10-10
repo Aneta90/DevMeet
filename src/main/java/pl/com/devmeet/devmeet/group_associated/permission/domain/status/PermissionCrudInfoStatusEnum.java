@@ -2,11 +2,11 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain.status;
 
 public enum PermissionCrudInfoStatusEnum {
 
-    GROUP_ALREADY_EXISTS("Permission already exists"),
-    GROUP_NOT_FOUND("Permission not found"),
-    GROUPS_NOT_FOUND("Permission not found"),
-    GROUP_FOUND_BUT_NOT_ACTIVE("Permission was found but is not active"),
-    GROUP_INCORRECT_VALUES("Permission has incorrect value / values");
+    PERMISSION_ALREADY_EXISTS("Permission already exists"),
+    PERMISSION_NOT_FOUND("Permission not found"),
+    PERMISSIONS_NOT_FOUND("Permissions not found"),
+    PERMISSION_FOUND_BUT_NOT_ACTIVE("Permission was found but is not active"),
+    PERMISSION_INCORRECT_VALUES("Permission has incorrect value / values");
 
     private String status;
 

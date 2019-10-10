@@ -1,10 +1,15 @@
 package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
+import lombok.AllArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
 
-class PermissionCrudSaver implements CrudEntitySaver<PermissionDto, PermissionEntity> {
+@AllArgsConstructor
+class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, PermissionEntity> {
+
+    private PermissionCrudRepository repository;
+
     @Override
-    public PermissionDto saveEntity(PermissionEntity entity) {
-        return null;
+    public PermissionEntity saveEntity(PermissionEntity entity) {
+        return repository.save(entity);
     }
 }

@@ -1,7 +1,11 @@
 package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
@@ -34,10 +38,16 @@ public class PermissionEntity {
 //    private PermissionTypeEnum type;
 
     private boolean possibleToVote;
-
     private boolean possibleToMessaging;
-
     private boolean possibleToChangeGroupName;
-
     private boolean possibleToBanMember;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private DateTime creationTime;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private DateTime modificationTime;
+    private boolean isActive;
 }

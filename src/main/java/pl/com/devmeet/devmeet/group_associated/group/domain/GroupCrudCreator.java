@@ -19,13 +19,11 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
     @Override
     public GroupEntity createEntity(GroupDto dto) {
         GroupEntity group;
-        boolean groupActivity;
 
         try {
             group = finder.findEntity(dto);
-            groupActivity = group.isActive();
 
-            if (!groupActivity && group.getModificationTime() != null)
+            if (!group.isActive() && group.getModificationTime() != null)
                 return saver.saveEntity(setDefaultValuesWhenGroupExists(group));
 
         } catch (IllegalArgumentException e) {
