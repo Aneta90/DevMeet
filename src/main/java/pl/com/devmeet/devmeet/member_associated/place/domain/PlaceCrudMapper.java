@@ -18,7 +18,7 @@ class PlaceCrudMapper {
                 .description(entity.getDescription())
                 .website(entity.getWebsite())
                 .location(entity.getLocation())
-         //     .availability(entity.getAvailability())
+         //    .availability(entity.getAvailability())
          //     .poll(entity.getPoll())
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
