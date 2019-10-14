@@ -39,6 +39,7 @@ public class MemberEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private UserEntity user;
 
+    @Column(unique = true)
     private String nick;
 
     @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

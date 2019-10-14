@@ -12,7 +12,7 @@ class GroupCrudMapper {
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
                 .description(entity.getDescription())
-//                .messenger(entity.getMessenger())
+//               .messenger(entity.getMessenger())
                 .membersLimit(entity.getMembersLimit())
                 .memberCounter(entity.getMemberCounter())
                 .meetingCounter(entity.getMeetingCounter())
