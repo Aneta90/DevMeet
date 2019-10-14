@@ -45,8 +45,8 @@ public class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDt
     private AvailabilityEntity updateAllowedParameters(AvailabilityEntity oldEntity, AvailabilityEntity newEntity) {
         oldEntity.setBeginTime(newEntity.getBeginTime());
         oldEntity.setEndTime(newEntity.getEndTime());
-    //    oldEntity.isRemoteWork(newEntity.isRemoteWork());
-    //    oldEntity.setPlace(newEntity.getPlace());
+        oldEntity.setRemoteWork(newEntity.isRemoteWork());
+        oldEntity.setPlace(newEntity.getPlace());
         oldEntity.setModificationTime(DateTime.now());
         return oldEntity;
     }

@@ -13,6 +13,11 @@ import pl.com.devmeet.devmeet.member_associated.availability.domain.status.Avail
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
 
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 
@@ -34,10 +39,12 @@ public class AvailabilityCrudFacadeTest {
         facade = new AvailabilityCrudFacade(repository);
 
 
-        testAvailability = new AvailabilityDto().builder()
+        testAvailability = new AvailabilityDto();
+
+        testAvailability.builder()
                 .member(testMember)
-                .beginTime(2020, 3, 3, 15, 0, 0)
-                .endTime(2020, 3, 3, 16, 0, 0, 0)
+                .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
+                .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
                 .place(testPlace)
                 .availabilityVote(null)
                 .remoteWork(true)
@@ -78,7 +85,7 @@ public class AvailabilityCrudFacadeTest {
     public void WHEN_create_exist_availability_but_not_active_THEN_return_availability() {
         AvailabilityDto createdFirst = createAvailability();
         AvailabilityDto deletedFirst = facade.delete(testAvailability);
-        AvailabilityDto createdSecond = facade.create(modifiedTestAvailability(testAvailability))
+        AvailabilityDto createdSecond = facade.create(modifiedTestAvailability(testAvailability));
 
         assertThat(createdFirst).isNotNull();
         assertThat(deletedFirst).isNotNull();
