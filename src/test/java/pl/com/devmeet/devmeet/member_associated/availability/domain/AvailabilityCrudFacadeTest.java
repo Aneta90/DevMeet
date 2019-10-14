@@ -31,7 +31,7 @@ public class AvailabilityCrudFacadeTest {
     private AvailabilityCrudRepository repository;
     private AvailabilityCrudFacade facade;
     private AvailabilityDto testAvailability;
-    private MemberDto testMember;
+    private MemberDto testMember= new MemberDto();
     private PlaceDto testPlace;
 
     @Before
