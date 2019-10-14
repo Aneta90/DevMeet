@@ -1,7 +1,9 @@
 package pl.com.devmeet.devmeet.member_associated.availability.domain;
+
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
 
 
 @AllArgsConstructor
@@ -18,7 +20,7 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
 
     @Override
     public AvailabilityEntity createEntity(AvailabilityDto dto) {
-        AvailabilityEntity availability = null;
+        AvailabilityEntity availability;
         boolean availabilityActivity;
 
         try {
@@ -26,16 +28,16 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
             availabilityActivity = availability.isActive();
 
             if (!availabilityActivity && availability.getModificationTime() != null)
-                return setDefaultValuesWhenAvailabilityExists(saver.saveEntity(availability));
-
+                //    return setDefaultValuesWhenAvailabilityExists(saver.saveEntity(availability));
+                return saver.saveEntity(setDefaultValuesWhenAvailabilityExists(availability));
 
         } catch (IllegalArgumentException e) {
-            return setDefaultValuesWhenAvailabilityNotExists(availability);
+            //  return setDefaultValuesWhenAvailabilityNotExists(availability);
+            return saver.saveEntity(setDefaultValuesWhenAvailabilityNotExists(AvailabilityCrudFacade.map(dto)));
         }
 
-        return null;
+        throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
     }
-
 
     private AvailabilityEntity setDefaultValuesWhenAvailabilityNotExists(AvailabilityEntity availability) {
         availability.setCreationTime(DateTime.now());

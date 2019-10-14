@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 
 class AvailabilityCrudMapper {
 
-    //2 ostatnie metody z UserCrudInterface- nie mamy jeszcze Membera
-
-
     public static AvailabilityDto map(AvailabilityEntity entity) {
         return new AvailabilityDto().builder()
                 .member(MemberCrudFacade.map(entity.getMember()))
@@ -17,7 +14,7 @@ class AvailabilityCrudMapper {
                 .endTime(entity.getEndTime())
                 .remoteWork(entity.isRemoteWork())
 //                        .place(entity.getPlace())
-                //                    .poll(entity.getPoll())
+                .availabilityVote(entity.getAvailabilityVote())
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
@@ -30,8 +27,8 @@ class AvailabilityCrudMapper {
                 .beginTime(dto.getBeginTime())
                 .endTime(dto.getEndTime())
                 .remoteWork(dto.isRemoteWork())
-                //                 .place(dto.getPlace())
-                //               .poll(dto.getPoll())
+                //                .place(dto.getPlace())
+                .availabilityVote(dto.getAvailabilityVote())
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
