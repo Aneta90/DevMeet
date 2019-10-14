@@ -34,13 +34,13 @@ public class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntit
         return null;
     }
 
-    Optional<List<MemberEntity>> memberListByGroup(GroupDto groupDto) {
+   /* Optional<List<MemberEntity>> memberListByGroup(GroupDto groupDto) {
         return memberRepository.findByGroup(groupDto.getGroupName());
     }
 
     Optional<List<MemberEntity>> memberListByPlace(PlaceDto placeDto) {
         return memberRepository.findByPlace(placeDto.getPlaceName());
-    }
+    }*/
 
     @Override
     public boolean isExist(MemberDto dto) throws MemberNotFoundException {

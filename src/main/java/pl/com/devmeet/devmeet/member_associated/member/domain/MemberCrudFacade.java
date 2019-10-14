@@ -65,13 +65,13 @@ public class MemberCrudFacade implements MemberCrudInterface {
         return finderInit().findEntity(dto);
     }
 
-    public Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto){
+   /* public Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto){
        return finderInit().memberListByGroup(groupDto);
     }
 
     public Optional<List<MemberEntity>> memberEntityList(PlaceDto placeDto){
         return finderInit().memberListByPlace(placeDto);
-    }
+    }*/
 
     public static MemberEntity map(MemberDto dto) {
         return MemberMapper.map(dto);

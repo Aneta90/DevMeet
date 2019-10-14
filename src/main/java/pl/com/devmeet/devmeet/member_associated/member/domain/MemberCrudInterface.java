@@ -22,9 +22,9 @@ public interface MemberCrudInterface {
 
     boolean doesExist(MemberDto memberDto) throws MemberNotFoundException;
 
-    Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto);
+   // Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto);
 
-    Optional<List<MemberEntity>> memberEntityList(PlaceDto placeDto);
+   // Optional<List<MemberEntity>> memberEntityList(PlaceDto placeDto);
 
     static MemberDto map(MemberEntity memberEntity) {
         return MemberMapper.map(memberEntity);
