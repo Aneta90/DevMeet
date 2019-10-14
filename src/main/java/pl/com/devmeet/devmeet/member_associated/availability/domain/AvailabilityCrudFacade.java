@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeMode;
 import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
 
 import java.util.List;
@@ -10,9 +11,10 @@ import java.util.List;
 public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, AvailabilityEntity> {
 
     private AvailabilityCrudRepository repository;
+    private CrudFacadeMode facadeMode;
 
     @Autowired
-    public AvailabilityCrudFacade(AvailabilityCrudRepository repository){
+    public AvailabilityCrudFacade(AvailabilityCrudRepository repository) {
         this.repository = repository;
     }
 
@@ -39,38 +41,37 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
     }
 
 
-    //po co castowanie tutaj było
     @Override
-    public AvailabilityDto read(AvailabilityDto dto) {
+    public AvailabilityDto read(AvailabilityDto dto) throws IllegalArgumentException {
         return map((AvailabilityEntity) initFinder().findEntity(dto));
     }
 
     @Override
-    public List<AvailabilityDto> readAll(AvailabilityDto dto) {
+    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws IllegalArgumentException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
-    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) {
+    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws IllegalArgumentException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public AvailabilityDto delete(AvailabilityDto dto) {
+    public AvailabilityDto delete(AvailabilityDto dto) throws IllegalArgumentException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public AvailabilityEntity findEntity(AvailabilityDto dto) {
-        return null;
+    public AvailabilityEntity findEntity(AvailabilityDto dto) throws IllegalArgumentException {
+        return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) {
-        return null;
+    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws IllegalArgumentException {
+        return initFinder().findEntities(dto);
     }
 
-   public static AvailabilityDto map(AvailabilityEntity entity) {
+    public static AvailabilityDto map(AvailabilityEntity entity) {
         return AvailabilityCrudMapper.map(entity);
     }
 
