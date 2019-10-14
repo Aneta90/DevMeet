@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.*;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
-
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.*;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -29,17 +26,28 @@ public class AvailabilityCrudFacadeTest {
 
     @Autowired
     private AvailabilityCrudRepository repository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     private AvailabilityCrudFacade facade;
+
     private AvailabilityDto testAvailability;
-    private MemberDto testMember= new MemberDto();
+    private MemberDto testMember = new MemberDto();
+
     private PlaceDto testPlace;
 
     @Before
     public void setUp() throws Exception {
         facade = new AvailabilityCrudFacade(repository);
 
+        testMember = testMember.builder()
+                .user(null) // może być null, ponieważ Member jest wyszukiwany w fasadzie po nicku
+                .nick("WasatyJanusz666hehe") // tylko nick jest wymagany do znalezienia membera (przynajmniej tak wynika z tego co znalazłem w fasadzie membera)
+                .build();
 
-        testAvailability = new AvailabilityDto();
+        testPlace = null;
+
 
         testAvailability.builder()
                 .member(testMember)
@@ -55,7 +63,45 @@ public class AvailabilityCrudFacadeTest {
     }
 
     private AvailabilityDto createAvailability() {
+        testAvailability.setMember(createdTestMember());
         return facade.create(testAvailability);
+    }
+
+    private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
+        try {
+            return initMemberCrudFacade().create(testMember); // fasada tworzy membera w bazie danych
+        } catch (MemberNotFoundException e) {
+            e.printStackTrace();
+        } catch (MemberAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private MemberEntity findTestMember(MemberDto memberDto){ // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
+        try {
+            return initMemberCrudFacade().findEntity(memberDto);
+        } catch (MemberNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private MemberCrudFacade initMemberCrudFacade() {
+        return new MemberCrudFacade(memberRepository); // tworzy obiekt fasady
+    }
+
+    @Test
+    public void TRY_TO_create_member_IF_SUCCESS_MemberCrudFacade_creator_works() throws MemberNotFoundException, MemberAlreadyExistsException {
+        MemberDto createdTestMember = createdTestMember();
+        assertThat(createdTestMember).isNotNull(); // tylko sprawdzam czy fasada zapisuje membera (pozytywny scenariusz), by upewnic sie ze ten element jest ok
+    }
+
+    @Test
+    public void TRY_TO_found_existing_member_IF_SUCCESS_MemberCrudFacade_finder_works() throws MemberNotFoundException, MemberAlreadyExistsException {
+        MemberDto createdTestMember = createdTestMember();
+        MemberEntity foundMember = findTestMember(testMember);
+        assertThat(foundMember).isNotNull(); // tylko sprawdzam czy fasada odczytuje istniejacego membera (pozytywny scenariusz), by upewnic sie ze ten element jest ok
     }
 
     @Test
@@ -184,8 +230,8 @@ public class AvailabilityCrudFacadeTest {
 
     @Test
     public void findEntity() {
-        AvailabilityDto created= createAvailability();
-        AvailabilityEntity foundEntity= facade.findEntity(created);
+        AvailabilityDto created = createAvailability();
+        AvailabilityEntity foundEntity = facade.findEntity(created);
 
         assertThat(foundEntity).isNotNull();
 
