@@ -1,8 +1,10 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-public class MemberNotFoundException extends Exception {
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
-    String MemberNotFoundException() {
-        return "Member is not in database";
+public class MemberNotFoundException extends EntityNotFoundException {
+
+    public MemberNotFoundException(String message) {
+        super(message);
     }
 }

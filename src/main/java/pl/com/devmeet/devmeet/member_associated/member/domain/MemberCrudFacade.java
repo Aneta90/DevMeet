@@ -1,11 +1,8 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
-
-import java.util.List;
-import java.util.Optional;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 public class MemberCrudFacade implements MemberCrudInterface {
 
@@ -28,40 +25,42 @@ public class MemberCrudFacade implements MemberCrudInterface {
         return new MemberCrudDeleter(memberRepository);
     }
 
-    private MemberCrudUpdater updateInit() {return new MemberCrudUpdater(memberRepository);}
+    private MemberCrudUpdater updateInit() {
+        return new MemberCrudUpdater(memberRepository);
+    }
 
     @Override
-    public MemberDto create(MemberDto dto) throws MemberNotFoundException, MemberAlreadyExistsException {
+    public MemberDto create(MemberDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
         return map(creatorInit().createEntity(dto));
     }
 
     @Override
-    public MemberDto read(MemberDto dto) throws MemberNotFoundException {
+    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
         return map(finderInit().findEntity(dto));
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException {
+    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException{
         return map(updateInit().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public MemberEntity delete(MemberDto dto) throws MemberNotFoundException {
+    public MemberEntity delete(MemberDto dto) throws EntityNotFoundException {
         return deleterInit().deleteEntity(dto);
     }
 
     @Override
-    public boolean isActive(MemberDto memberDto) throws MemberNotFoundException {
+    public boolean isActive(MemberDto memberDto) throws EntityNotFoundException {
         return finderInit().findEntity(memberDto).isActive();
     }
 
     @Override
-    public boolean doesExist(MemberDto memberDto) throws MemberNotFoundException {
+    public boolean doesExist(MemberDto memberDto) throws EntityNotFoundException {
         return finderInit().isExist(memberDto);
     }
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
         return finderInit().findEntity(dto);
     }
 

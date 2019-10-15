@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 public class MemberCrudDeleter {
 
@@ -12,7 +13,7 @@ public class MemberCrudDeleter {
         this.memberCrudSaver = new MemberCrudSaver(memberRepository);
     }
 
-    public MemberEntity deleteEntity(MemberDto memberDto) throws IllegalArgumentException, MemberNotFoundException {
+    MemberEntity deleteEntity(MemberDto memberDto) throws IllegalArgumentException, EntityNotFoundException {
 
         MemberEntity memberEntity = memberCrudFinder.findEntity(memberDto);
         if (memberEntity != null) {
@@ -22,7 +23,7 @@ public class MemberCrudDeleter {
             memberEntity.setGroups(null);
             return memberCrudSaver.saveEntity(memberEntity);
         } else {
-            throw new MemberNotFoundException();
+            throw new MemberNotFoundException("Member is not found in database");
         }
     }
 }
