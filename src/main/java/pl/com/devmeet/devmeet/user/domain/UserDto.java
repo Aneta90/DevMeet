@@ -9,8 +9,7 @@ import org.joda.time.DateTime;
 @Getter
 @Setter
 @Builder
-public
-class UserDto {
+public class UserDto {
 
     private DefaultUserLoginTypeEnum login;
     private String phone;
