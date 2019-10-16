@@ -1,8 +1,10 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-public class MemberAlreadyExistsException extends Exception {
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 
-    String MemberAlreadyExists() {
-        return "Member already exists";
+public class MemberAlreadyExistsException extends EntityAlreadyExistsException {
+
+    public MemberAlreadyExistsException(String message) {
+        super(message);
     }
 }

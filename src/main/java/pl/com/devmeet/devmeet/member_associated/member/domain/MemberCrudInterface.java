@@ -1,26 +1,23 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
-
-import java.util.List;
-import java.util.Optional;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 public interface MemberCrudInterface {
 
-    MemberDto create(MemberDto memberDto) throws MemberNotFoundException, MemberAlreadyExistsException;
+    MemberDto create(MemberDto memberDto) throws MemberNotFoundException, MemberAlreadyExistsException, EntityNotFoundException, EntityAlreadyExistsException;
 
-    MemberEntity findEntity(MemberDto memberDto) throws MemberNotFoundException;
+    MemberEntity findEntity(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
 
-    MemberDto read(MemberDto memberDto) throws MemberNotFoundException;
+    MemberDto read(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
 
-    MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException;
+    MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException, EntityNotFoundException;
 
-    MemberEntity delete(MemberDto memberDto) throws MemberNotFoundException;
+    MemberEntity delete(MemberDto memberDto) throws EntityNotFoundException;
 
-    boolean isActive(MemberDto memberDto) throws MemberNotFoundException;
+    boolean isActive(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
 
-    boolean doesExist(MemberDto memberDto) throws MemberNotFoundException;
+    boolean doesExist(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
 
    // Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto);
 

@@ -1,8 +1,7 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +25,7 @@ public class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntit
         if (memberEntity.isPresent()) {
             return memberEntity.get();
         }
-        throw new MemberNotFoundException();
+        throw new MemberNotFoundException("Member is not found in database");
     }
 
     @Override
@@ -43,7 +42,11 @@ public class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntit
     }*/
 
     @Override
-    public boolean isExist(MemberDto dto) throws MemberNotFoundException {
-        return findEntity(dto) != null;
+    public boolean isExist(MemberDto dto) throws EntityNotFoundException {
+        if (findEntity(dto) != null) {
+            return true;
+        } else {
+            throw new EntityNotFoundException("Member does not exist in database");
+        }
     }
 }
