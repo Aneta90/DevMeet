@@ -6,7 +6,7 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
-public class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
+class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
 
     private MemberRepository memberRepository;
 

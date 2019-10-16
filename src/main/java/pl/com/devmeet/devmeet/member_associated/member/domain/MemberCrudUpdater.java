@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
 
-public class MemberCrudUpdater implements CrudEntityUpdater<MemberDto, MemberEntity> {
+class MemberCrudUpdater implements CrudEntityUpdater<MemberDto, MemberEntity> {
 
     private MemberCrudFinder memberCrudFinder;
     private MemberCrudSaver memberCrudSaver;
