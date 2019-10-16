@@ -3,7 +3,9 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 import java.util.List;
 
@@ -12,15 +14,17 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
 
     private PermissionCrudRepository repository;
     private GroupCrudRepository groupRepository;
-    private MemberCrudRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    public PermissionCrudFacade(PermissionCrudRepository repository) {
+    public PermissionCrudFacade(PermissionCrudRepository repository, GroupCrudRepository groupRepository, MemberRepository memberRepository) {
         this.repository = repository;
+        this.groupRepository = groupRepository;
+        this.memberRepository = memberRepository;
     }
 
     private PermissionCrudCreator initCreator() {
-        return new PermissionCrudCreator(repository);
+        return new PermissionCrudCreator(repository, groupRepository, memberRepository);
     }
 
     private PermissionCrudFinder initFinder() {
@@ -36,12 +40,12 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionDto create(PermissionDto dto) {
+    public PermissionDto create(PermissionDto dto) throws EntityNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PermissionDto read(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionDto read(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
@@ -61,7 +65,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
         return initFinder().findEntity(dto);
     }
 

@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.*;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
@@ -70,9 +72,9 @@ public class AvailabilityCrudFacadeTest {
     private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
         try {
             return initMemberCrudFacade().create(testMember); // fasada tworzy membera w bazie danych
-        } catch (MemberNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             e.printStackTrace();
-        } catch (MemberAlreadyExistsException e) {
+        } catch (EntityAlreadyExistsException e) {
             e.printStackTrace();
         }
         return null;
@@ -81,7 +83,7 @@ public class AvailabilityCrudFacadeTest {
     private MemberEntity findTestMember(MemberDto memberDto){ // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
         try {
             return initMemberCrudFacade().findEntity(memberDto);
-        } catch (MemberNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             e.printStackTrace();
         }
         return null;

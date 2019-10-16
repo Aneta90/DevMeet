@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -10,6 +11,7 @@ import pl.com.devmeet.devmeet.group_associated.permission.domain.status.Permissi
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +20,15 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
 
     private PermissionCrudRepository permissionRepository;
     private GroupCrudRepository groupRepository;
-    private MemberCrudRepository memberRepository;
+    private MemberRepository memberRepository;
 
-    public PermissionCrudFinder(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberCrudRepository memberRepository) {
+    public PermissionCrudFinder(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository) {
         this.permissionRepository = permissionRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
     }
 
-    private MemberEntity findMemberEntity(MemberDto member) {
+    private MemberEntity findMemberEntity(MemberDto member) throws EntityNotFoundException {
         return new MemberCrudFacade(memberRepository).findEntity(member);
     }
 
@@ -35,7 +37,7 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
         Optional<PermissionEntity> permission = findPermission(dto);
 
         if(permission.isPresent())
@@ -44,7 +46,7 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
             throw new IllegalArgumentException(PermissionCrudInfoStatusEnum.PERMISSION_NOT_FOUND.toString());
     }
 
-    private Optional<PermissionEntity> findPermission(PermissionDto dto) {
+    private Optional<PermissionEntity> findPermission(PermissionDto dto) throws EntityNotFoundException {
         MemberEntity member = findMemberEntity(dto.getMember());
         GroupEntity group = findGroupEntity(dto.getGroup());
 
@@ -58,6 +60,10 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
 
     @Override
     public boolean isExist(PermissionDto dto) {
-        return findPermission(dto).isPresent();
+        try {
+            return findPermission(dto).isPresent();
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
     }
 }
