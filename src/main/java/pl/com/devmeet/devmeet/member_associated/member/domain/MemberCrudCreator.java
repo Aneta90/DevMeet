@@ -4,7 +4,7 @@ import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
-public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
+class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
 
     private MemberCrudFinder memberCrudFinder;
     private MemberCrudSaver memberCrudSaver;

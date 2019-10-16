@@ -13,8 +13,6 @@ public enum MemberCrudInfoStatusEnum {
 
     @Override
     public String toString() {
-        return "MemberCrudInfoStatusEnum{" +
-                "status='" + status + '\'' +
-                '}';
+        return status;
     }
 }
