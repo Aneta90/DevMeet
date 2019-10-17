@@ -7,7 +7,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
-import pl.com.devmeet.devmeet.group_associated.permission.domain.status.PermissionCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status.PermissionCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
@@ -37,17 +37,22 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
+    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException {
         Optional<PermissionEntity> permission = findPermission(dto);
 
-        if(permission.isPresent())
+        if (permission.isPresent())
             return permission.get();
         else
-            throw new IllegalArgumentException(PermissionCrudInfoStatusEnum.PERMISSION_NOT_FOUND.toString());
+            throw new IllegalArgumentException(PermissionCrudStatusEnum.PERMISSION_NOT_FOUND.toString());
     }
 
-    private Optional<PermissionEntity> findPermission(PermissionDto dto) throws EntityNotFoundException {
-        MemberEntity member = findMemberEntity(dto.getMember());
+    private Optional<PermissionEntity> findPermission(PermissionDto dto) {
+        MemberEntity member;
+        try {
+            member = findMemberEntity(dto.getMember());
+        } catch (EntityNotFoundException e) {
+            return Optional.empty();
+        }
         GroupEntity group = findGroupEntity(dto.getGroup());
 
         return permissionRepository.findByMemberAndGroup(member, group);
@@ -60,10 +65,6 @@ class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, Permission
 
     @Override
     public boolean isExist(PermissionDto dto) {
-        try {
-            return findPermission(dto).isPresent();
-        } catch (EntityNotFoundException e) {
-            return false;
-        }
+        return findPermission(dto).isPresent();
     }
 }

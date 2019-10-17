@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +64,7 @@ public class GroupCrudFacadeTest {
         } catch (IllegalArgumentException e) {
             assertThat(e)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_ALREADY_EXISTS.toString());
+                    .hasMessage(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
         }
     }
 
@@ -103,7 +103,7 @@ public class GroupCrudFacadeTest {
         } catch (IllegalArgumentException e) {
             assertThat(e)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 
@@ -139,7 +139,7 @@ public class GroupCrudFacadeTest {
         } catch (IllegalArgumentException e) {
             assertThat(e)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 
@@ -160,7 +160,7 @@ public class GroupCrudFacadeTest {
         } catch (IllegalArgumentException e) {
             assertThat(e)
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 

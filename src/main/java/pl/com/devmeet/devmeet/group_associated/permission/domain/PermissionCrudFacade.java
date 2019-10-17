@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
@@ -40,18 +41,18 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionDto create(PermissionDto dto) throws EntityNotFoundException {
+    public PermissionDto create(PermissionDto dto) throws IllegalArgumentException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PermissionDto read(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
+    public PermissionDto read(PermissionDto dto) throws IllegalArgumentException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<PermissionDto> readAll(PermissionDto dto) throws IllegalArgumentException {
-        return null;
+    public List<PermissionDto> readAll(PermissionDto dto) throws UnsupportedOperationException {
+        throw  new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException, EntityNotFoundException {
+    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException {
         return initFinder().findEntity(dto);
     }
 

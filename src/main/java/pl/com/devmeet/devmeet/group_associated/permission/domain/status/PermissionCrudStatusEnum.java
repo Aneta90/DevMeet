@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeet.group_associated.permission.domain.status;
 
-public enum PermissionCrudInfoStatusEnum {
+public enum PermissionCrudStatusEnum {
 
     PERMISSION_ALREADY_EXISTS("Permission already exists"),
     PERMISSION_NOT_FOUND("Permission not found"),
@@ -10,7 +10,7 @@ public enum PermissionCrudInfoStatusEnum {
 
     private String status;
 
-    PermissionCrudInfoStatusEnum(String status) {
+    PermissionCrudStatusEnum(String status) {
         this.status = status;
     }
 

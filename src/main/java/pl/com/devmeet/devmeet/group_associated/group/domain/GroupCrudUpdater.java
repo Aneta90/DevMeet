@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
 
 class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
 
@@ -26,7 +26,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         if (oldGroup.isActive())
             return oldGroup;
         else
-            throw new IllegalArgumentException(GroupCrudInfoStatusEnum
+            throw new IllegalArgumentException(GroupCrudStatusEnum
                     .GROUP_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
@@ -34,7 +34,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         if (newGroup.getGroupName().equals(oldGroup.getGroupName()))
             return newGroup;
 
-        throw new IllegalArgumentException(GroupCrudInfoStatusEnum
+        throw new IllegalArgumentException(GroupCrudStatusEnum
                 .GROUP_INCORRECT_VALUES.toString());
     }
 

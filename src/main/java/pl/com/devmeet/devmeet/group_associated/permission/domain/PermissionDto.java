@@ -21,6 +21,8 @@ public class PermissionDto {
     private boolean possibleToChangeGroupName;
     private boolean possibleToBanMember;
 
+    private boolean memberBaned;
+
     private DateTime creationTime;
     private DateTime modificationTime;
     private boolean isActive;

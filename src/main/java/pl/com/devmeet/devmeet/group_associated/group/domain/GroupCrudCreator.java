@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
 
 @AllArgsConstructor
 class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
@@ -30,7 +30,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
             return saver.saveEntity(setDefaultValuesWhenGroupNotExists(GroupCrudFacade.map(dto)));
         }
         
-        throw new IllegalArgumentException(GroupCrudInfoStatusEnum.GROUP_ALREADY_EXISTS.toString());
+        throw new IllegalArgumentException(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
     }
 
 
