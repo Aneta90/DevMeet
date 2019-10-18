@@ -13,6 +13,9 @@ class PermissionCrudMapper {
                 .possibleToMessaging(entity.isPossibleToMessaging())
                 .possibleToChangeGroupName(entity.isPossibleToChangeGroupName())
                 .possibleToBanMember(entity.isPossibleToBanMember())
+                .creationTime(entity.getCreationTime())
+                .modificationTime(entity.getModificationTime())
+                .isActive(entity.isActive())
                 .build();
     }
 
@@ -24,6 +27,9 @@ class PermissionCrudMapper {
                 .possibleToMessaging(dto.isPossibleToMessaging())
                 .possibleToChangeGroupName(dto.isPossibleToChangeGroupName())
                 .possibleToBanMember(dto.isPossibleToBanMember())
+                .creationTime(dto.getCreationTime())
+                .modificationTime(dto.getModificationTime())
+                .isActive(dto.isActive())
                 .build();
     }
 }

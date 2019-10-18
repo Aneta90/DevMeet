@@ -2,9 +2,10 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeet.group_associated.permission.domain.status.PermissionCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, PermissionEntity> {
@@ -18,7 +19,7 @@ class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, Permissi
     }
 
     @Override
-    public PermissionEntity createEntity(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionEntity createEntity(PermissionDto dto) throws EntityAlreadyExistsException {
         PermissionEntity permission;
 
         try {
@@ -27,11 +28,11 @@ class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, Permissi
             if (!permission.isActive() && permission.getModificationTime() != null)
                 return permissionCrudSaver.saveEntity(setDefaultValuesWhenPermissionExist(permission));
 
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             return permissionCrudSaver.saveEntity(setDefaultValuesWhenPermissionNotExist(PermissionCrudFacade.map(dto)));
         }
 
-        throw new IllegalArgumentException(PermissionCrudStatusEnum.PERMISSION_ALREADY_EXISTS.toString());
+        throw new EntityAlreadyExistsException(PermissionCrudStatusEnum.PERMISSION_ALREADY_EXISTS.toString());
     }
 
     private PermissionEntity setDefaultValuesWhenPermissionNotExist(PermissionEntity permission) {

@@ -2,6 +2,8 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityDeleter;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
 
 class GroupCrudDeleter implements CrudEntityDeleter<GroupDto, GroupEntity> {
@@ -15,7 +17,7 @@ class GroupCrudDeleter implements CrudEntityDeleter<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupEntity deleteEntity(GroupDto dto) {
+    public GroupEntity deleteEntity(GroupDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
         GroupEntity group = groupCrudFinder.findEntity(dto);
 
         boolean groupActivity = group.isActive();
@@ -27,6 +29,6 @@ class GroupCrudDeleter implements CrudEntityDeleter<GroupDto, GroupEntity> {
             return groupCrudSaver.saveEntity(group);
         }
 
-        throw new IllegalArgumentException(GroupCrudStatusEnum.GROUP_FOUND_BUT_NOT_ACTIVE.toString());
+        throw new EntityAlreadyExistsException(GroupCrudStatusEnum.GROUP_FOUND_BUT_NOT_ACTIVE.toString());
     }
 }

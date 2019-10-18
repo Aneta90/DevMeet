@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 import java.util.List;
@@ -41,37 +43,37 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionDto create(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionDto create(PermissionDto dto) throws EntityAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PermissionDto read(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionDto read(PermissionDto dto) throws EntityNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
     public List<PermissionDto> readAll(PermissionDto dto) throws UnsupportedOperationException {
-        throw  new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+        throw  new UnsupportedOperationException(PermissionCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PermissionDto update(PermissionDto oldDto, PermissionDto newDto) throws IllegalArgumentException {
+    public PermissionDto update(PermissionDto oldDto, PermissionDto newDto) throws EntityNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public PermissionDto delete(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionDto delete(PermissionDto dto) throws EntityNotFoundException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws IllegalArgumentException {
+    public PermissionEntity findEntity(PermissionDto dto) throws EntityNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<PermissionEntity> findEntities(PermissionDto dto) throws IllegalArgumentException {
+    public List<PermissionEntity> findEntities(PermissionDto dto) throws UnsupportedOperationException {
         return initFinder().findEntities(dto);
     }
 

@@ -15,7 +15,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
-import pl.com.devmeet.devmeet.group_associated.permission.domain.status.PermissionCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
@@ -114,9 +114,14 @@ public class PermissionCrudFacadeTest {
                 .findEntity(userCrudFacade
                         .create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
 
-        GroupEntity groupEntity = groupCrudFacade
-                .findEntity(groupCrudFacade
-                        .create(testGroupDto));
+        GroupEntity groupEntity = null;
+        try {
+            groupEntity = groupCrudFacade
+                    .findEntity(groupCrudFacade
+                            .create(testGroupDto));
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            groupEntity = null;
+        }
 
         MemberEntity memberEntity = null;
         try {
@@ -144,7 +149,7 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void GROUP_CRUD_FACADE_WR() {
+    public void GROUP_CRUD_FACADE_WR() throws EntityAlreadyExistsException, EntityNotFoundException {
         GroupCrudFacade groupFacade = initGroupCrudFacade();
         GroupEntity groupEntity = groupFacade.findEntity(groupFacade.create(testGroupDto));
 
@@ -166,7 +171,7 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_create_not_existing_permission_to_group_THEN_return_permission() {
+    public void WHEN_create_not_existing_permission_to_group_THEN_return_permission() throws EntityAlreadyExistsException {
         PermissionDto created;
         initTestDB();
 
@@ -188,23 +193,27 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_create_existing_permission_to_group_THEN_IllegalArgumentException() {
+    public void WHEN_try_to_create_existing_permission_to_group_THEN_EntityAlreadyExistsException() {
         initTestDB();
         permissionCrudFacade = initPermissionCrudFacade();
-        permissionCrudFacade.create(testPermissionDto);
+        try {
+            permissionCrudFacade.create(testPermissionDto);
+        } catch (EntityAlreadyExistsException e) {
+            Assert.fail();
+        }
 
         try {
             permissionCrudFacade.create(testPermissionDto);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityAlreadyExistsException.class)
                     .hasMessage(PermissionCrudStatusEnum.PERMISSION_ALREADY_EXISTS.toString());
         }
     }
 
     @Test
-    public void WHEN_found_permission_THEN_return_permission() {
+    public void WHEN_found_permission_THEN_return_permission() throws EntityNotFoundException, EntityAlreadyExistsException {
         initTestDB();
         PermissionDto created;
         PermissionDto found = null;
@@ -212,24 +221,21 @@ public class PermissionCrudFacadeTest {
 
         created = permissionCrudFacade.create(testPermissionDto);
 
-        try {
-            found = permissionCrudFacade.read(testPermissionDto);
-        } catch (IllegalArgumentException e) {
-            Assert.fail();
-        }
+        found = permissionCrudFacade.read(testPermissionDto);
+
 
         assertThat(found).isNotNull();
     }
 
     @Test
-    public void WHEN_try_to_find_not_existing_permission_THEN_return_IllegalArgumentException() {
+    public void WHEN_try_to_find_not_existing_permission_THEN_return_EntityNotFoundException() {
         permissionCrudFacade = initPermissionCrudFacade();
         try {
             permissionCrudFacade.read(testPermissionDto);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage(PermissionCrudStatusEnum.PERMISSION_NOT_FOUND.toString());
         }
     }
@@ -239,15 +245,15 @@ public class PermissionCrudFacadeTest {
         PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
         try {
             permissionCrudFacade.readAll(testPermissionDto);
-        }catch (UnsupportedOperationException e){
+        } catch (UnsupportedOperationException e) {
             assertThat(e)
                     .isInstanceOf(UnsupportedOperationException.class)
-                    .hasMessage(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+                    .hasMessage(PermissionCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
         }
     }
 
     @Test
-    public void WHEN_update_existing_permission_THEN_return_permission() {
+    public void WHEN_update_existing_permission_THEN_return_permission() throws EntityAlreadyExistsException, EntityNotFoundException {
         initTestDB();
         PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
         PermissionDto created = permissionCrudFacade.create(testPermissionDto);
@@ -278,14 +284,14 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_not_existing_permission_THEN_return_IllegalArgumentException() {
+    public void WHEN_try_to_update_not_existing_permission_THEN_return_EntityNotFoundException() {
         initTestDB();
         PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
         try {
             permissionCrudFacade.update(testPermissionDto, permissionUpdatedValues(testPermissionDto));
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage(PermissionCrudStatusEnum.PERMISSION_NOT_FOUND.toString());
         }
     }

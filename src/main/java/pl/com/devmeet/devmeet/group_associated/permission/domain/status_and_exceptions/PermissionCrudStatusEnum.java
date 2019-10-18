@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.group_associated.permission.domain.status;
+package pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions;
 
 public enum PermissionCrudStatusEnum {
 
@@ -6,7 +6,9 @@ public enum PermissionCrudStatusEnum {
     PERMISSION_NOT_FOUND("Permission not found"),
     PERMISSIONS_NOT_FOUND("Permissions not found"),
     PERMISSION_FOUND_BUT_NOT_ACTIVE("Permission was found but is not active"),
-    PERMISSION_INCORRECT_VALUES("Permission has incorrect value / values");
+    PERMISSION_MEMBER_NOT_FOUND("Member not found"),
+    PERMISSION_GROUP_NOT_FOUND("Group not found"),
+    METHOD_NOT_IMPLEMENTED("Method not implemented");;
 
     private String status;
 

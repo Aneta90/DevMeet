@@ -2,7 +2,8 @@ package pl.com.devmeet.devmeet.domain_utils;
 
 public enum CrudErrorEnum {
 
-    METHOD_NOT_IMPLEMENTED("Method not implemented");
+    METHOD_NOT_IMPLEMENTED("Method not implemented"),
+    INCORRECT_VALUES("Incorrect values");
 
     private String status;
 
