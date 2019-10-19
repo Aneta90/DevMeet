@@ -97,7 +97,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     }
 
     @Override
-    public PermissionDto delete(PermissionDto dto) throws EntityNotFoundException {
+    public PermissionDto delete(PermissionDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
 

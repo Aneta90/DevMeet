@@ -312,7 +312,7 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_delete_not_existing_permission_THEN_return_EntityNotFoundException() {
+    public void WHEN_delete_not_existing_permission_THEN_return_EntityNotFoundException() throws EntityAlreadyExistsException {
         initTestDB();
         PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
 
