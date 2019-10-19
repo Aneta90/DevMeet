@@ -19,13 +19,9 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     @Override
     public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws EntityNotFoundException, EntityAlreadyExistsException {
         GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntity(oldDto));
-        GroupEntity newGroup = null;
 
-        try {
-            newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
-        }catch (IllegalArgumentException e){
+        GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
 
-        }
         return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
     }
 
