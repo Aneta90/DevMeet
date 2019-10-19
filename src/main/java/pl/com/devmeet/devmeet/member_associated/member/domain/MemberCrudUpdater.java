@@ -1,9 +1,9 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
-public class MemberCrudUpdater implements CrudEntityUpdater<MemberDto, MemberEntity> {
+public class MemberCrudUpdater {
 
     private MemberCrudFinder memberCrudFinder;
     private MemberCrudSaver memberCrudSaver;
@@ -13,22 +13,29 @@ public class MemberCrudUpdater implements CrudEntityUpdater<MemberDto, MemberEnt
         this.memberCrudSaver = new MemberCrudSaver(memberRepository);
     }
 
-    @Override
-    public MemberEntity updateEntity(MemberDto oldDto, MemberDto newDto) throws IllegalArgumentException, MemberNotFoundException {
+    public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
+
         MemberEntity oldEntity = memberCrudFinder.findEntity(oldDto);
-        MemberEntity updatedEntity = mapDtoToEntity(newDto);
 
-        return memberCrudSaver.saveEntity(updateValues(oldEntity, updatedEntity));
+        if (oldEntity.isActive()) {
+            return memberCrudSaver.saveEntity(updateValues(newDto, oldEntity));
+        }
+        throw new MemberNotFoundException("Member is not found or is not active");
     }
 
-    private MemberEntity mapDtoToEntity(MemberDto dto) {
-        return MemberCrudFacade.map(dto);
-    }
 
+    private MemberEntity updateValues(MemberDto updatedMember, MemberEntity oldMember) {
+        String nick = updatedMember.getNick();
+        boolean modification = false;
 
-    private MemberEntity updateValues(MemberEntity oldMemberEntity, MemberEntity newMemberEntity) {
-        newMemberEntity.setId(oldMemberEntity.getId());
-        newMemberEntity.setModificationTime(DateTime.now());
-        return newMemberEntity;
+        if (nick != null) {
+            oldMember.setNick(updatedMember.getNick());
+            modification = true;
+        }
+
+        if (modification)
+            oldMember.setModificationTime(DateTime.now());
+
+        return oldMember;
     }
 }

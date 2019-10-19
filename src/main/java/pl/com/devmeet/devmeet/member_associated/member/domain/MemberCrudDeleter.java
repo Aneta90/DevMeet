@@ -13,15 +13,16 @@ public class MemberCrudDeleter {
         this.memberCrudSaver = new MemberCrudSaver(memberRepository);
     }
 
-    MemberEntity deleteEntity(MemberDto memberDto) throws IllegalArgumentException, EntityNotFoundException {
+    boolean deleteEntity(MemberDto memberDto) throws IllegalArgumentException, EntityNotFoundException {
 
         MemberEntity memberEntity = memberCrudFinder.findEntity(memberDto);
-        if (memberEntity != null) {
+        if (memberEntity != null && memberEntity.isActive()) {
             memberEntity.setActive(false);
             memberEntity.setAvailabilities(null);
             memberEntity.setModificationTime(DateTime.now());
             memberEntity.setGroups(null);
-            return memberCrudSaver.saveEntity(memberEntity);
+
+            return memberCrudSaver.saveEntity(memberEntity) != null;
         } else {
             throw new MemberNotFoundException("Member is not found in database");
         }

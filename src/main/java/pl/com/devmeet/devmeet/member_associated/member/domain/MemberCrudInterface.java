@@ -5,19 +5,19 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 public interface MemberCrudInterface {
 
-    MemberDto create(MemberDto memberDto) throws MemberNotFoundException, MemberAlreadyExistsException, EntityNotFoundException, EntityAlreadyExistsException;
+    MemberDto create(MemberDto memberDto) throws EntityNotFoundException, EntityAlreadyExistsException;
 
-    MemberEntity findEntity(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
+    MemberEntity findEntity(MemberDto memberDto) throws EntityNotFoundException;
 
-    MemberDto read(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
+    MemberDto read(MemberDto memberDto) throws EntityNotFoundException;
 
-    MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException, EntityNotFoundException;
+    MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException;
 
-    MemberEntity delete(MemberDto memberDto) throws EntityNotFoundException;
+    boolean delete(MemberDto memberDto) throws EntityNotFoundException;
 
-    boolean isActive(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
+    boolean isActive(MemberDto memberDto) throws EntityNotFoundException;
 
-    boolean doesExist(MemberDto memberDto) throws MemberNotFoundException, EntityNotFoundException;
+    boolean isExist(MemberDto memberDto);
 
    // Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto);
 

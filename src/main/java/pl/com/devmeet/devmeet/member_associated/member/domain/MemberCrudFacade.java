@@ -1,7 +1,6 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 public class MemberCrudFacade implements MemberCrudInterface {
@@ -30,8 +29,8 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public MemberDto create(MemberDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
-        return map(creatorInit().createEntity(dto));
+    public MemberDto create(MemberDto dto) {
+        return creatorInit().create(dto);
     }
 
     @Override
@@ -40,12 +39,12 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException{
-        return map(updateInit().updateEntity(oldDto, newDto));
+    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException {
+        return updateInit().update(oldDto, newDto);
     }
 
     @Override
-    public MemberEntity delete(MemberDto dto) throws EntityNotFoundException {
+    public boolean delete(MemberDto dto) throws EntityNotFoundException {
         return deleterInit().deleteEntity(dto);
     }
 
@@ -55,7 +54,7 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public boolean doesExist(MemberDto memberDto) throws EntityNotFoundException {
+    public boolean isExist(MemberDto memberDto) {
         return finderInit().isExist(memberDto);
     }
 
