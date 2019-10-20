@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
 
-class MemberCrudSaver implements CrudEntitySaver<MemberEntity, MemberEntity> {
+public class MemberCrudSaver implements CrudEntitySaver<MemberDto, MemberEntity> {
 
     private MemberRepository memberRepository;
 
@@ -11,7 +11,7 @@ class MemberCrudSaver implements CrudEntitySaver<MemberEntity, MemberEntity> {
     }
 
     @Override
-    public MemberEntity saveEntity(MemberEntity entity) {
-        return memberRepository.save(entity);
+    public MemberDto saveEntity(MemberEntity entity) {
+        return MemberCrudInterface.map(memberRepository.save(entity));
     }
 }

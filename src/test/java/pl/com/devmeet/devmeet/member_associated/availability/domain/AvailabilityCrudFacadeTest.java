@@ -72,8 +72,6 @@ public class AvailabilityCrudFacadeTest {
     private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
         try {
             return initMemberCrudFacade().create(testMember); // fasada tworzy membera w bazie danych
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
         } catch (EntityAlreadyExistsException e) {
             e.printStackTrace();
         }

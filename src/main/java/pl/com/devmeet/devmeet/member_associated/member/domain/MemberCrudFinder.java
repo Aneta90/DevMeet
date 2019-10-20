@@ -4,7 +4,6 @@ import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
 
@@ -15,18 +14,25 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     }
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws IllegalArgumentException, MemberNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
 
-        Optional<MemberEntity> memberEntity = Optional.empty();
-        if (dto.getNick() != null) {
+        MemberEntity memberEntity;
+        if (dto.getNick() == null) {
+            throw new EntityNotFoundException("Not found");
+        } else {
             memberEntity = memberRepository.findByNick(dto.getNick());
+            return memberEntity;
         }
-
-        if (memberEntity.isPresent()) {
-            return memberEntity.get();
-        }
-        throw new MemberNotFoundException("Member is not found in database");
     }
+
+    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
+        return getDtoFromEntity(findEntity(dto));
+    }
+
+    private MemberDto getDtoFromEntity(MemberEntity entity) {
+        return MemberCrudInterface.map(entity);
+    }
+
 
     @Override
     public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {
@@ -42,11 +48,7 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     }*/
 
     @Override
-    public boolean isExist(MemberDto dto) throws EntityNotFoundException {
-        if (findEntity(dto) != null) {
-            return true;
-        } else {
-            throw new EntityNotFoundException("Member does not exist in database");
-        }
+    public boolean isExist(MemberDto dto) {
+        return memberRepository.findByNick(dto.getNick()) != null;
     }
 }
