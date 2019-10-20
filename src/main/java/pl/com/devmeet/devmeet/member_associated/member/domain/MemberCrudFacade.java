@@ -40,13 +40,13 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException {
-        return updateInit().update(oldDto, newDto);
+    public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
+        return updateInit().update(newDto, oldDto);
     }
 
     @Override
     public boolean delete(MemberDto dto) throws EntityNotFoundException {
-        return deleterInit().deleteEntity(dto);
+        return deleterInit().delete(dto);
     }
 
     @Override

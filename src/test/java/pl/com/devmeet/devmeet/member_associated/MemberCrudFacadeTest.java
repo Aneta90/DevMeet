@@ -11,7 +11,6 @@ import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +21,6 @@ public class MemberCrudFacadeTest {
 
     @Autowired
     MemberRepository memberRepository;
-
     MemberDto memberDto;
 
     private MemberDto createdMemberDto;
@@ -64,6 +62,53 @@ public class MemberCrudFacadeTest {
     public void WHEN_try_to_find_member_who_does_not_exist_THEN_return_MemberNotFoundException() throws EntityNotFoundException {
         MemberDto notFoundMemberDto = new MemberDto();
         notFoundMemberDto.setNick("null");
-        memberCrudFacade.read(notFoundMemberDto);
+        MemberDto memberNotFound = memberCrudFacade.read(notFoundMemberDto);
+        assertThat(memberNotFound).isNull();
+    }
+
+    @Test
+    public void WHEN_member_exists_then_return_true() {
+        boolean memberExists = memberCrudFacade.isExist(memberDto);
+        assertThat(memberExists).isTrue();
+    }
+
+    @Test
+    public void WHEN_member_does_not_exist_then_return_false() {
+        MemberDto memberNotExisted = new MemberDto();
+        memberDto.setNick("test");
+        boolean memberDoesNotExist = memberCrudFacade.isExist(memberNotExisted);
+        assertThat(memberDoesNotExist).isFalse();
+    }
+
+    @Test
+    public void WHEN_try_to_update_existing_member_then_updated_member() throws EntityNotFoundException {
+        MemberDto updatedMemberDto = new MemberDto();
+        updatedMemberDto.setNick("updatedMember");
+        memberDto = memberCrudFacade.update(updatedMemberDto, memberDto);
+        assertThat(memberDto.getNick()).isEqualTo("updatedMember");
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void WHEN_try_to_update_not_existing_member_then_return_EntityNotFoundException() throws EntityNotFoundException {
+        MemberDto memberNotExisted = new MemberDto();
+        memberDto.setNick("test");
+        MemberDto updatedMemberDto = new MemberDto();
+        updatedMemberDto.setNick("updatedMember");
+        MemberDto resultMemberDto = memberCrudFacade.update(updatedMemberDto, memberNotExisted);
+        assertThat(resultMemberDto).isNull();
+    }
+
+    @Test
+    public void WHEN_try_to_delete_existing_member_then_delete_member() throws EntityNotFoundException { //sprawdzic czy na pewno dobrze działa
+        boolean isMemberDeleted = memberCrudFacade.delete(createdMemberDto);
+        assertThat(isMemberDeleted).isTrue();
+    }
+
+    @Test(expected = NullPointerException.class) //do poprawy - powinien zwracać EntityNotDoundException
+    public void WHEN_try_to_delete_non_existing_member_then_throw_EntityNotFoundException() throws EntityNotFoundException {
+        MemberDto nonExistingMember = new MemberDto();
+        nonExistingMember.setNick("aaa");
+        boolean isMemberDeleted = memberCrudFacade.delete(nonExistingMember);
+        assertThat(isMemberDeleted).isFalse();
     }
 }
