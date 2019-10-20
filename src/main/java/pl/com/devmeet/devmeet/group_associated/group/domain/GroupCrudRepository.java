@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UUID> {
+public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UUID> {
 
     Optional<GroupEntity> findByGroupName(String groupName);
 

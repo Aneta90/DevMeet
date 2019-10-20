@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
-public class MemberCrudDeleter {
+class MemberCrudDeleter {
 
     private MemberCrudFinder memberCrudFinder;
     private MemberCrudSaver memberCrudSaver;

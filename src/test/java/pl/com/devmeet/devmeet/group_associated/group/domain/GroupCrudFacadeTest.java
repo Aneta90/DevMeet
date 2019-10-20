@@ -8,7 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,12 +43,12 @@ public class GroupCrudFacadeTest {
 
     }
 
-    private GroupDto createGroup() {
+    private GroupDto createGroup() throws EntityAlreadyExistsException {
         return facade.create(testGroup);
     }
 
     @Test
-    public void WHEN_create_not_exist_group_THEN_return_group() {
+    public void WHEN_create_not_exist_group_THEN_return_group() throws EntityAlreadyExistsException {
         GroupDto created = createGroup();
 
         assertThat(created).isNotNull();
@@ -56,20 +58,24 @@ public class GroupCrudFacadeTest {
 
     @Test
     public void WHEN_create_exist_group_THEN_return_IllegalArgumentException_group_already_exists() {
-        GroupDto createdFirst = createGroup();
+        try {
+            GroupDto createdFirst = createGroup();
+        } catch (EntityAlreadyExistsException e) {
+            Assert.fail();
+        }
 
         try {
             facade.create(testGroup);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_ALREADY_EXISTS.toString());
+                    .isInstanceOf(EntityAlreadyExistsException.class)
+                    .hasMessage(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
         }
     }
 
     @Test
-    public void WHEN_create_exist_group_but_not_active_THEN_return_group() {
+    public void WHEN_create_exist_group_but_not_active_THEN_return_group() throws EntityAlreadyExistsException, EntityNotFoundException {
         GroupDto createdFirst = createGroup();
         GroupDto deletedFirst = facade.delete(testGroup);
         GroupDto createdSecond = facade.create(modifiedTestGroup(testGroup));
@@ -90,20 +96,20 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_found_existing_group_THEN_return_group() {
+    public void WHEN_found_existing_group_THEN_return_group() throws EntityNotFoundException, EntityAlreadyExistsException {
         assertThat(createGroup()).isNotNull();
         assertThat(facade.read(testGroup)).isNotNull();
     }
 
     @Test
-    public void WHEN_group_not_found_THEN_return_IllegalArgumentException_group_not_found() {
+    public void WHEN_group_not_found_THEN_return_EntityNotFoundException_group_not_found() {
         try {
             facade.findEntity(testGroup);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 
@@ -113,7 +119,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_group_THEN_return_group() {
+    public void WHEN_try_to_update_existing_group_THEN_return_group() throws EntityAlreadyExistsException, EntityNotFoundException {
         GroupDto group = createGroup();
         GroupDto update = modifiedTestGroup(testGroup);
 
@@ -132,19 +138,21 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_not_existing_group_THEN_return_IllegalArgumentException_group_not_found() {
+    public void WHEN_try_to_update_not_existing_group_THEN_return_EntityNotFoundException_group_not_found() {
         GroupDto update = modifiedTestGroup(testGroup);
         try {
             facade.update(testGroup, update);
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
+        } catch (EntityAlreadyExistsException e) {
+            e.printStackTrace();
         }
     }
 
     @Test
-    public void WHEN_delete_existing_group_THEN_return_group() {
+    public void WHEN_delete_existing_group_THEN_return_group() throws EntityAlreadyExistsException, EntityNotFoundException {
         GroupDto group = createGroup();
         GroupDto deleted = facade.delete(group);
 
@@ -154,19 +162,19 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_not_existing_group_THEN_return_return_IllegalArgumentException_group_not_found() {
+    public void WHEN_try_to_delete_not_existing_group_THEN_return_return_EntityNotFoundException_group_not_found() throws EntityAlreadyExistsException {
         try {
             facade.delete(testGroup);
-        } catch (IllegalArgumentException e) {
+        } catch ( EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(GroupCrudInfoStatusEnum.GROUP_NOT_FOUND.toString());
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 
 
     @Test
-    public void findEntity() {
+    public void findEntity() throws EntityNotFoundException, EntityAlreadyExistsException {
         GroupDto created = createGroup();
         GroupEntity foundEntity = facade.findEntity(created);
 
