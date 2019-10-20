@@ -17,13 +17,22 @@ public class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntit
     public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
 
         MemberEntity memberEntity;
-        if (dto.getNick() != null) {
+        if (dto.getNick() == null) {
+            throw new EntityNotFoundException("Not found");
+        } else {
             memberEntity = memberRepository.findByNick(dto.getNick());
             return memberEntity;
-        } else {
-            throw new EntityNotFoundException("Not found");
         }
     }
+
+    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
+        return getDtoFromEntity(findEntity(dto));
+    }
+
+    private MemberDto getDtoFromEntity(MemberEntity entity) {
+        return MemberCrudInterface.map(entity);
+    }
+
 
     @Override
     public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {

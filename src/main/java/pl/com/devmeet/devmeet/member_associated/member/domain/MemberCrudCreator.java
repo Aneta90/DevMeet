@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-import javax.persistence.EntityExistsException;
+
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 
 public class MemberCrudCreator {
 
@@ -20,10 +21,10 @@ public class MemberCrudCreator {
         return memberCrudSaver.saveEntity(MemberCrudFacade.map(dto));
     }*/
 
-    public MemberDto create(MemberDto dto) throws EntityExistsException {
+    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException {
 
         if (memberCrudFinder.isExist(dto)) {
-            throw new EntityExistsException();
+            throw new EntityAlreadyExistsException("Member already exists in our database");
         }
 
         return saveMemberEntity(MemberCrudFacade.map(dto));
