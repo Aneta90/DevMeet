@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,8 +39,11 @@ class PermissionCrudUpdater implements CrudEntityUpdater<PermissionDto, Permissi
         return permissionCrudFinder.findEntity(oldDto);
     }
 
-    private PermissionDto checkMemberAndGroup(PermissionDto oldDto, PermissionDto newDto) {
-        return null;
+    private PermissionDto checkMemberAndGroup(PermissionDto oldDto, PermissionDto newDto) throws EntityNotFoundException {
+        if (oldDto.getMember().getNick() == newDto.getMember().getNick())
+            if(oldDto.getGroup().getGroupName() == newDto.getGroup().getGroupName())
+                return newDto;
+        throw new EntityNotFoundException(PermissionCrudStatusEnum.INCORRECT_MEMBER_OR_GROUP.toString());
     }
 
     private PermissionEntity mapDtoToEntity(PermissionDto dto) {
@@ -50,7 +54,7 @@ class PermissionCrudUpdater implements CrudEntityUpdater<PermissionDto, Permissi
         oldEntity.setPossibleToVote(newEntity.isPossibleToVote());
         oldEntity.setPossibleToMessaging(newEntity.isPossibleToMessaging());
         oldEntity.setPossibleToChangeGroupName(newEntity.isPossibleToChangeGroupName());
-        oldEntity.setMemberBaned(newEntity.isMemberBaned());
+        oldEntity.setPossibleToBanMember(newEntity.isPossibleToBanMember());
 
         oldEntity.setMemberBaned(newEntity.isMemberBaned());
 
