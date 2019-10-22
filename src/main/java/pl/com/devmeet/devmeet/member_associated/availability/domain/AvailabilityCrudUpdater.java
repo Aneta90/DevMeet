@@ -1,42 +1,53 @@
 package pl.com.devmeet.devmeet.member_associated.availability.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeet.member_associated.availability.domain.status.AvailabilityCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 
-public class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, AvailabilityEntity> {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, AvailabilityEntity> {
 
     private AvailabilityCrudSaver availabilityCrudSaver;
     private AvailabilityCrudFinder availabilityCrudFinder;
 
-
-    public AvailabilityCrudUpdater(AvailabilityCrudRepository repository) {
-        this.availabilityCrudSaver = new AvailabilityCrudSaver(repository);
-        this.availabilityCrudFinder = new AvailabilityCrudFinder(repository);
-    }
-
     @Override
-    public AvailabilityEntity updateEntity(AvailabilityDto oldDto, AvailabilityDto newDto) throws IllegalArgumentException {
-        AvailabilityEntity foundOldAvailability = checkIsOldAvailabilityActive(availabilityCrudFinder.findEntity(oldDto));
-        AvailabilityEntity newAvailability = mapDtoToEntity(checkIfNewAvailabilityHasAMember(newDto, foundOldAvailability));
-
-        return availabilityCrudSaver.saveEntity(updateAllowedParameters(foundOldAvailability, newAvailability));
+    public AvailabilityEntity updateEntity(AvailabilityDto oldDto, AvailabilityDto newDto) throws EntityNotFoundException {
+   //     AvailabilityEntity oldAvailability = checkIsOldAvailabilityActive(availabilityCrudFinder.findEntity(oldDto));
+        AvailabilityEntity oldAvailability = findAvailabilityEntity(oldDto);
+   //     AvailabilityEntity newAvailability = mapDtoToEntity(checkIfNewAvailabilityHasAMember(newDto, oldAvailability));
+        AvailabilityEntity newAvailability = mapDtoToEntity(checkMember(oldDto, newDto));
+        return availabilityCrudSaver.saveEntity(updateAllowedParameters(oldAvailability, newAvailability));
     }
 
-    private AvailabilityEntity checkIsOldAvailabilityActive(AvailabilityEntity oldAvailability){
-        if (oldAvailability.isActive())
-            return oldAvailability;
-        else
-            throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_FOUND_BUT_NOT_ACTIVE.toString());
+    AvailabilityEntity findAvailabilityEntity(AvailabilityDto oldDto) throws EntityNotFoundException {
+        return availabilityCrudFinder.findEntity(oldDto);
     }
 
-    private AvailabilityDto checkIfNewAvailabilityHasAMember(AvailabilityDto newAvailability, AvailabilityEntity oldAvailability) {
-        if (newAvailability.getMember().equals(oldAvailability.getMember()))
-            return newAvailability;
-
-        throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum
-                .AVAILABILITY_INCORRECT_VALUES.toString());
+    private AvailabilityDto checkMember(AvailabilityDto oldDto, AvailabilityDto newDto){
+        return null;
     }
+
+
+//    private AvailabilityEntity checkIsOldAvailabilityActive(AvailabilityEntity oldAvailability){
+//        if (oldAvailability.isActive())
+//            return oldAvailability;
+//        else
+//            throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_FOUND_BUT_NOT_ACTIVE.toString());
+//    }
+//
+//    private AvailabilityDto checkIfNewAvailabilityHasAMember(AvailabilityDto newAvailability, AvailabilityEntity oldAvailability) {
+//        if (newAvailability.getMember().equals(oldAvailability.getMember()))
+//            return newAvailability;
+//
+//        throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum
+//                .AVAILABILITY_INCORRECT_VALUES.toString());
+//    }
 
     private AvailabilityEntity mapDtoToEntity(AvailabilityDto dto) {
         return AvailabilityCrudFacade.map(dto);
