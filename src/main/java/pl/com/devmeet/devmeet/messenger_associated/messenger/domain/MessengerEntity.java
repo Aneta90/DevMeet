@@ -37,8 +37,8 @@ public class MessengerEntity {
     @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private GroupEntity group;
 
-    @OneToMany(mappedBy = "messenger", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<MessageEntity> messages; //sprawdzić ??
+    @OneToMany(mappedBy = "message", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<MessageEntity> messages;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
