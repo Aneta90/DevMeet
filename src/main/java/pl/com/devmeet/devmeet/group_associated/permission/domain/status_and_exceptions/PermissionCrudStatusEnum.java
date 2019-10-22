@@ -8,7 +8,8 @@ public enum PermissionCrudStatusEnum {
     PERMISSION_FOUND_BUT_NOT_ACTIVE("Permission was found but is not active"),
     PERMISSION_MEMBER_NOT_FOUND("Member not found"),
     PERMISSION_GROUP_NOT_FOUND("Group not found"),
-    METHOD_NOT_IMPLEMENTED("Method not implemented");;
+    METHOD_NOT_IMPLEMENTED("Method not implemented"),
+    INCORRECT_MEMBER_OR_GROUP("Incorrect values. Member or group doesn't match");
 
     private String status;
 
