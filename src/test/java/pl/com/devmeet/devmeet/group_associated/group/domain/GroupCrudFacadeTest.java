@@ -182,9 +182,4 @@ public class GroupCrudFacadeTest {
         assertThat(foundEntity.getGroupName()).isEqualTo(created.getGroupName());
         assertThat(foundEntity.getCreationTime()).isEqualTo(created.getCreationTime());
     }
-
-    @Ignore
-    @Test
-    public void findEntities() {
-    }
 }

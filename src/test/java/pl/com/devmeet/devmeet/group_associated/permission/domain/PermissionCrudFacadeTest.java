@@ -231,6 +231,7 @@ public class PermissionCrudFacadeTest {
 
     @Test
     public void WHEN_try_to_find_not_existing_permission_THEN_return_EntityNotFoundException() {
+        initTestDB();
         permissionCrudFacade = initPermissionCrudFacade();
         try {
             permissionCrudFacade.read(testPermissionDto);
@@ -268,8 +269,8 @@ public class PermissionCrudFacadeTest {
 
         assertThat(updated.isMemberBaned()).isTrue();
 
-        assertThat(updated.getMember()).isEqualTo(created.getMember());
-        assertThat(updated.getGroup()).isEqualTo(created.getGroup());
+        assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
+        assertThat(updated.getGroup()).isEqualToComparingFieldByField(created.getGroup());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());
@@ -323,15 +324,5 @@ public class PermissionCrudFacadeTest {
                     .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage(PermissionCrudStatusEnum.PERMISSION_NOT_FOUND.toString());
         }
-    }
-
-    @Ignore
-    @Test
-    public void findEntity() {
-    }
-
-    @Ignore
-    @Test
-    public void findEntities() {
     }
 }
