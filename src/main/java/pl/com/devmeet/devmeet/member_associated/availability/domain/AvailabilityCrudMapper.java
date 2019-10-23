@@ -35,6 +35,16 @@ class AvailabilityCrudMapper {
                 .build();
     }
 
+    public static List<AvailabilityDto> mapDtoList(List<AvailabilityEntity> entities) {
+        return entities.stream()
+                .map(entity -> map(entity))
+                .collect(Collectors.toList());
+    }
 
+    public static List<AvailabilityEntity> mapEntityList(List<AvailabilityDto> dtos) {
+        return dtos.stream()
+                .map(dto -> map(dto))
+                .collect(Collectors.toList());
+    }
 }
 

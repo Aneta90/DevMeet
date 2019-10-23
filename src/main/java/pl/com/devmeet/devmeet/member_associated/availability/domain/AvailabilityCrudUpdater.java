@@ -33,22 +33,6 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
         return null;
     }
 
-
-//    private AvailabilityEntity checkIsOldAvailabilityActive(AvailabilityEntity oldAvailability){
-//        if (oldAvailability.isActive())
-//            return oldAvailability;
-//        else
-//            throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_FOUND_BUT_NOT_ACTIVE.toString());
-//    }
-//
-//    private AvailabilityDto checkIfNewAvailabilityHasAMember(AvailabilityDto newAvailability, AvailabilityEntity oldAvailability) {
-//        if (newAvailability.getMember().equals(oldAvailability.getMember()))
-//            return newAvailability;
-//
-//        throw new IllegalArgumentException(AvailabilityCrudInfoStatusEnum
-//                .AVAILABILITY_INCORRECT_VALUES.toString());
-//    }
-
     private AvailabilityEntity mapDtoToEntity(AvailabilityDto dto) {
         return AvailabilityCrudFacade.map(dto);
     }

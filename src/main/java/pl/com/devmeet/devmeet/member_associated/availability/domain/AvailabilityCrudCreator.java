@@ -20,14 +20,6 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
     private AvailabilityCrudFinder availabilityCrudFinder;
     private MemberCrudFacade memberCrudFacade;
 
-/*
-    public AvailabilityCrudCreator(AvailabilityCrudRepository repository) {
-        this.availabilityCrudSaver = new AvailabilityCrudSaver(repository);
-        this.availabilityCrudFinder = new AvailabilityCrudFinder(repository);
-
-    }
-*/
-
     @Override
     public AvailabilityEntity createEntity(AvailabilityDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
         AvailabilityEntity availability;

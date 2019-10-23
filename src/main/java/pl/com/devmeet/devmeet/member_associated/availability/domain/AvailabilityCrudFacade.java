@@ -12,6 +12,8 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 
 import java.util.List;
 
+import static pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudMapper.mapDtoList;
+
 @Service
 public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, AvailabilityEntity> {
 
@@ -25,7 +27,7 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
     }
 
     private AvailabilityMemberFinder initMemberFinder() {
-        return new AvailabilityMemberFinder().builder()
+        return  new AvailabilityMemberFinder().builder()
                 .memberCrudFacade(new MemberCrudFacade(memberRepository))
                 .build();
     }
@@ -79,9 +81,8 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
     }
 
     @Override
-    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws UnsupportedOperationException {
-     //   return mapDtoList(initFinder().findEntities(dto));
-        throw new UnsupportedOperationException(AvailabilityCrudInfoStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<AvailabilityDto> readAll(AvailabilityDto dto) {
+        return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
