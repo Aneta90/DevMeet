@@ -58,7 +58,7 @@ public class MemberCrudFacadeTest {
         assertThat(foundMemberDto.getNick()).isEqualTo("testMember");
     }
 
-    @Test(expected = NullPointerException.class) //do poprawy ma wyrzucać EntityNotFoundException
+    @Test(expected = EntityNotFoundException.class)
     public void WHEN_try_to_find_member_who_does_not_exist_THEN_return_MemberNotFoundException() throws EntityNotFoundException {
         MemberDto notFoundMemberDto = new MemberDto();
         notFoundMemberDto.setNick("null");
@@ -104,7 +104,7 @@ public class MemberCrudFacadeTest {
         assertThat(isMemberDeleted).isTrue();
     }
 
-    @Test(expected = NullPointerException.class) //do poprawy - powinien zwracać EntityNotDoundException
+    @Test(expected = EntityNotFoundException.class)
     public void WHEN_try_to_delete_non_existing_member_then_throw_EntityNotFoundException() throws EntityNotFoundException {
         MemberDto nonExistingMember = new MemberDto();
         nonExistingMember.setNick("aaa");

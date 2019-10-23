@@ -6,13 +6,18 @@ public interface MessengerCrudInterface {
 
     MessengerDto read(MessengerDto messengerDto);
 
+    MessengerEntity findEntity(MessengerDto messengerDto);
+
     MessengerDto update(MessengerDto messengerDto);
 
     MessengerDto delete(MessengerDto messengerDto);
 
-    MessengerDto map(MessengerEntity messengerEntity);
+    static MessengerDto map(MessengerEntity messengerEntity) {
+        return MessengerMapper.map(messengerEntity);
+    }
 
-    MessengerEntity map(MessengerDto messengerDto);
-
+    static MessengerEntity map(MessengerDto messengerDto) {
+        return MessengerMapper.map(messengerDto);
+    }
 
 }
