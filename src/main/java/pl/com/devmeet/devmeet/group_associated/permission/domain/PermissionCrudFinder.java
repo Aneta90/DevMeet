@@ -21,7 +21,7 @@ import java.util.Optional;
 class PermissionCrudFinder implements CrudEntityFinder<PermissionDto, PermissionEntity> {
 
     private PermissionCrudRepository permissionRepository;
-   private PermissionGroupFinder groupFinder;
+    private PermissionGroupFinder groupFinder;
     private PermissionMemberFinder memberFinder;
 
     @Override

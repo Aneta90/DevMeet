@@ -9,5 +9,6 @@ import java.util.UUID;
 
 public interface PollCrudRepository extends PagingAndSortingRepository<PollEntity, UUID> {
 
-    Optional<List<PollEntity>> findAllByGroupAndActiveTrue(GroupEntity groupEntity);
+    Optional<PollEntity> findByGroupAndActiveTrue(GroupEntity groupEntity);
+    Optional<List<PollEntity>> findAllByGroup(GroupEntity groupEntity);
 }
