@@ -6,6 +6,10 @@ public class MessengerCrudSaver{
 
     private MessengerRepository messengerRepository;
 
+    public MessengerCrudSaver(MessengerRepository messengerRepository) {
+        this.messengerRepository = messengerRepository;
+    }
+
     public MessengerDto saveEntity(MessengerEntity entity) throws EntityNotFoundException {
        return MessengerCrudInterface.map(messengerRepository.save(entity));
     }

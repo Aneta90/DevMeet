@@ -14,9 +14,7 @@ public class MessengerCrudFinder {
         this.messengerRepository = messengerRepository;
     }
 
-
-    public Optional<MessengerEntity> findEntity(GroupDto groupDto) throws IllegalArgumentException, EntityNotFoundException { //Podstawową funkcjonalnością jest umieszczanie na stronie grupy wiadomości przez użytkowników, także sprawdzam, czy dana grupa ma swojego messengera
-
+    public Optional<MessengerEntity> findEntity(GroupDto groupDto) throws IllegalArgumentException, EntityNotFoundException {
         Optional<MessengerEntity> messengerEntity;
         if (groupDto.getMessenger() == null) {
             throw new EntityNotFoundException("Given group does not have any messenger yet.");
@@ -35,7 +33,7 @@ public class MessengerCrudFinder {
     }
 
 
-    public List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException, EntityNotFoundException {
+    public List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException {
         return null;
     }
 

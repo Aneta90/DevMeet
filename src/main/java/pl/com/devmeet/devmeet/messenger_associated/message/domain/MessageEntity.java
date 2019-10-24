@@ -36,7 +36,8 @@ public class MessageEntity {
   //  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   //  private MemberEntity toMember;
 
-  //  private GroupEntity toGroup; ?? dopytać
+    //@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    //  private GroupEntity toGroup; ?? dopytać
 
     private String message;
 

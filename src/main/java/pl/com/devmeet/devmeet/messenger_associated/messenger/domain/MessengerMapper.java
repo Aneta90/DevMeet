@@ -5,10 +5,10 @@ public class MessengerMapper {
     static MessengerDto map(MessengerEntity messengerEntity){
 
         return new MessengerDto().builder()
-                //.member(messengerEntity.getMember()) ??
-               // .messages(messengerEntity.getMessages())
+                //.member(messengerEntity.getMember())
+                //.messages(messengerEntity.getMessages())
                 .isActive(messengerEntity.isActive())
-              //  .group(messengerEntity.getGroup())
+                //.group(messengerEntity.getGroup())
                 .creationTime(messengerEntity.getCreationTime())
                 .build();
 

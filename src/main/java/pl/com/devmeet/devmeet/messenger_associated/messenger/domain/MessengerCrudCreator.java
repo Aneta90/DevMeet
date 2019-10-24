@@ -8,20 +8,18 @@ public class MessengerCrudCreator {
     private MessengerCrudFinder messengerCrudFinder;
     private MessengerCrudSaver messengerCrudSaver;
 
-    public MessengerCrudCreator(MessengerCrudFinder messengerCrudFinder, MessengerCrudSaver messengerCrudSaver) {
-        this.messengerCrudFinder = messengerCrudFinder;
-        this.messengerCrudSaver = messengerCrudSaver;
+    public MessengerCrudCreator(MessengerRepository messengerRepository) {
+        this.messengerCrudFinder = new MessengerCrudFinder(messengerRepository);
+        this.messengerCrudSaver = new MessengerCrudSaver(messengerRepository);
     }
 
     public MessengerDto create(MessengerDto messengerDto) throws EntityNotFoundException, EntityAlreadyExistsException {
 
         if (messengerCrudFinder.isExist(messengerDto)) {
             throw new EntityAlreadyExistsException("This group already has it's own messenger");
+        } else {
+            return saveMessengerEntity(MessengerCrudFacade.map(messengerDto));
         }
-
-
-    //    return saveMessengerEntity(MessengerCrudFacade.map(messengerDto)); do dorobienia MessengerCrudFacade
-         return null;
     }
 
 
