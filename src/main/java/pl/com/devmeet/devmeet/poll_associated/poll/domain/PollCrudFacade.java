@@ -94,10 +94,10 @@ public class PollCrudFacade implements CrudInterface<PollDto, PollEntity> {
     }
 
     public static List<PollDto> mapToDtos(List<PollEntity> entities){
-        return null;
+        return PollCrudMapper.mapToDtos(entities);
     }
 
     public static List<PollEntity> mapToEntities(List<PollDto> dtos){
-        return null;
+        return PollCrudMapper.mapToEntities(dtos);
     }
 }

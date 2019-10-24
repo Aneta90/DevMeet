@@ -34,7 +34,7 @@ class PollCrudFinder implements CrudEntityFinder<PollDto, PollEntity> {
         GroupEntity group;
         group = findGroupEntity(dto.getGroup());
 
-        return pollCrudRepository.findByGroupAndActiveTrue(group);
+        return pollCrudRepository.findByGroupAndActive(group, dto.isActive());
     }
 
     private Optional<List<PollEntity>> findPolls(PollDto dto) throws EntityNotFoundException {
