@@ -24,5 +24,5 @@ public class PollDto {
 
     private DateTime modificationTime;
     private DateTime creationTime;
-    private boolean isActive;
+    private boolean active;
 }

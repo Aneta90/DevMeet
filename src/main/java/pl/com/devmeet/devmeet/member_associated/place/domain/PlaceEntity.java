@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteEntity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -42,11 +43,11 @@ public class PlaceEntity {
 
     private String location;
 
-    @OneToOne(mappedBy = "place",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private AvailabilityEntity availability;
 
-    @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private PlaceVoteEntity placeVote;
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PlaceVoteEntity> placeVotes;
 
     @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MeetingEntity meeting;

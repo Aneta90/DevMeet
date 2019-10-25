@@ -12,7 +12,7 @@ class PollCrudMapper {
                 .group(GroupCrudFacade.map(entity.getGroup()))
                 .modificationTime(entity.getModificationTime())
                 .creationTime(entity.getCreationTime())
-                .isActive(entity.isActive())
+                .active(entity.isActive())
                 .build();
     }
 

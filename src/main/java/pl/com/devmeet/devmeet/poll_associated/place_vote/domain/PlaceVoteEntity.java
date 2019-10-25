@@ -32,7 +32,7 @@ public class PlaceVoteEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private PollEntity poll;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private PlaceEntity place;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

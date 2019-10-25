@@ -38,12 +38,12 @@ class PollCrudCreator implements CrudEntityCreator<PollDto, PollEntity> {
     private PollEntity setDefaultValuesWhenPollNotExist(PollEntity entity) {
         entity.setActive(true);
         entity.setCreationTime(DateTime.now());
-        return null;
+        return entity;
     }
 
     private PollEntity setDefaultValuesWhenPollExist(PollEntity entity) {
         entity.setActive(true);
         entity.setModificationTime(DateTime.now());
-        return null;
+        return entity;
     }
 }

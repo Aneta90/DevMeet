@@ -22,8 +22,12 @@ class PollCrudFinder implements CrudEntityFinder<PollDto, PollEntity> {
 
     @Override
     public PollEntity findEntity(PollDto dto) throws IllegalArgumentException, EntityNotFoundException {
+        Optional<PollEntity> poll = findPoll(dto);
 
-        return null;
+        if(poll.isPresent())
+            return poll.get();
+
+        throw new EntityNotFoundException(PollCrudStatusEnum.POLL_NOT_FOUND.toString());
     }
 
     private GroupEntity findGroupEntity(GroupDto group) throws EntityNotFoundException {
