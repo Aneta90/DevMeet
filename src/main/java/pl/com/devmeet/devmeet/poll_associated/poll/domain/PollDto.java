@@ -6,6 +6,9 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteDto;
+
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -14,11 +17,12 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
 @Getter
 public class PollDto {
 
-    private MemberDto member;
     private GroupDto group;
 
-    private AvailabilityDto availability;
-    private PlaceDto place;
+    private List<PlaceVoteDto> placeVotes;
+    private List<AvailabilityDto> availabilityVotes;
 
+    private DateTime modificationTime;
     private DateTime creationTime;
+    private boolean active;
 }

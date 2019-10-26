@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-
 public class PermissionCrudFacadeTest {
 
     @Autowired

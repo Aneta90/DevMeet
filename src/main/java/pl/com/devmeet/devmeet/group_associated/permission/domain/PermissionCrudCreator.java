@@ -19,8 +19,6 @@ class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, Permissi
 
     private PermissionCrudSaver permissionCrudSaver;
     private PermissionCrudFinder permissionCrudFinder;
-    private GroupCrudFacade groupCrudFacade;
-    private MemberCrudFacade memberCrudFacade;
 
     @Override
     public PermissionEntity createEntity(PermissionDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
