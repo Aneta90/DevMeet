@@ -16,11 +16,11 @@ class AvailabilityVotePollFinder {
 
     private PollCrudFacade pollCrudFacade;
 
-    public PollEntity findPoll(PollDto dto){
+    public PollEntity findPoll(PollDto dto) throws EntityNotFoundException {
         try {
             return pollCrudFacade.findEntity(dto);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_POLL_NOT_FOUND.toString())
+            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_POLL_NOT_FOUND.toString());
         }
     }
 

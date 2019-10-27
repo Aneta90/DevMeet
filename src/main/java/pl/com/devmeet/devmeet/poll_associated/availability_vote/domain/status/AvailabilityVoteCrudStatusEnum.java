@@ -7,7 +7,8 @@ public enum AvailabilityVoteCrudStatusEnum {
     AVAILABILITY_VOTES_NOT_FOUND("Availability votes not found"),
     AVAILABILITY_VOTE_FOUND_BUT_NOT_ACTIVE("Availability vote found but not active"),
     AVAILABILITY_VOTE_POLL_NOT_FOUND("Poll not found"),
-    AVAILABILITY_VOTE_MEMBER_NOT_FOUND("Member not found");
+    AVAILABILITY_VOTE_MEMBER_NOT_FOUND("Member not found"),
+    AVAILABILITY_VOTE_AVAILABILITY_NOT_FOUND("Availability not found");
 
     private String message;
 

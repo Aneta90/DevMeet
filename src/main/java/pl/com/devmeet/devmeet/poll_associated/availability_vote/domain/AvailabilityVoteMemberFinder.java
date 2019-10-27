@@ -16,11 +16,11 @@ class AvailabilityVoteMemberFinder {
 
     private MemberCrudFacade memberCrudFacade;
 
-    public MemberEntity findMember(MemberDto dto){
+    public MemberEntity findMember(MemberDto dto) throws EntityNotFoundException {
         try {
             return memberCrudFacade.findEntity(dto);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_MEMBER_NOT_FOUND.toString())
+            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_MEMBER_NOT_FOUND.toString());
         }
     }
 }
