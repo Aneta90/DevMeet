@@ -27,7 +27,7 @@ class PollCrudSaver implements CrudEntitySaver<PollEntity, PollEntity> {
         GroupEntity groupEntity = pollEntity.getGroup();
 
         if (groupEntity.getId() == null)
-            groupEntity = pollGroupFinder.findGroup(GroupCrudFacade.map(pollEntity.getGroup()));
+            groupEntity = pollGroupFinder.findGroup(GroupCrudFacade.map(groupEntity));
 
         pollEntity.setGroup(groupEntity);
         return pollEntity;
