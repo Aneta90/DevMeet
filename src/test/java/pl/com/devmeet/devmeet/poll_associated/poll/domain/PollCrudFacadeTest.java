@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.poll_associated.poll.domain;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -8,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
@@ -16,7 +18,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status.PollCrudStatusEnum;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -54,7 +56,6 @@ public class PollCrudFacadeTest {
                 .group(testGroupDto)
                 .placeVotes(null)
                 .availabilityVotes(null)
-                .modificationTime(null)
                 .creationTime(null)
                 .active(true)
                 .build();
@@ -97,7 +98,6 @@ public class PollCrudFacadeTest {
         assertThat(pollDto).isNotNull();
         assertThat(pollDto.getGroup()).isNotNull();
         assertThat(pollDto.getCreationTime()).isNotNull();
-        assertThat(pollDto.getModificationTime()).isNull();
         assertThat(pollDto.isActive()).isTrue();
     }
 
@@ -113,6 +113,7 @@ public class PollCrudFacadeTest {
 
         try {
             pollCrudFacade.create(testPollDto);
+            Assert.fail();
         } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             assertThat(e)
                     .isInstanceOf(EntityAlreadyExistsException.class)
@@ -136,6 +137,7 @@ public class PollCrudFacadeTest {
         initTestDB();
         try {
             initPollCrudFacade().read(testPollDto);
+            Assert.fail();
         } catch (EntityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(EntityNotFoundException.class)
@@ -143,28 +145,67 @@ public class PollCrudFacadeTest {
         }
     }
 
-    @Ignore
     @Test
-    public void readAll() {
+    public void readAll_not_support() {
+        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        try {
+            pollCrudFacade.update(testPollDto, testPollDto);
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            assertThat(e)
+                    .isInstanceOf(UnsupportedOperationException.class)
+                    .hasMessage(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+        }
     }
 
-    @Ignore
+
     @Test
-    public void update() {
+    public void update_not_support() {
+        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        try {
+            pollCrudFacade.update(testPollDto, testPollDto);
+            Assert.fail();
+        } catch (UnsupportedOperationException e) {
+            assertThat(e)
+                    .isInstanceOf(UnsupportedOperationException.class)
+                    .hasMessage(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+        }
     }
 
-    @Ignore
     @Test
-    public void delete() {
+    public void WHEN_delete_active_poll_THEN_return_poll() throws EntityAlreadyExistsException, EntityNotFoundException {
+        initTestDB();
+        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        pollCrudFacade.create(testPollDto);
+        PollDto deleted = pollCrudFacade.delete(testPollDto);
+
+        assertThat(deleted).isNotNull();
+        assertThat(deleted.isActive()).isFalse();
     }
 
-    @Ignore
     @Test
-    public void findEntity() {
-    }
+    public void WHEN_delete_not_active_poll_THEN_return_EntityAlreadyExistsException() {
+        initTestDB();
+        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        PollDto created;
+        try {
+            created = pollCrudFacade.create(testPollDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            Assert.fail();
+        }
 
-    @Ignore
-    @Test
-    public void findEntities() {
+        try {
+            pollCrudFacade.delete(testPollDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            Assert.fail();
+        }
+
+        try {
+            initPollCrudFacade().delete(testPollDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            assertThat(e)
+                    .isInstanceOf(EntityAlreadyExistsException.class)
+                    .hasMessage(PollCrudStatusEnum.POLL_FOUND_BUT_NOT_ACTIVE.toString());
+        }
     }
 }

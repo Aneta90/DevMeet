@@ -24,9 +24,9 @@ class PollCrudCreator implements CrudEntityCreator<PollDto, PollEntity> {
         try {
             poll = pollCrudFinder.findEntity(dto);
 
-            if (!poll.isActive() && poll.getModificationTime() != null) {
-                return pollCrudSaver.saveEntity(setDefaultValuesWhenPollExist(PollCrudFacade.map(dto)));
-            }
+//            if (!poll.isActive()) {
+//                return pollCrudSaver.saveEntity(setDefaultValuesWhenPollExist(PollCrudFacade.map(dto)));
+//            }
 
         } catch (EntityNotFoundException e) {
             poll = setDefaultValuesWhenPollNotExist(PollCrudFacade.map(dto));
@@ -42,8 +42,6 @@ class PollCrudCreator implements CrudEntityCreator<PollDto, PollEntity> {
     }
 
     private PollEntity setDefaultValuesWhenPollExist(PollEntity entity) {
-        entity.setActive(true);
-        entity.setModificationTime(DateTime.now());
-        return entity;
+        return setDefaultValuesWhenPollNotExist(entity);
     }
 }

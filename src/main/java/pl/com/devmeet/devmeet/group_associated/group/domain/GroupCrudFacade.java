@@ -46,7 +46,7 @@ public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
 
     @Override
     public List<GroupDto> readAll(GroupDto dto) throws EntityNotFoundException {
-        return mapDtoList(initFinder().findEntities(dto));
+        return mapDtoList(findEntities(dto));
     }
 
     @Override

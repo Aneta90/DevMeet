@@ -50,6 +50,13 @@ public class PollCrudFacade implements CrudInterface<PollDto, PollEntity> {
                 .build();
     }
 
+    private PollCrudDeleter initDeleter() {
+        return new PollCrudDeleter().builder()
+                .pollCrudSaver(initSaver())
+                .pollCrudFinder(initFinder())
+                .build();
+    }
+
     @Override
     public PollDto create(PollDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
         return map(initCreator().createEntity(dto));
@@ -57,27 +64,27 @@ public class PollCrudFacade implements CrudInterface<PollDto, PollEntity> {
 
     @Override
     public PollDto read(PollDto dto) throws IllegalArgumentException, EntityNotFoundException {
-        return map(initFinder().findEntity(dto));
+        return map(findEntity(dto));
     }
 
     @Override
-    public List<PollDto> readAll(PollDto dto) throws IllegalArgumentException, EntityNotFoundException, UnsupportedOperationException {
+    public List<PollDto> readAll(PollDto dto) throws IllegalArgumentException, UnsupportedOperationException {
         throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PollDto update(PollDto oldDto, PollDto newDto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
-        return null;
+    public PollDto update(PollDto oldDto, PollDto newDto) throws UnsupportedOperationException {
+       throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PollDto delete(PollDto dto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
-        return null;
+    public PollDto delete(PollDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+        return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public PollEntity findEntity(PollDto dto) throws IllegalArgumentException, EntityNotFoundException {
-        return null;
+    public PollEntity findEntity(PollDto dto) throws EntityNotFoundException {
+        return initFinder().findEntity(dto);
     }
 
     @Override
