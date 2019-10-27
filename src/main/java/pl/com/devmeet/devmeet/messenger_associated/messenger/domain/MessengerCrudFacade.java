@@ -37,8 +37,8 @@ public class MessengerCrudFacade implements MessengerCrudInterface {
     }
 
     @Override
-    public MessengerDto read(MessengerDto messengerDto) throws EntityNotFoundException {
-        return finderInit().read(messengerDto.getGroup());
+    public Optional<MessengerDto> read(MessengerDto messengerDto) throws EntityNotFoundException {
+        return Optional.ofNullable(finderInit().read(messengerDto.getGroup()));
     }
 
     @Override

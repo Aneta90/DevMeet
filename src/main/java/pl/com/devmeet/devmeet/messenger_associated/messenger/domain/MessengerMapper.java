@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-public class MessengerMapper {
+class MessengerMapper {
 
     static MessengerDto map(MessengerEntity messengerEntity){
 

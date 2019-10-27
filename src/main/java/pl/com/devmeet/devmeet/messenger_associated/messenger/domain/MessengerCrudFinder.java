@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public class MessengerCrudFinder {
 
-    MessengerRepository messengerRepository;
+    private MessengerRepository messengerRepository;
 
-    public MessengerCrudFinder(MessengerRepository messengerRepository) {
+    MessengerCrudFinder(MessengerRepository messengerRepository) {
         this.messengerRepository = messengerRepository;
     }
 
@@ -25,18 +25,16 @@ public class MessengerCrudFinder {
     }
 
     public MessengerDto read(GroupDto groupDto) throws EntityNotFoundException {
-        return getDtoFromEntity(findEntity(groupDto).get()); //??sprawdzić
+        return getDtoFromEntity(findEntity(groupDto).get());
     }
 
-    public MessengerDto getDtoFromEntity(MessengerEntity messengerEntity) {
+    MessengerDto getDtoFromEntity(MessengerEntity messengerEntity) {
         return MessengerCrudInterface.map(messengerEntity);
     }
 
-
-    public List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException {
+    List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException {
         return null;
     }
-
 
     public boolean isExist(MessengerDto messengerDto) throws EntityNotFoundException {
         return findEntity(messengerDto.getGroup()) != null;
