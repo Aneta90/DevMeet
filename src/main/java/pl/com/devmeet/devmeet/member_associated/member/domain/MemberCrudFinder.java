@@ -15,18 +15,36 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     }
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws IllegalArgumentException, MemberNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
 
-        Optional<MemberEntity> memberEntity = Optional.empty();
-        if (dto.getNick() != null) {
-            memberEntity = memberRepository.findByNick(dto.getNick());
+        Optional<MemberEntity> member = findMember(dto);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            throw new EntityNotFoundException("Member not found");
         }
-
-        if (memberEntity.isPresent()) {
-            return memberEntity.get();
-        }
-        throw new MemberNotFoundException("Member is not found in database");
     }
+
+    private Optional<MemberEntity> findMember(MemberDto memberDto) {
+        String memberNick = memberDto.getNick();
+        if (checkMemberNick(memberNick)) {
+            return Optional.ofNullable(memberRepository.findByNick(memberNick));
+        }
+        return Optional.empty();
+    }
+
+    private boolean checkMemberNick(String memberNick) {
+        return memberNick != null && !memberNick.equals("");
+    }
+
+    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
+        return getDtoFromEntity(findEntity(dto));
+    }
+
+    private MemberDto getDtoFromEntity(MemberEntity entity) {
+        return MemberCrudInterface.map(entity);
+    }
+
 
     @Override
     public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {
@@ -42,11 +60,7 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     }*/
 
     @Override
-    public boolean isExist(MemberDto dto) throws EntityNotFoundException {
-        if (findEntity(dto) != null) {
-            return true;
-        } else {
-            throw new EntityNotFoundException("Member does not exist in database");
-        }
+    public boolean isExist(MemberDto dto) {
+        return memberRepository.findByNick(dto.getNick()) != null;
     }
 }

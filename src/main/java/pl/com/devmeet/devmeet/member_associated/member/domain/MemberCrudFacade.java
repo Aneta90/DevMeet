@@ -30,23 +30,23 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public MemberDto create(MemberDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
-        return map(creatorInit().createEntity(dto));
+    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException {
+        return creatorInit().create(dto);
     }
 
     @Override
     public MemberDto read(MemberDto dto) throws EntityNotFoundException {
-        return map(finderInit().findEntity(dto));
+        return finderInit().read(dto);
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws EntityNotFoundException{
-        return map(updateInit().updateEntity(oldDto, newDto));
+    public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
+        return updateInit().update(newDto, oldDto);
     }
 
     @Override
-    public MemberEntity delete(MemberDto dto) throws EntityNotFoundException {
-        return deleterInit().deleteEntity(dto);
+    public boolean delete(MemberDto dto) throws EntityNotFoundException {
+        return deleterInit().delete(dto);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
-    public boolean doesExist(MemberDto memberDto) throws EntityNotFoundException {
+    public boolean isExist(MemberDto memberDto) {
         return finderInit().isExist(memberDto);
     }
 
