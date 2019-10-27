@@ -83,7 +83,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
 
     @Override
     public PermissionDto read(PermissionDto dto) throws EntityNotFoundException {
-        return map(initFinder().findEntity(dto));
+        return map(findEntity(dto));
     }
 
     @Override

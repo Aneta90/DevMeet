@@ -10,7 +10,6 @@ class PollCrudMapper {
     public static PollDto map (PollEntity entity){
         return new PollDto().builder()
                 .group(GroupCrudFacade.map(entity.getGroup()))
-                .modificationTime(entity.getModificationTime())
                 .creationTime(entity.getCreationTime())
                 .active(entity.isActive())
                 .build();
@@ -19,7 +18,6 @@ class PollCrudMapper {
     public static PollEntity map (PollDto dto){
         return new PollEntity().builder()
                 .group(GroupCrudFacade.map(dto.getGroup()))
-                .modificationTime(dto.getModificationTime())
                 .creationTime(dto.getCreationTime())
                 .active(dto.isActive())
                 .build();

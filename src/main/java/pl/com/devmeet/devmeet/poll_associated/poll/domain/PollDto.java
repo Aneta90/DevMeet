@@ -22,7 +22,6 @@ public class PollDto {
     private List<PlaceVoteDto> placeVotes;
     private List<AvailabilityDto> availabilityVotes;
 
-    private DateTime modificationTime;
     private DateTime creationTime;
     private boolean active;
 }

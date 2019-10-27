@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.poll_associated.poll.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
@@ -11,6 +12,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 class PollCrudSaver implements CrudEntitySaver<PollEntity, PollEntity> {
 
     private PollCrudRepository pollCrudRepository;
