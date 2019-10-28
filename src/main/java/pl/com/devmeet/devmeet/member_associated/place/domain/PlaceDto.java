@@ -7,6 +7,8 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class PlaceDto {
 
     private AvailabilityDto availability;
 
-    private PlaceVoteEntity placeVote;
+    private List<PlaceVoteEntity> placeVotes;
 
     private DateTime creationTime;
     private DateTime modificationTime;

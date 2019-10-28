@@ -46,6 +46,5 @@ class AvailabilityCrudMapper {
                 .map(dto -> map(dto))
                 .collect(Collectors.toList());
     }
-
 }
 
