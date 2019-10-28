@@ -81,7 +81,7 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
     }
 
     @Override
-    public List<AvailabilityDto> readAll(AvailabilityDto dto) {
+    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws EntityNotFoundException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
@@ -101,7 +101,7 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
     }
 
     @Override
-    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws UnsupportedOperationException {
+    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws UnsupportedOperationException, EntityNotFoundException {
         return initFinder().findEntities(dto);
     }
 
