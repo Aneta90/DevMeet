@@ -3,7 +3,6 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class AvailabilityCrudFacadeTest {
                 .nick("Wasacz")
                 .build();
 
-        testAvailabilityDto.builder()
+        testAvailabilityDto = new AvailabilityDto().builder()
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
@@ -107,29 +106,6 @@ public class AvailabilityCrudFacadeTest {
                 && memberEntity != null;
     }
 
-//    private AvailabilityDto createAvailability() {
-//        testAvailabilityDto.setMember(createdTestMember());
-//        return availabilityCrudFacade.create(testAvailabilityDto);
-//    }
-//
-//        private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-//        try {
-//            return initMemberCrudFacade().create(testMemberDto); // fasada tworzy membera w bazie danych
-//        } catch (EntityAlreadyExistsException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    private MemberEntity findTestMember(MemberDto memberDto) { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-//        try {
-//            return initMemberCrudFacade().findEntity(memberDto);
-//        } catch (EntityNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @Test
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
@@ -159,7 +135,7 @@ public class AvailabilityCrudFacadeTest {
         assertThat(created.getMember()).isNotNull();
         assertThat(created).isNotNull();
         assertThat(created.getCreationTime()).isNotNull();
-        assertThat(created.getModificationTime()).isNotNull();
+        assertThat(created.getModificationTime()).isNull();
         assertThat(created.isActive()).isTrue();
     }
 
@@ -211,11 +187,11 @@ public class AvailabilityCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_find_all_availabilities_THEN_return_availabilities() {
+    public void WHEN_try_to_find_all_availabilities_THEN_return_availabilities() throws EntityNotFoundException, EntityAlreadyExistsException {
         initTestDB();
-        AvailabilityDto created;
         List<AvailabilityDto> found = null;
         AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        availabilityCrudFacade.create(testAvailabilityDto);
         found = availabilityCrudFacade.readAll(testAvailabilityDto);
         assertThat(found).isNotNull();
     }
@@ -280,14 +256,8 @@ public class AvailabilityCrudFacadeTest {
             availabilityCrudFacade.delete(testAvailabilityDto);
         } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
         }
     }
-
-    @Ignore
-    @Test
-    public void findEntities() {
-    }
-
 }
