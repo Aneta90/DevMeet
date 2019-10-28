@@ -107,29 +107,6 @@ public class AvailabilityCrudFacadeTest {
                 && memberEntity != null;
     }
 
-//    private AvailabilityDto createAvailability() {
-//        testAvailabilityDto.setMember(createdTestMember());
-//        return availabilityCrudFacade.create(testAvailabilityDto);
-//    }
-//
-//        private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-//        try {
-//            return initMemberCrudFacade().create(testMemberDto); // fasada tworzy membera w bazie danych
-//        } catch (EntityAlreadyExistsException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    private MemberEntity findTestMember(MemberDto memberDto) { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-//        try {
-//            return initMemberCrudFacade().findEntity(memberDto);
-//        } catch (EntityNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @Test
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
