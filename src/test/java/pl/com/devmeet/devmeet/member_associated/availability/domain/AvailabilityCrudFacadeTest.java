@@ -14,6 +14,9 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.*;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeet.user.domain.*;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,34 +31,41 @@ public class AvailabilityCrudFacadeTest {
 
     @Autowired
     private AvailabilityCrudRepository repository;
-
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private AvailabilityCrudFacade facade;
+    private AvailabilityCrudFacade availabilityCrudFacade;
+    private MemberCrudFacade memberCrudFacade;
+    private UserCrudFacade userCrudFacade;
 
-    private AvailabilityDto testAvailability;
-    private MemberDto testMember = new MemberDto();
-
-    private PlaceDto testPlace;
+    private AvailabilityDto testAvailabilityDto;
+    private MemberDto testMemberDto;
+    private UserDto testUserDto;
+    private PlaceDto testPlaceDto;
 
     @Before
-    public void setUp() throws Exception {
-        facade = new AvailabilityCrudFacade(repository);
+    public void setUp() {
 
-        testMember = testMember.builder()
-                .user(null) // może być null, ponieważ Member jest wyszukiwany w fasadzie po nicku
-                .nick("WasatyJanusz666hehe") // tylko nick jest wymagany do znalezienia membera (przynajmniej tak wynika z tego co znalazłem w fasadzie membera)
+        testUserDto = new UserDto().builder()
+                .email("mailik@gmail.com")
+                .phone("567566456")
+                .password("multiPass")
+                .isActive(true)
+                .loggedIn(true)
                 .build();
 
-        testPlace = null;
+        testMemberDto = new MemberDto().builder()
+                .user(testUserDto)
+                .nick("Wasacz")
+                .build();
 
-
-        testAvailability.builder()
-                .member(testMember)
+        testAvailabilityDto.builder()
+                .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
-                .place(testPlace)
+                .place(testPlaceDto)
                 .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -64,199 +74,220 @@ public class AvailabilityCrudFacadeTest {
                 .build();
     }
 
-    private AvailabilityDto createAvailability() {
-        testAvailability.setMember(createdTestMember());
-        return facade.create(testAvailability);
-    }
-
-    private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-        try {
-            return initMemberCrudFacade().create(testMember); // fasada tworzy membera w bazie danych
-        } catch (EntityAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private MemberEntity findTestMember(MemberDto memberDto){ // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
-        try {
-            return initMemberCrudFacade().findEntity(memberDto);
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private UserCrudFacade initUserCrudFacade() {
+        return new UserCrudFacade(userRepository);
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
         return new MemberCrudFacade(memberRepository); // tworzy obiekt fasady
     }
 
+    private AvailabilityCrudFacade initAvailabilityCrudFacade() {
+        return new AvailabilityCrudFacade(repository, memberRepository);
+    }
+
+
+    private boolean initTestDB() {
+        userCrudFacade = initUserCrudFacade();
+        memberCrudFacade = initMemberCrudFacade();
+
+        UserEntity testUser = userCrudFacade
+                .findEntity(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
+
+        MemberEntity memberEntity;
+        try {
+            memberEntity = memberCrudFacade
+                    .findEntity(memberCrudFacade.create(testMemberDto));
+        } catch (EntityNotFoundException e) {
+            memberEntity = null;
+        } catch (EntityAlreadyExistsException e) {
+            memberEntity = null;
+        }
+        return testUser != null
+                && memberEntity != null;
+    }
+
+//    private AvailabilityDto createAvailability() {
+//        testAvailabilityDto.setMember(createdTestMember());
+//        return availabilityCrudFacade.create(testAvailabilityDto);
+//    }
+//
+//        private MemberDto createdTestMember() { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
+//        try {
+//            return initMemberCrudFacade().create(testMemberDto); // fasada tworzy membera w bazie danych
+//        } catch (EntityAlreadyExistsException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    private MemberEntity findTestMember(MemberDto memberDto) { // nie bedziemy w AvailabilityCrudFacadeTest testowali innej fasady; potrzebujemy tylko info czy ta inna fasada dziala
+//        try {
+//            return initMemberCrudFacade().findEntity(memberDto);
+//        } catch (EntityNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
     @Test
-    public void TRY_TO_create_member_IF_SUCCESS_MemberCrudFacade_creator_works() throws MemberNotFoundException, MemberAlreadyExistsException {
-        MemberDto createdTestMember = createdTestMember();
-        assertThat(createdTestMember).isNotNull(); // tylko sprawdzam czy fasada zapisuje membera (pozytywny scenariusz), by upewnic sie ze ten element jest ok
+    public void USER_CRUD_FACADE_WR() {
+        UserCrudFacade userCrudFacade = initUserCrudFacade();
+        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE);
+        UserEntity userEntity = userCrudFacade.findEntity(testUser);
+        assertThat(userEntity).isNotNull();
     }
 
     @Test
-    public void TRY_TO_found_existing_member_IF_SUCCESS_MemberCrudFacade_finder_works() throws MemberNotFoundException, MemberAlreadyExistsException {
-        MemberDto createdTestMember = createdTestMember();
-        MemberEntity foundMember = findTestMember(testMember);
-        assertThat(foundMember).isNotNull(); // tylko sprawdzam czy fasada odczytuje istniejacego membera (pozytywny scenariusz), by upewnic sie ze ten element jest ok
+    public void MEMBER_CRUD_FACADE_WR() throws EntityAlreadyExistsException, EntityNotFoundException {
+        MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
+        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.create(testMemberDto));
+        assertThat(memberEntity).isNotNull();
     }
 
     @Test
-    public void WHEN_create_not_exist_availability_THEN_return_availability() {
-        AvailabilityDto created = createAvailability();
+    public void INIT_TEST_DB() {
+        boolean initDB = initTestDB();
+        assertThat(initDB).isTrue();
+    }
+
+    @Test
+    public void WHEN_try_to_create_non_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+        initTestDB();
+        availabilityCrudFacade = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
+        assertThat(created.getMember()).isNotNull();
         assertThat(created).isNotNull();
         assertThat(created.getCreationTime()).isNotNull();
+        assertThat(created.getModificationTime()).isNotNull();
         assertThat(created.isActive()).isTrue();
     }
 
     @Test
-    public void WHEN_create_exist_availability_THEN_return_IllegalArgumentException_availability_already_exists() {
-        AvailabilityDto createdFirst = createAvailability();
-
+    public void WHEN_try_to_create_existing_availability_THEN_EntityAlreadyExistsException() {
+        initTestDB();
+        availabilityCrudFacade = initAvailabilityCrudFacade();
         try {
-            facade.create(testAvailability);
+            availabilityCrudFacade.create(testAvailabilityDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        }
+        try {
+            availabilityCrudFacade.create(testAvailabilityDto);
+            Assert.fail();
+        } catch (EntityNotFoundException e) {
+            Assert.fail();
+        } catch (EntityAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityAlreadyExistsException.class)
                     .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
         }
-
     }
 
     @Test
-    public void WHEN_create_exist_availability_but_not_active_THEN_return_availability() {
-        AvailabilityDto createdFirst = createAvailability();
-        AvailabilityDto deletedFirst = facade.delete(testAvailability);
-        AvailabilityDto createdSecond = facade.create(modifiedTestAvailability(testAvailability));
+    public void WHEN_found_availability_THEN_return_availability() throws EntityNotFoundException, EntityAlreadyExistsException {
+        initTestDB();
+        AvailabilityDto created;
+        AvailabilityDto found = null;
+        availabilityCrudFacade = initAvailabilityCrudFacade();
 
-        assertThat(createdFirst).isNotNull();
-        assertThat(deletedFirst).isNotNull();
-        assertThat(createdSecond).isNotNull();
-        assertThat(createdSecond.getCreationTime()).isNotNull();
-        assertThat(createdSecond.getModificationTime()).isNotNull();
-        assertThat(createdSecond.isActive()).isTrue();
-    }
-
-    private AvailabilityDto modifiedTestAvailability(AvailabilityDto dto) {
-        dto.setModificationTime(now());
-        dto.setRemoteWork(false);
-        return testAvailability;
+        created = availabilityCrudFacade.create(testAvailabilityDto);
+        found = availabilityCrudFacade.read(testAvailabilityDto);
+        assertThat(found).isNotNull();
     }
 
     @Test
-    public void WHEN_found_existing_availability_THEN_return_availability() {
-        assertThat(createAvailability()).isNotNull();
-        assertThat(facade.read(testAvailability)).isNotNull();
-    }
-
-    @Test
-    public void WHEN_availability_not_found_THEN_return_IllegalArgumentException_availability_not_found() {
+    public void WHEN_try_to_find_non_existing_availability_THEN_return_EntityNotFoundException() {
+        initTestDB();
+        availabilityCrudFacade = initAvailabilityCrudFacade();
         try {
-            facade.findEntity(testAvailability);
+            availabilityCrudFacade.read(testAvailabilityDto);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITIES_NOT_FOUND.toString());
-        }
-    }
-
-    @Ignore
-    @Test
-    public void readAll() {
-    }
-
-    @Test
-    public void WHEN_try_to_update_existing_availability_THEN_return_availability() {
-        AvailabilityDto availability = createAvailability();
-        AvailabilityDto update = modifiedTestAvailability(testAvailability);
-        AvailabilityDto modifiedAvailability = facade.update(testAvailability, update);
-
-        //co do czego porównywać?
-        //availabilityVote?
-        // ???    assertThat(modifiedAvailability.getModificationTime()).isEqualTo(update.getModificationTime());
-        assertThat(modifiedAvailability.isRemoteWork()).isEqualTo(update.isRemoteWork());
-
-        assertThat(modifiedAvailability.getMember()).isEqualTo(availability.getMember());
-        assertThat(modifiedAvailability.getBeginTime()).isEqualTo(availability.getBeginTime());
-        assertThat(modifiedAvailability.getEndTime()).isEqualTo(availability.getEndTime());
-        assertThat(modifiedAvailability.getPlace()).isEqualTo(availability.getPlace());
-        assertThat(modifiedAvailability.getAvailabilityVote()).isEqualTo(availability.getAvailabilityVote());
-        assertThat(modifiedAvailability.getCreationTime()).isEqualTo(availability.getCreationTime());
-        assertThat(modifiedAvailability.isActive()).isEqualTo(availability.isActive());
-//???
-        assertThat(modifiedAvailability.getModificationTime()).isNotNull();
-
-    }
-
-    @Test
-    public void WHEN_try_to_update_not_existing_availability_THEN_return_IllegalArgumentException_availability_not_found() {
-        AvailabilityDto update = modifiedTestAvailability(testAvailability);
-
-        try {
-            facade.update(testAvailability, update);
-        } catch (IllegalArgumentException e) {
-            assertThat(e)
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
         }
     }
 
     @Test
-    public void WHEN_delete_existing_availability_THEN_return_availability() {
-        AvailabilityDto availability = createAvailability();
-        AvailabilityDto deleted = facade.delete(availability);
+    public void WHEN_try_to_find_all_availabilities_THEN_return_availabilities() {
+        initTestDB();
+        AvailabilityDto created;
+        List<AvailabilityDto> found = null;
+        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        found = availabilityCrudFacade.readAll(testAvailabilityDto);
+        assertThat(found).isNotNull();
+    }
+
+    @Test
+    public void WHEN_try_to_update_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+        initTestDB();
+        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
+        AvailabilityDto updated = availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+
+
+        assertThat(updated.isRemoteWork()).isFalse();
+
+        assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
+        assertThat(updated.getBeginTime()).isEqualTo(created.getBeginTime());
+        assertThat(updated.getEndTime()).isEqualTo(created.getEndTime());
+        assertThat(updated.getPlace()).isEqualTo(created.getPlace());
+        assertThat(updated.getAvailabilityVote()).isEqualTo(created.getAvailabilityVote());
+        assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
+        assertThat(updated.isActive()).isEqualTo(created.isActive());
+        assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
+    }
+
+    private AvailabilityDto availabilityUpdatedValues(AvailabilityDto testAvailabilityDto) {
+        testAvailabilityDto.setRemoteWork(false);
+        return testAvailabilityDto;
+    }
+
+    @Test
+    public void WHEN_try_to_update_non_existing_availability_THEN_return_EntityNotFoundException() {
+        initTestDB();
+        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        try {
+            availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+        } catch (EntityNotFoundException e) {
+            assertThat(e)
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
+        }
+    }
+
+    @Test
+    public void WHEN_delete_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+        initTestDB();
+        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
+        AvailabilityDto deleted = availabilityCrudFacade.delete(testAvailabilityDto);
 
         assertThat(deleted).isNotNull();
-        assertThat(deleted.isActive()).isNotEqualTo(availability.isActive());
+        assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
+        assertThat(deleted.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(deleted.getModificationTime()).isNotNull();
     }
 
     @Test
-    public void WHEN_try_to_delete_not_existing_availability_THEN_return_return_IllegalArgumentException_availability_not_found() {
+    public void WHEN_try_to_delete_non_existing_availability_THEN_return_EntityNotFoundException() {
+        initTestDB();
+        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+
         try {
-            facade.delete(testAvailability);
-        } catch (IllegalArgumentException e) {
+            availabilityCrudFacade.delete(testAvailabilityDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             assertThat(e)
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
         }
-    }
-
-
-    @Test
-    public void findEntity() {
-        AvailabilityDto created = createAvailability();
-        AvailabilityEntity foundEntity = facade.findEntity(created);
-
-        assertThat(foundEntity).isNotNull();
-
-        assertThat(foundEntity.getBeginTime()).isEqualTo(created.getBeginTime());
-        assertThat(foundEntity.getCreationTime()).isEqualTo(created.getCreationTime());
     }
 
     @Ignore
     @Test
     public void findEntities() {
     }
-//
-//    @Test
-//    public void map() {
-//    }
-//
-//    @Test
-//    public void mapDtoList() {
-//    }
-//
-//    @Test
-//    public void testMap() {
-//    }
-//
-//    @Test
-//    public void mapEntityList() {
-//    }
+
 }
