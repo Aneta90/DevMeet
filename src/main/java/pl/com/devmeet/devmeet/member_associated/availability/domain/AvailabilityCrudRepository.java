@@ -13,5 +13,4 @@ import java.util.UUID;
 public interface AvailabilityCrudRepository extends PagingAndSortingRepository<AvailabilityEntity, UUID> {
 
     Optional<AvailabilityEntity> findByMember(MemberEntity member);
-
-}
+    Optional<List<AvailabilityEntity>> findAllByMember(MemberEntity member);}

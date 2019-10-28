@@ -29,9 +29,10 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
         return availabilityCrudFinder.findEntity(oldDto);
     }
 
-    private AvailabilityDto checkMember(AvailabilityDto oldDto, AvailabilityDto newDto){
-        return null;
-    }
+    private AvailabilityDto checkMember(AvailabilityDto oldDto, AvailabilityDto newDto) throws EntityNotFoundException {
+        if (oldDto.getMember().getNick() == newDto.getMember().getNick())
+                return newDto;
+        throw new EntityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());    }
 
     private AvailabilityEntity mapDtoToEntity(AvailabilityDto dto) {
         return AvailabilityCrudFacade.map(dto);

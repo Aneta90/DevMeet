@@ -46,9 +46,25 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
     }
 
     @Override
-    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(AvailabilityCrudInfoStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws EntityNotFoundException {
+        Optional<List<AvailabilityEntity>> availabilityEntities = findAvailabilities(dto);
+
+        if(availabilityEntities.isPresent())
+            return availabilityEntities.get();
+        else
+            throw new EntityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITIES_NOT_FOUND.toString());
     }
+
+    private Optional<List<AvailabilityEntity>> findAvailabilities(AvailabilityDto dto) throws EntityNotFoundException {
+        MemberEntity member;
+        try {
+            member = findMemberEntity(dto.getMember());
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_MEMBER_NOT_FOUND.toString());
+        }
+        return availabilityRepository.findAllByMember(member);
+    }
+
 
     @Override
     public boolean isExist(AvailabilityDto dto) {
