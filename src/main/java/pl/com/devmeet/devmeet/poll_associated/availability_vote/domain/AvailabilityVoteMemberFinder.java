@@ -12,7 +12,7 @@ import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status.Av
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class AvailabilityVoteMemberFinder {
+public class AvailabilityVoteMemberFinder {
 
     private MemberCrudFacade memberCrudFacade;
 

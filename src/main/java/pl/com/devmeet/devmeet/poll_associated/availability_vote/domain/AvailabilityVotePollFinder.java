@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,4 @@ class AvailabilityVotePollFinder {
             throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_POLL_NOT_FOUND.toString());
         }
     }
-
 }
