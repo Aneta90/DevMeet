@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain.status;
 
-public enum GroupCrudInfoStatusEnum {
+public enum GroupCrudStatusEnum {
 
     GROUP_ALREADY_EXISTS("Group already exists"),
     GROUP_NOT_FOUND("Group not found"),
@@ -10,7 +10,7 @@ public enum GroupCrudInfoStatusEnum {
 
     private String status;
 
-    GroupCrudInfoStatusEnum(String status) {
+    GroupCrudStatusEnum(String status) {
         this.status = status;
     }
 

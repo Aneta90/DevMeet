@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
-enum PermissionTypeEnum {
+public enum PermissionTypeEnum {
 
     ADMIN(0),
     MEMBER(1),

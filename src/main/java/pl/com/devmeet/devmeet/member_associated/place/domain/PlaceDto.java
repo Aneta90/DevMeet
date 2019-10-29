@@ -4,7 +4,10 @@ import lombok.*;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -22,7 +25,7 @@ public class PlaceDto {
 
     private AvailabilityDto availability;
 
-    private PollDto poll;
+    private List<PlaceVoteEntity> placeVotes;
 
     private DateTime creationTime;
     private DateTime modificationTime;
