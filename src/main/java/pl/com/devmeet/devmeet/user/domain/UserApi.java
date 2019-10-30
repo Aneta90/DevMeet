@@ -13,17 +13,17 @@ import java.util.List;
 @RequestMapping("/users")
 class UserApi {
 
-    private UserCrudFacade userCrudFacade;
+    private UserService userService;
 
     @Autowired
-    public UserApi(UserCrudFacade userCrudFacade) {
-        this.userCrudFacade = userCrudFacade;
+    public UserApi(UserService userService) {
+        this.userService = userService;
     }
 
     // get
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        return userCrudFacade.readAll();
+        return userService.findAll();
     }
 }
