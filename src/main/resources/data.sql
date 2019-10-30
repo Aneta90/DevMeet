@@ -1,0 +1,1 @@
+insert into users(login,password,is_active,logged_in, email) values (2,'123',true,false,'e@e.e');
