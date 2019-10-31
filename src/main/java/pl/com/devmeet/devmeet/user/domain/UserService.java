@@ -38,6 +38,11 @@ class UserService {
                 .collect(Collectors.toList());
     }
 
+    Optional<UserDto> findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(UserMapper::toDto);
+    }
+
     // add
 
     UserDto add(UserDto user) {
@@ -49,6 +54,12 @@ class UserService {
             return mapAndSave(user);
         } else throw new UserExceptionAdd();
     }
+
+    // update
+    // TO BE IMPLEMENTED
+
+    // delete
+    // TO BE IMPLEMENTED
 
     // custom methods
 
