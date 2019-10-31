@@ -27,7 +27,7 @@ class AvailabilityCrudMapper {
                 .beginTime(dto.getBeginTime())
                 .endTime(dto.getEndTime())
                 .remoteWork(dto.isRemoteWork())
-                //                .place(dto.getPlace())
+               //                .place(dto.getPlace())
                 .availabilityVote(dto.getAvailabilityVote())
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())

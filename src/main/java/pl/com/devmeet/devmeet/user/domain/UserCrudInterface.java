@@ -1,5 +1,7 @@
 package pl.com.devmeet.devmeet.user.domain;
 
+import java.util.List;
+
 public interface UserCrudInterface {
 
     UserDto create(UserDto dto, DefaultUserLoginTypeEnum defaultLoginType);
@@ -7,6 +9,8 @@ public interface UserCrudInterface {
     UserEntity findEntity(UserDto dto);
 
     UserDto read(UserDto dto);
+
+    List<UserDto> readAll();
 
     boolean isExist(UserDto dto);
 
@@ -17,10 +21,10 @@ public interface UserCrudInterface {
     boolean delete(UserDto dto);
 
     static UserDto map(UserEntity entity) {
-        return UserMapper.map(entity);
+        return UserMapper.toDto(entity);
     }
 
     static UserEntity map(UserDto dto) {
-        return UserMapper.map(dto);
+        return UserMapper.toEntity(dto);
     }
 }
