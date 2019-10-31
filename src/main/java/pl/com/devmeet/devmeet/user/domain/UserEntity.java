@@ -1,7 +1,7 @@
 package pl.com.devmeet.devmeet.user.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.joda.deser.DateTimeDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,11 +37,11 @@ public class UserEntity {
     private MemberEntity member;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime creationTime;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime modificationTime;
 
     private boolean isActive;
@@ -49,7 +49,7 @@ public class UserEntity {
     private boolean loggedIn;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime loginTime;
 
 }
