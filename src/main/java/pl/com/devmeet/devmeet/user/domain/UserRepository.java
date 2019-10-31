@@ -2,6 +2,7 @@ package pl.com.devmeet.devmeet.user.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +22,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select u from UserEntity u where lower(u.email) like lower(concat('%', :search, '%') )" +
             "or u.phone like concat('%', :search, '%') ")
     List<UserEntity> findAllByEmailAndPhone(String search);
+
+    @Query(value = "SELECT * FROM users WHERE users.is_active = :isActive", nativeQuery = true)
+    List<UserEntity> findAllByIsActive(@Param("isActive") Boolean isActive);
 
 }

@@ -52,4 +52,16 @@ public class UserEntity {
     @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime loginTime;
 
+    public UserEntity(DefaultUserLoginTypeEnum login, String password, String email, String phone, MemberEntity member, DateTime creationTime, DateTime modificationTime, boolean isActive, boolean loggedIn, DateTime loginTime) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.member = member;
+        this.creationTime = creationTime;
+        this.modificationTime = modificationTime;
+        this.isActive = isActive;
+        this.loggedIn = loggedIn;
+        this.loginTime = loginTime;
+    }
 }

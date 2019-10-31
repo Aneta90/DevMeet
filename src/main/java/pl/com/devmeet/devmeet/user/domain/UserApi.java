@@ -45,6 +45,12 @@ class UserApi {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/is-active/{isActive}")
+    public List<UserDto> getAllIsActive(@PathVariable String isActive) {
+        return userService.findAllByIsActive(Boolean.valueOf(isActive));
+    }
+
+
     // add
 
     @PostMapping

@@ -51,6 +51,13 @@ class UserService {
                 .collect(Collectors.toList());
     }
 
+    List<UserDto> findAllByIsActive(Boolean isActive) {
+        return repository.findAllByIsActive(isActive)
+                .stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     // add
 
     UserDto add(UserDto user) {
