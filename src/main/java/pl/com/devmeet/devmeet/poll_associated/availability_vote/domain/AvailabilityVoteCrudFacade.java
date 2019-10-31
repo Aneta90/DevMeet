@@ -110,11 +110,11 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
     }
 
     public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
-        return null;
+        return AvailabilityVoteCrudMapper.map(dto);
     }
 
     public static AvailabilityVoteDto map (AvailabilityVoteEntity entity){
-        return null;
+        return AvailabilityVoteCrudMapper.map(entity);
     }
 
     public static List<AvailabilityVoteEntity> mapToEntities(List<AvailabilityVoteDto> dtos){
