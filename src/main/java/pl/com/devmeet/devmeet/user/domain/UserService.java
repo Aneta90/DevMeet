@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.user.domain;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,14 +52,31 @@ class UserService {
                 && user.getPassword() != null
                 && user.getEmail() != null) { // add more ifs statements if required
             checkEmailDuplication(user);
+            user.setActive(false);
+            user.setCreationTime(DateTime.now());
             return mapAndSave(user);
         } else throw new UserExceptionAdd();
     }
 
     // update
-    // TO BE IMPLEMENTED
+    UserDto update(UserDto user) {
+        Optional<UserEntity> first = repository.findById(user.getId());
+        if (first.isPresent()) {
+            if (user.getEmail() == null) {
+                user.setEmail(first.get().getEmail());
+            } else checkEmailDuplication(user);
+            if (user.getPassword() == null) user.setPassword(first.get().getPassword());
+            if (user.getLogin() == null) user.setLogin(first.get().getLogin());
+            if (user.getPhone() == null) user.setPhone(first.get().getPhone());
+            user.setCreationTime(first.get().getCreationTime());
+            user.setModificationTime(DateTime.now());
+            return mapAndSave(user);
+        }
+        return null;
+    }
 
     // delete
+
     // TO BE IMPLEMENTED
 
     // custom methods

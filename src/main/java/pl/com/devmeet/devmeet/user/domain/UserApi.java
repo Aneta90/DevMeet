@@ -58,16 +58,16 @@ class UserApi {
 
     // update
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Long id,
                                           @RequestBody UserDto user) {
         if (!id.equals(user.getId()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
 
-        // to be implemented in service
-
-        return null;
-
+        if (userService.update(user) != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
     }
 
 }
