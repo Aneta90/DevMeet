@@ -44,6 +44,13 @@ class UserService {
                 .map(UserMapper::toDto);
     }
 
+    List<UserDto> findAllByEmailAndPhone(String text) {
+        return repository.findAllByEmailAndPhone(text)
+                .stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     // add
 
     UserDto add(UserDto user) {

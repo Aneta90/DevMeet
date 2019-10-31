@@ -25,8 +25,10 @@ class UserApi {
     // get
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.findAll();
+    public List<UserDto> getAllUsers(@RequestParam(required = false) String searchEmalOrPhone) {
+        if (searchEmalOrPhone != null)
+            return userService.findAllByEmailAndPhone(searchEmalOrPhone);
+        else return userService.findAll();
     }
 
     @GetMapping("{id}")

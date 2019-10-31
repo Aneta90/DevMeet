@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.user.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +17,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     List<UserEntity> findByPhone(String phone);
+
+    @Query("select u from UserEntity u where lower(u.email) like lower(concat('%', :search, '%') )" +
+            "or u.phone like concat('%', :search, '%') ")
+    List<UserEntity> findAllByEmailAndPhone(String search);
 
 }
