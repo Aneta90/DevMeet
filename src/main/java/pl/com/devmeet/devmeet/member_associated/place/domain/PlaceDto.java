@@ -23,7 +23,7 @@ public class PlaceDto {
     private String website;
     private String location;
 
-    private AvailabilityDto availability;
+ //   private AvailabilityDto availability;
 
     private List<PlaceVoteEntity> placeVotes;
 

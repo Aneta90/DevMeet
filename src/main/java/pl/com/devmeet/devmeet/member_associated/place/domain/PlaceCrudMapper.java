@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.member_associated.place.domain;
 
+import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 
 import java.util.List;
@@ -13,7 +14,6 @@ class PlaceCrudMapper {
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
                 .website(entity.getWebsite())
-                .availability(map(entity).getAvailability())
                 .placeVotes(entity.getPlaceVotes())
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
@@ -27,7 +27,7 @@ class PlaceCrudMapper {
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
                 .website(dto.getWebsite())
-                .availability(map(dto).getAvailability())
+        //        .availability(AvailabilityCrudFacade.map(dto.getAvailability()))
                 .placeVotes(dto.getPlaceVotes())
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
