@@ -4,6 +4,9 @@ import pl.com.devmeet.devmeet.member_associated.availability.domain.Availability
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollCrudFacade;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
@@ -25,4 +28,16 @@ class AvailabilityVoteCrudMapper {
                 .isActive(entity.isActive())
                 .build();
     }
-}
+
+    public static List<AvailabilityVoteEntity> mapToEntities(List<AvailabilityVoteDto> dtos){
+        return dtos.stream()
+                .map(dto -> map(dto))
+                .collect(Collectors.toList());
+    }
+
+    public static List<AvailabilityVoteDto> mapToDtos(List<AvailabilityVoteEntity> entities){
+        return entities.stream()
+                .map(entity -> map(entity))
+                .collect(Collectors.toList());
+    }
+ }

@@ -67,8 +67,22 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
                 .build();
     }
 
-    private AvailabilityVoteCrudCreator initVoteCreator(){
+    private AvailabilityVoteCrudCreator initVoteCreator() {
         return AvailabilityVoteCrudCreator.builder()
+                .voteCrudFinder(initVoteFinder())
+                .voteCrudSaver(initVoteSaver())
+                .build();
+    }
+
+    private AvailabilityVoteCrudUpdater initVoteUpdater() {
+        return AvailabilityVoteCrudUpdater.builder()
+                .voteCrudFinder(initVoteFinder())
+                .voteCrudSaver(initVoteSaver())
+                .build();
+    }
+
+    private AvailabilityVoteCrudDeleter initVoteDeleter() {
+        return AvailabilityVoteCrudDeleter.builder()
                 .voteCrudFinder(initVoteFinder())
                 .voteCrudSaver(initVoteSaver())
                 .build();
@@ -91,12 +105,12 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
 
     @Override
     public AvailabilityVoteDto update(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
-        return null;
+        return map(initVoteUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
     public AvailabilityVoteDto delete(AvailabilityVoteDto dto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
-        return null;
+        return map(initVoteDeleter().deleteEntity(dto));
     }
 
     @Override
@@ -106,22 +120,22 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
 
     @Override
     public List<AvailabilityVoteEntity> findEntities(AvailabilityVoteDto dto) throws IllegalArgumentException, EntityNotFoundException, UnsupportedOperationException {
-        return null;
+        return initVoteFinder().findEntities(dto);
     }
 
-    public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
+    public static AvailabilityVoteEntity map(AvailabilityVoteDto dto) {
         return AvailabilityVoteCrudMapper.map(dto);
     }
 
-    public static AvailabilityVoteDto map (AvailabilityVoteEntity entity){
+    public static AvailabilityVoteDto map(AvailabilityVoteEntity entity) {
         return AvailabilityVoteCrudMapper.map(entity);
     }
 
-    public static List<AvailabilityVoteEntity> mapToEntities(List<AvailabilityVoteDto> dtos){
-        return null;
+    public static List<AvailabilityVoteEntity> mapToEntities(List<AvailabilityVoteDto> dtos) {
+        return AvailabilityVoteCrudMapper.mapToEntities(dtos);
     }
 
-    public static List<AvailabilityVoteDto> mapToDtos(List<AvailabilityVoteEntity> entities){
-        return null;
+    public static List<AvailabilityVoteDto> mapToDtos(List<AvailabilityVoteEntity> entities) {
+        return AvailabilityVoteCrudMapper.mapToDtos(entities);
     }
 }

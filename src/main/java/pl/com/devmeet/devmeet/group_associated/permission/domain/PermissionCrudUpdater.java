@@ -40,8 +40,8 @@ class PermissionCrudUpdater implements CrudEntityUpdater<PermissionDto, Permissi
     }
 
     private PermissionDto checkMemberAndGroup(PermissionDto oldDto, PermissionDto newDto) throws EntityNotFoundException {
-        if (oldDto.getMember().getNick() == newDto.getMember().getNick())
-            if(oldDto.getGroup().getGroupName() == newDto.getGroup().getGroupName())
+        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
+            if(oldDto.getGroup().getGroupName().equals(newDto.getGroup().getGroupName()))
                 return newDto;
         throw new EntityNotFoundException(PermissionCrudStatusEnum.INCORRECT_MEMBER_OR_GROUP.toString());
     }

@@ -30,7 +30,6 @@ import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 import pl.com.devmeet.devmeet.user.domain.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -58,7 +57,8 @@ public class AvailabilityVoteCrudFacadeTest {
 
     private UserDto testUserDto;
     private MemberDto testMemberDto;
-    private AvailabilityDto testAvailabilityDto;
+    private AvailabilityDto testAvailabilityDtoFirst;
+    private AvailabilityDto testAvailabilityDtoSecond;
     private GroupDto testGroupDto;
     private PollDto testPollDto;
     private AvailabilityVoteDto testVoteDto;
@@ -82,10 +82,22 @@ public class AvailabilityVoteCrudFacadeTest {
                 .nick("Wasacz")
                 .build();
 
-        testAvailabilityDto = new AvailabilityDto().builder()
+        testAvailabilityDtoFirst = new AvailabilityDto().builder()
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
+                .place(null)
+                .availabilityVote(null)
+                .remoteWork(true)
+                .creationTime(null)
+                .modificationTime(null)
+                .isActive(true)
+                .build();
+
+        testAvailabilityDtoSecond = new AvailabilityDto().builder()
+                .member(testMemberDto)
+                .beginTime(new DateTime(2020, 3, 1, 18, 0, 0))
+                .endTime(new DateTime(2020, 3, 1, 20, 0, 0))
                 .place(null)
                 .availabilityVote(null)
                 .remoteWork(true)
@@ -118,7 +130,7 @@ public class AvailabilityVoteCrudFacadeTest {
         testVoteDto = AvailabilityVoteDto.builder()
                 .poll(testPollDto)
                 .member(testMemberDto)
-                .availability(testAvailabilityDto)
+                .availability(testAvailabilityDtoFirst)
                 .creationTime(null)
                 .isActive(true)
                 .build();
@@ -176,7 +188,7 @@ public class AvailabilityVoteCrudFacadeTest {
         }
 
         try {
-            availabilityEntity = availabilityCrudFacade.findEntity(availabilityCrudFacade.create(testAvailabilityDto));
+            availabilityEntity = availabilityCrudFacade.findEntity(availabilityCrudFacade.create(testAvailabilityDtoFirst));
         } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             availabilityEntity = null;
         }
@@ -250,7 +262,7 @@ public class AvailabilityVoteCrudFacadeTest {
         AvailabilityVoteDto created = voteCrudFacade.create(testVoteDto);
         AvailabilityVoteDto found = voteCrudFacade.read(testVoteDto);
 
-        System.out.println("time in created:\t" + created.getCreationTime()+ "\ntime in found:\t\t" + found.getCreationTime());
+        System.out.println("time in created:\t" + created.getCreationTime() + "\ntime in found:\t\t" + found.getCreationTime());
 
         assertThat(found).isNotNull();
 
@@ -277,6 +289,22 @@ public class AvailabilityVoteCrudFacadeTest {
 
     @Test
     public void update() {
+        initTestDB();
+        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        try {
+            AvailabilityVoteDto created = voteCrudFacade.create(testVoteDto);
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            Assert.fail();
+        }
+
+
+
+    }
+
+    private AvailabilityVoteDto updateVote(AvailabilityVoteDto voteDto){
+        voteDto.setAvailability(testAvailabilityDtoSecond);
+        voteDto.setCreationTime(new DateTime());
+        return voteDto;
     }
 
     @Test
