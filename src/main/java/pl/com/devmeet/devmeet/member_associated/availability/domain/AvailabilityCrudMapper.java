@@ -13,7 +13,7 @@ class AvailabilityCrudMapper {
                 .beginTime(entity.getBeginTime())
                 .endTime(entity.getEndTime())
                 .remoteWork(entity.isRemoteWork())
-//                        .place(entity.getPlace())
+      //                 .place(entity.getPlace())
                 .availabilityVote(entity.getAvailabilityVote())
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())

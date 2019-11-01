@@ -208,11 +208,11 @@ public class PlaceCrudFacadeTest {
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         PlaceDto created = placeCrudFacade.create(testPlaceDto);
         PlaceDto updated = placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
-
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
-       // assertThat(updated.getDescription()).isEqualTo(created.getDescription());
-    //    assertThat(updated.getWebsite()).isEqualTo(created.getWebsite());
+        assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
+        assertThat(updated.getWebsite()).isNotEqualTo(created.getWebsite());
+        assertThat(updated.getWebsite()).isEqualTo("www.pw.pl");
         assertThat(updated.getLocation()).isEqualTo(created.getLocation());
         assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
         assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
