@@ -213,6 +213,7 @@ public class PlaceCrudFacadeTest {
         assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
         assertThat(updated.getWebsite()).isNotEqualTo(created.getWebsite());
         assertThat(updated.getWebsite()).isEqualTo("www.pw.pl");
+        assertThat(updated.getDescription()).isEqualTo("openspace");
         assertThat(updated.getLocation()).isEqualTo(created.getLocation());
         assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
         assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
