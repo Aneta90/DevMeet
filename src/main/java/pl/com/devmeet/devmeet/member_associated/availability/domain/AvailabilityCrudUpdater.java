@@ -42,8 +42,7 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
         oldEntity.setBeginTime(newEntity.getBeginTime());
         oldEntity.setEndTime(newEntity.getEndTime());
         oldEntity.setRemoteWork(newEntity.isRemoteWork());
-        oldEntity.setPlace(newEntity.getPlace());
-        oldEntity.setModificationTime(DateTime.now());
+//        oldEntity.setModificationTime(DateTime.now());
         return oldEntity;
     }
 }
