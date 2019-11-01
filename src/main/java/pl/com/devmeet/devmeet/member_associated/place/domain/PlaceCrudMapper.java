@@ -13,12 +13,12 @@ class PlaceCrudMapper {
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
                 .website(entity.getWebsite())
-          //      .availability(entity.getAvailability())
-                 .placeVotes(entity.getPlaceVotes())
-                 .creationTime(entity.getCreationTime())
-                 .modificationTime(entity.getModificationTime())
-                 .isActive(entity.isActive())
-                 .build();
+                .availability(map(entity).getAvailability())
+                .placeVotes(entity.getPlaceVotes())
+                .creationTime(entity.getCreationTime())
+                .modificationTime(entity.getModificationTime())
+                .isActive(entity.isActive())
+                .build();
     }
 
     public static PlaceEntity map(PlaceDto dto) {
@@ -27,7 +27,7 @@ class PlaceCrudMapper {
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
                 .website(dto.getWebsite())
-          //      .availability(dto.getAvailability())
+                .availability(map(dto).getAvailability())
                 .placeVotes(dto.getPlaceVotes())
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
