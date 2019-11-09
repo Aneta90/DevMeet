@@ -13,7 +13,7 @@ public class MessengerCrudCreator {
         this.messengerCrudSaver = new MessengerCrudSaver(messengerRepository);
     }
 
-    public MessengerDto create(MessengerDto messengerDto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public MessengerDto create(MessengerDto messengerDto) throws EntityAlreadyExistsException {
 
         if (messengerCrudFinder.isExist(messengerDto)) {
             throw new EntityAlreadyExistsException("This group already has it's own messenger");
@@ -24,7 +24,7 @@ public class MessengerCrudCreator {
     }
 
 
-    private MessengerDto saveMessengerEntity(MessengerEntity messengerDto){
-        return messengerCrudSaver.saveEntity(messengerDto);
+    private MessengerDto saveMessengerEntity(MessengerEntity messenger){
+        return messengerCrudSaver.saveEntity(messenger);
     }
 }

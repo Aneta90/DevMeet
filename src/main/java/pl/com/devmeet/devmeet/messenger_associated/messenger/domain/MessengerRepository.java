@@ -11,5 +11,7 @@ public interface MessengerRepository extends PagingAndSortingRepository<Messenge
     @Query("SELECT m FROM MessengerEntity m where m.group.groupName = ?1")
     Optional<MessengerEntity> findMessengerByGroup(String groupName);
 
+    @Query("SELECT m FROM MessengerEntity m where m.messengerName = ?1")
+    MessengerEntity findByMessengerName(String messengerName);
 }
 

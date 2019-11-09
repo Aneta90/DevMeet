@@ -1,6 +1,8 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-public class MessengerCrudSaver {
+import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
+
+public class MessengerCrudSaver implements CrudEntitySaver<MessengerDto,MessengerEntity> {
 
     private MessengerRepository messengerRepository;
 
@@ -8,6 +10,7 @@ public class MessengerCrudSaver {
         this.messengerRepository = messengerRepository;
     }
 
+    @Override
     public MessengerDto saveEntity(MessengerEntity entity) {
         return MessengerCrudInterface.map(messengerRepository.save(entity));
     }

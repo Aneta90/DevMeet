@@ -1,12 +1,12 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
+import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MessengerCrudFinder {
+public class MessengerCrudFinder implements CrudEntityFinder<MessengerDto,MessengerEntity> {
 
     private MessengerRepository messengerRepository;
 
@@ -14,29 +14,40 @@ public class MessengerCrudFinder {
         this.messengerRepository = messengerRepository;
     }
 
-    public Optional<MessengerEntity> findEntity(GroupDto groupDto) throws IllegalArgumentException, EntityNotFoundException {
-        Optional<MessengerEntity> messengerEntity;
-        if (groupDto.getMessenger() == null) {
-            throw new EntityNotFoundException("Given group does not have any messenger yet.");
+    public MessengerEntity findEntity(MessengerDto messengerDto) throws EntityNotFoundException {
+        Optional<MessengerEntity> messenger = findMessenger(messengerDto);
+        if (messenger.isPresent()) {
+           return messenger.get();
         } else {
-            messengerEntity = messengerRepository.findMessengerByGroup(groupDto.getGroupName());
+            throw new EntityNotFoundException("Given messenger does not have any group yet.");
         }
-        return messengerEntity;
+    }
+    private Optional<MessengerEntity> findMessenger(MessengerDto messengerDto) {
+        String messengerGroupName = messengerDto.getMessengerName();
+        if (checkMessengerNick(messengerGroupName)) {
+            return Optional.ofNullable(messengerRepository.findByMessengerName(messengerDto.getMessengerName()));
+        }
+        return Optional.empty();
     }
 
-    public MessengerDto read(GroupDto groupDto) throws EntityNotFoundException {
-        return getDtoFromEntity(findEntity(groupDto).get());
+    private boolean checkMessengerNick(String messengerNick) {
+        return messengerNick != null && !messengerNick.equals("");
     }
 
-    MessengerDto getDtoFromEntity(MessengerEntity messengerEntity) {
+
+    public MessengerDto read(MessengerDto messengerDto) throws EntityNotFoundException {
+        return getDtoFromEntity(findEntity(messengerDto));
+    }
+
+    private MessengerDto getDtoFromEntity(MessengerEntity messengerEntity) {
         return MessengerCrudInterface.map(messengerEntity);
     }
 
-    List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException {
+    public List<MessengerEntity> findEntities(MessengerDto messengerDto) throws IllegalArgumentException {
         return null;
     }
 
-    public boolean isExist(MessengerDto messengerDto) throws EntityNotFoundException {
-        return findEntity(messengerDto.getGroup()) != null;
+    public boolean isExist(MessengerDto messengerDto) {
+        return messengerRepository.findByMessengerName(messengerDto.getMessengerName())!= null;
     }
 }

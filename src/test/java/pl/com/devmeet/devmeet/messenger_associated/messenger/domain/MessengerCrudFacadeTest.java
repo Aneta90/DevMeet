@@ -9,15 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeet.messenger_associated.message.domain.MessageDto;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -27,83 +20,94 @@ public class MessengerCrudFacadeTest {
 
     @Autowired
     MessengerRepository messengerRepository;
-
-    @Autowired
-    GroupCrudRepository groupCrudRepository;
-
+    private MessengerDto messengerDto;
+    private MessengerDto createdMessengerDto;
     private MessengerCrudFacade messengerCrudFacade;
 
+  /*  @Autowired
+    GroupCrudRepository groupCrudRepository;
     GroupCrudFacade groupCrudFacade;
-    MemberCrudFacade memberCrudFacade;
-
     private GroupDto groupDto;
-    private MessengerDto messengerDto;
-    private MemberDto memberDto;
-    private MemberDto memberDto1;
-    private MessageDto messageDto;
-    private List<MessageDto> messageDtoList;
+    GroupDto createdGroupDto;*/
 
     @Before
-    public void setUp() throws EntityNotFoundException, EntityAlreadyExistsException {
+    public void setUp() throws EntityAlreadyExistsException {
 
-        //init??
-
-        messengerCrudFacade = new MessengerCrudFacade(messengerRepository);
+    /*    groupCrudFacade = new GroupCrudFacade(groupCrudRepository);
         groupDto = new GroupDto().builder()
                 .groupName("testGroup")
-                .creationTime(DateTime.now())
                 .description("testGroup")
-                .isActive(true)
                 .messenger(messengerDto)
-                .build();
-        groupCrudFacade.create(groupDto);
+                .build();*/
 
-        memberDto = new MemberDto().builder()
-                .nick("testMember")
-                .messenger(messengerDto)
-                .creationTime(DateTime.now())
-                .build();
-
-        memberDto1 = new MemberDto().builder()
-                .nick("testMember1")
-                .messenger(messengerDto)
-                .creationTime(DateTime.now())
-                .build();
-
-        memberCrudFacade.create(memberDto);
-        memberCrudFacade.create(memberDto1);
-
-    /*    messageDto = new MessageDto().builder()
-                .creationTime(DateTime.now())
-                .message("messageTest")
-                .fromMember(memberDto)
-                .toMember(memberDto1)
-                .build();
-
-        messageDtoList = new LinkedList<>();
-        messageDtoList.add(messageDto);*/
-
+        messengerCrudFacade = new MessengerCrudFacade(messengerRepository);
         messengerDto = new MessengerDto().builder()
                 .creationTime(DateTime.now())
                 .isActive(true)
-                .group(groupDto)
-               // .messages(messageDtoList)
-                .member(memberDto)
+                .group(null)
+                .messengerName("testName")
+                .messages(null)
+                .member(null)
                 .build();
-        messengerCrudFacade.create(messengerDto);
+
+        createdMessengerDto = messengerCrudFacade.create(messengerDto);
+        //  createdGroupDto = groupCrudFacade.create(groupDto);
 
     }
 
     @Test
     public void WHEN_try_to_create_non_existing_messenger_then_create_new_messenger() {
-        assertThat(messengerDto).isNotNull();
-        assertThat(messengerDto.getGroup()).isEqualTo(groupDto);
+        assertThat(createdMessengerDto).isNotNull();
+        assertThat(createdMessengerDto.getMessengerName()).isEqualTo("testName");
+        //   assertThat(createdMessengerDto.getGroup().getGroupName()).isEqualTo("testGroup");
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void WHEN_try_to_create_existing_messenger_then_return_EntityAlreadyExistException() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_try_to_create_existing_messenger_then_return_EntityAlreadyExistException() throws EntityAlreadyExistsException {
         MessengerDto existingMessenger = new MessengerDto();
-        existingMessenger.setGroup(groupDto);
-        messengerCrudFacade.create(messengerDto);
+        existingMessenger.setMessengerName("testName");
+        messengerCrudFacade.create(existingMessenger);
+    }
+
+    @Test
+    public void WHEN_find_existing_messenger_then_return_messengerDto() throws EntityNotFoundException {
+        MessengerDto foundMessengerDto = messengerCrudFacade.read(createdMessengerDto);
+        assertThat(foundMessengerDto).isNotNull();
+        assertThat(foundMessengerDto.getMessengerName()).isEqualTo("testName");
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void WHEN_try_to_find_messenger_which_does_not_exist_THEN_return_MessengerNotFoundException() throws EntityNotFoundException {
+        MessengerDto notFoundMessengerDto = new MessengerDto();
+        notFoundMessengerDto.setMessengerName("nonExistingMessenger");
+        messengerCrudFacade.read(notFoundMessengerDto);
+    }
+
+    @Test
+    public void WHEN_messenger_exists_then_return_true() {
+        boolean messengerExists = messengerCrudFacade.isExist(messengerDto);
+        assertThat(messengerExists).isTrue();
+    }
+
+    @Test
+    public void WHEN_messenger_does_not_exist_then_return_false() {
+        MessengerDto messengerNotExisted = new MessengerDto();
+        messengerNotExisted.setMessengerName("test");
+        boolean memberDoesNotExist = messengerCrudFacade.isExist(messengerNotExisted);
+        assertThat(memberDoesNotExist).isFalse();
+    }
+
+    @Test
+    public void WHEN_try_to_delete_existing_messenger_then_delete_messenger() throws EntityNotFoundException {
+        boolean isMessengerDeleted = messengerCrudFacade.delete(createdMessengerDto);
+        assertThat(isMessengerDeleted).isTrue();
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void WHEN_try_to_delete_non_existing_member_then_throw_EntityNotFoundException() throws EntityNotFoundException {
+        MessengerDto nonExistingMessenger = new MessengerDto();
+        nonExistingMessenger.setMessengerName("aaa");
+        boolean isMessengerDeleted = messengerCrudFacade.delete(nonExistingMessenger);
+        assertThat(isMessengerDeleted).isFalse();
     }
 }
