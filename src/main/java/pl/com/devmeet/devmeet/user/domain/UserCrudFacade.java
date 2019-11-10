@@ -3,15 +3,19 @@ package pl.com.devmeet.devmeet.user.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserCrudFacade implements UserCrudInterface {
 
-    @Autowired
     private UserRepository repository;
 
-//    private String userNotFoundMessage = "User not found";
+
+    //    private String userNotFoundMessage = "User not found";
 //    private String defaultLoginTypeErrMessage = "User default login type not defined";
 
+    @Autowired
     public UserCrudFacade(UserRepository repository) {
         this.repository = repository;
     }
@@ -49,6 +53,14 @@ public class UserCrudFacade implements UserCrudInterface {
     @Override
     public UserDto read(UserDto dto) {
         return finderInit().read(dto);
+    }
+
+    @Override
+    public List<UserDto> readAll() {
+        return repository.findAll()
+                .stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
