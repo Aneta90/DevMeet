@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
-import java.util.Optional;
-
 public class MessengerCrudFacade implements MessengerCrudInterface {
 
     @Autowired
@@ -32,18 +30,18 @@ public class MessengerCrudFacade implements MessengerCrudInterface {
     }
 
     @Override
-    public MessengerDto create(MessengerDto messengerDto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public MessengerDto create(MessengerDto messengerDto) throws EntityAlreadyExistsException {
         return creatorInit().create(messengerDto);
     }
 
     @Override
     public MessengerDto read(MessengerDto messengerDto) throws EntityNotFoundException {
-        return finderInit().read(messengerDto.getGroup());
+        return finderInit().read(messengerDto);
     }
 
     @Override
-    public Optional<MessengerEntity> findEntity(MessengerDto messengerDto) throws EntityNotFoundException {
-        return finderInit().findEntity(messengerDto.getGroup());
+    public MessengerEntity findEntity(MessengerDto messengerDto) throws EntityNotFoundException {
+        return finderInit().findEntity(messengerDto);
     }
 
     @Override
@@ -56,11 +54,16 @@ public class MessengerCrudFacade implements MessengerCrudInterface {
         return deleterInit().delete(messengerDto);
     }
 
-    static MessengerEntity map(MessengerDto messengerDto) {
+    public boolean isExist(MessengerDto messengerDto) {
+        return finderInit().isExist(messengerDto);
+    }
+
+
+    public static MessengerEntity map(MessengerDto messengerDto) {
         return MessengerMapper.map(messengerDto);
     }
 
-    static MessengerDto map(MessengerEntity messengerEntity) {
+    public static MessengerDto map(MessengerEntity messengerEntity) {
         return MessengerMapper.map(messengerEntity);
     }
 

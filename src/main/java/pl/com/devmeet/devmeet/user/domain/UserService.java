@@ -2,7 +2,9 @@ package pl.com.devmeet.devmeet.user.domain;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +71,8 @@ class UserService {
             user.setActive(false);
             user.setCreationTime(DateTime.now());
             return mapAndSave(user);
-        } else throw new UserExceptionAdd();
+        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                "Adding user error!. Set all required fields without id or use update.");
     }
 
     // update
@@ -85,8 +88,9 @@ class UserService {
             user.setCreationTime(first.get().getCreationTime());
             user.setModificationTime(DateTime.now());
             return mapAndSave(user);
-        }
-        return null;
+        } else
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Resource with id (" + user.getId() + ") Not found");
     }
 
     // delete
@@ -105,7 +109,8 @@ class UserService {
         Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
         if (userByEmail.isPresent()) {
             if (!userByEmail.get().getId().equals(user.getId()))
-                throw new UserExceptionDuplicateEmail();
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Email: " + user.getEmail() + " already assigned for user id = " + userByEmail.get().getId());
         }
     }
 

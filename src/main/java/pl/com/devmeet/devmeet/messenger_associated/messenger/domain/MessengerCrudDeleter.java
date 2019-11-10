@@ -15,16 +15,16 @@ public class MessengerCrudDeleter {
         this.messengerCrudSaver = new MessengerCrudSaver(messengerRepository);
     }
 
-    boolean delete(MessengerDto messengerDto) throws IllegalArgumentException, EntityNotFoundException {
+    boolean delete(MessengerDto messengerDto) throws EntityNotFoundException {
 
-        Optional<MessengerEntity> messengerEntity = messengerCrudFinder.findEntity(messengerDto.getGroup());
-        if (messengerEntity.isPresent()) {
+        MessengerEntity messengerEntity = messengerCrudFinder.findEntity(messengerDto);
+        if (messengerEntity.isActive()) {
 
-            messengerEntity.get().setActive(false);
+            messengerEntity.setActive(false);
 
-            return saveMessengerEntity(messengerEntity.get()) != null;
+            return saveMessengerEntity(messengerEntity) != null;
         } else {
-            throw new MemberNotFoundException("Member is not found in database or is not active");
+            throw new EntityNotFoundException("Member is not found in database or is not active");
         }
     }
 

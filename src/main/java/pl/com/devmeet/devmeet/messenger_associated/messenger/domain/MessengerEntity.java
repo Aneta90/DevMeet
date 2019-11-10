@@ -31,6 +31,9 @@ public class MessengerEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
+    @Column(unique = true)
+    private String messengerName;
+
     @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;
 
