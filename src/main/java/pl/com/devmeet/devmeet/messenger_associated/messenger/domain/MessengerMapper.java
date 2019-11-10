@@ -9,10 +9,10 @@ class MessengerMapper {
 
         return new MessengerDto().builder()
                 .messengerName(messengerEntity.getMessengerName())
-//                .member(MemberCrudFacade.map(messengerEntity.getMember()))
+                .member(MemberCrudFacade.map(messengerEntity.getMember()))
                 //.messages(messengerEntity.getMessages())
                 .isActive(messengerEntity.isActive())
-//                .group(GroupCrudFacade.map(messengerEntity.getGroup()))
+                .group(GroupCrudFacade.map(messengerEntity.getGroup()))
                 .creationTime(messengerEntity.getCreationTime())
                 .build();
 
@@ -23,9 +23,9 @@ class MessengerMapper {
         return new MessengerEntity().builder()
                 .messengerName(messengerDto.getMessengerName())
                 // .messages(messengerDto.getMessages())
-                //.group(GroupCrudFacade.map(messengerDto.getGroup()))
+                .group(GroupCrudFacade.map(messengerDto.getGroup()))
                 .creationTime(messengerDto.getCreationTime())
-                //.member(MemberCrudFacade.map(messengerDto.getMember()))
+                .member(MemberCrudFacade.map(messengerDto.getMember()))
                 .isActive(messengerDto.isActive())
                 .build();
     }
