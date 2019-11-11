@@ -32,7 +32,6 @@ import static org.junit.Assert.*;
 
 public class PlaceCrudFacadeTest {
 
-
     @Autowired
     private PlaceCrudRepository repository;
     @Autowired
