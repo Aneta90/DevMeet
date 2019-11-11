@@ -11,7 +11,7 @@ public interface MessengerCrudInterface {
 
     MessengerDto read(MessengerDto messengerDto) throws EntityNotFoundException;
 
-    Optional<MessengerEntity> findEntity(MessengerDto messengerDto) throws EntityNotFoundException;
+    MessengerEntity findEntity(MessengerDto messengerDto) throws EntityNotFoundException;
 
     MessengerDto update(MessengerDto messengerDto);
 

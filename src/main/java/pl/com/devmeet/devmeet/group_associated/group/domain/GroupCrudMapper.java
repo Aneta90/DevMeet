@@ -1,5 +1,7 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,7 @@ class GroupCrudMapper {
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
                 .description(entity.getDescription())
-//               .messenger(entity.getMessenger())
+                .messenger(MessengerCrudFacade.map(entity.getMessenger()))
                 .membersLimit(entity.getMembersLimit())
                 .memberCounter(entity.getMemberCounter())
                 .meetingCounter(entity.getMeetingCounter())
@@ -26,8 +28,7 @@ class GroupCrudMapper {
         return new GroupEntity().builder()
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
-                .description(dto.getDescription())
-//                .messenger(dto.getMessenger())
+                .messenger(MessengerCrudFacade.map(dto.getMessenger()))
                 .membersLimit(dto.getMembersLimit())
                 .memberCounter(dto.getMemberCounter())
                 .meetingCounter(dto.getMeetingCounter())
