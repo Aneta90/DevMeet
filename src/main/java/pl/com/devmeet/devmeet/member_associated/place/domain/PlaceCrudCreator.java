@@ -1,41 +1,38 @@
 package pl.com.devmeet.devmeet.member_associated.place.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
+import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class PlaceCrudCreator implements CrudEntityCreator<PlaceDto, PlaceEntity> {
 
-    private PlaceCrudSaver saver;
-    private PlaceCrudFinder finder;
-
-    public PlaceCrudCreator(PlaceCrudRepository repository) {
-        this.saver = new PlaceCrudSaver(repository);
-        this.finder = new PlaceCrudFinder(repository);
-
-    }
+    private PlaceCrudSaver placeCrudSaver;
+    private PlaceCrudFinder placeCrudFinder;
+    private MemberCrudFacade memberCrudFacade;
 
     @Override
-    public PlaceEntity createEntity(PlaceDto dto) {
-        PlaceEntity place = null;
-        boolean placeActivity;
-
+    public PlaceEntity createEntity(PlaceDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+        PlaceEntity place;
         try {
-            place = finder.findEntity(dto);
-            placeActivity = place.isActive();
-
-            if (!placeActivity && place.getModificationTime() != null)
-                return setDefaultValuesWhenPlaceExists(saver.saveEntity(place));
-
-
-        } catch (IllegalArgumentException e) {
-            return setDefaultValuesWhenPlaceNotExists(place);
+            place = placeCrudFinder.findEntity(dto);
+            if (!place.isActive() && place.getModificationTime() != null)
+                return placeCrudSaver.saveEntity(setDefaultValuesWhenPlaceExists(place));
+        } catch (EntityNotFoundException e) {
+            place= setDefaultValuesWhenPlaceNotExists(PlaceCrudFacade.map(dto));
+            return placeCrudSaver.saveEntity(place);
         }
 
-        return null;
+        throw new EntityAlreadyExistsException(PlaceCrudStatusEnum.PLACE_ALREADY_EXISTS.toString());
     }
-
 
     private PlaceEntity setDefaultValuesWhenPlaceNotExists(PlaceEntity place) {
         place.setCreationTime(DateTime.now());
@@ -43,10 +40,10 @@ class PlaceCrudCreator implements CrudEntityCreator<PlaceDto, PlaceEntity> {
         return place;
     }
 
-    private PlaceEntity setDefaultValuesWhenPlaceExists(PlaceEntity entity) {
-        entity.setModificationTime(DateTime.now());
-        entity.setActive(true);
-        return entity;
+    private PlaceEntity setDefaultValuesWhenPlaceExists(PlaceEntity place) {
+        place.setModificationTime(DateTime.now());
+        place.setActive(true);
+        return place;
+
     }
 }
-

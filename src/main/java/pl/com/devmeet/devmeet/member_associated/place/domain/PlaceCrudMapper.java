@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.member_associated.place.domain;
 
+import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 
 import java.util.List;
@@ -7,25 +8,18 @@ import java.util.stream.Collectors;
 
 class PlaceCrudMapper {
 
-    //2 ostatnie metody z UserCrudInterface- nie mamy jeszcze Membera
-
-
     public static PlaceDto map(PlaceEntity entity) {
         return new PlaceDto().builder()
-
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
                 .website(entity.getWebsite())
-                .location(entity.getLocation())
-         //    .availability(entity.getAvailability())
-         //     .poll(entity.getPoll())
+                .placeVotes(entity.getPlaceVotes())
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
                 .build();
     }
-
 
     public static PlaceEntity map(PlaceDto dto) {
         return new PlaceEntity().builder()
@@ -33,9 +27,8 @@ class PlaceCrudMapper {
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
                 .website(dto.getWebsite())
-                .location(dto.getLocation())
-                //     .availability(dto.getAvailability())
-                //     .poll(dto.getPoll())
+        //        .availability(AvailabilityCrudFacade.map(dto.getAvailability()))
+                .placeVotes(dto.getPlaceVotes())
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
@@ -53,6 +46,5 @@ class PlaceCrudMapper {
                 .map(dto -> map(dto))
                 .collect(Collectors.toList());
     }
-
 }
 

@@ -43,8 +43,8 @@ public class AvailabilityEntity {
 
     private boolean remoteWork;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private PlaceEntity place;
+//    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private PlaceEntity place;
 
     @OneToOne(mappedBy = "availability", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private AvailabilityVoteEntity availabilityVote;
