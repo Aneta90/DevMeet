@@ -11,7 +11,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -30,14 +29,14 @@ public class MessageEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-   // @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-   // private MemberEntity from;
+ //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+ //   private MemberEntity fromMember;
 
-  //  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-  //  private MemberEntity toMember;
+ //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+ //   private MemberEntity toMember;
 
-    //@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    //  private GroupEntity toGroup; ?? dopytać
+ //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+ //   private GroupEntity toGroup;
 
     private String message;
 

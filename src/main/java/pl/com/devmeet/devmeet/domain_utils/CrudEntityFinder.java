@@ -8,5 +8,5 @@ public interface CrudEntityFinder<D, E> {
 
     List<E> findEntities(D dto) throws IllegalArgumentException, EntityNotFoundException;
 
-    boolean isExist(D dto);
+    boolean isExist(D dto) throws EntityNotFoundException;
 }

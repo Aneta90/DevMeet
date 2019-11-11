@@ -2,8 +2,9 @@ package pl.com.devmeet.devmeet.user.domain;
 
 class UserMapper {
 
-    static UserDto map(UserEntity entity) {
+    static UserDto toDto(UserEntity entity) {
         return new UserDto().builder()
+                .id(entity.getId())
                 .login(entity.getLogin())
                 .phone(entity.getPhone())
                 .email(entity.getEmail())
@@ -16,8 +17,9 @@ class UserMapper {
                 .build();
     }
 
-    static UserEntity map(UserDto dto) {
+    static UserEntity toEntity(UserDto dto) {
         return new UserEntity().builder()
+                .id(dto.getId())
                 .login(dto.getLogin())
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
