@@ -22,8 +22,7 @@ import java.util.UUID;
 @Builder
 @Table(name = "places")
 @Entity
-@Getter
-@Setter
+
 public class PlaceEntity {
 
     @javax.persistence.Id
