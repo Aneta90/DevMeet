@@ -21,8 +21,7 @@ import java.util.UUID;
 @Builder
 @Table(name = "availabilities")
 @Entity
-@Getter
-@Setter
+
 public class AvailabilityEntity {
 
     @javax.persistence.Id
