@@ -6,27 +6,25 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 class MessengerMapper {
 
     static MessengerDto map(MessengerEntity messengerEntity) {
-
-        return new MessengerDto().builder()
+        return messengerEntity != null ? new MessengerDto().builder()
                 .messengerName(messengerEntity.getMessengerName())
                 .member(MemberCrudFacade.map(messengerEntity.getMember()))
                 //.messages(messengerEntity.getMessages())
                 .isActive(messengerEntity.isActive())
                 .group(GroupCrudFacade.map(messengerEntity.getGroup()))
                 .creationTime(messengerEntity.getCreationTime())
-                .build();
+                .build() : null;
 
     }
 
     static MessengerEntity map(MessengerDto messengerDto) {
-
-        return new MessengerEntity().builder()
+        return messengerDto != null ? new MessengerEntity().builder()
                 .messengerName(messengerDto.getMessengerName())
                 // .messages(messengerDto.getMessages())
                 .group(GroupCrudFacade.map(messengerDto.getGroup()))
                 .creationTime(messengerDto.getCreationTime())
                 .member(MemberCrudFacade.map(messengerDto.getMember()))
                 .isActive(messengerDto.isActive())
-                .build();
+                .build() : null;
     }
 }

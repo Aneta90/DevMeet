@@ -6,7 +6,7 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 class PermissionCrudMapper {
 
     public static PermissionDto map (PermissionEntity entity){
-        return new PermissionDto().builder()
+        return entity != null ? new PermissionDto().builder()
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .group(GroupCrudFacade.map(entity.getGroup()))
                 .possibleToVote(entity.isPossibleToVote())
@@ -17,11 +17,11 @@ class PermissionCrudMapper {
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
-                .build();
+                .build() : null;
     }
 
     public static PermissionEntity map (PermissionDto dto){
-        return new PermissionEntity().builder()
+        return dto != null ? new PermissionEntity().builder()
                 .member(MemberCrudFacade.map(dto.getMember()))
                 .group(GroupCrudFacade.map(dto.getGroup()))
                 .possibleToVote(dto.isPossibleToVote())
@@ -32,6 +32,6 @@ class PermissionCrudMapper {
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
-                .build();
+                .build() : null;
     }
 }

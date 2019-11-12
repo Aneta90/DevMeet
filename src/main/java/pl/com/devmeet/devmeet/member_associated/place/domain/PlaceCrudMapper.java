@@ -11,8 +11,7 @@ class PlaceCrudMapper {
 
 
     public static PlaceDto map(PlaceEntity entity) {
-        return new PlaceDto().builder()
-
+        return entity != null ? new PlaceDto().builder()
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
@@ -23,12 +22,12 @@ class PlaceCrudMapper {
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
-                .build();
+                .build() : null;
     }
 
 
     public static PlaceEntity map(PlaceDto dto) {
-        return new PlaceEntity().builder()
+        return dto != null ? new PlaceEntity().builder()
                 .member(MemberCrudFacade.map(dto.getMember()))
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
@@ -39,7 +38,7 @@ class PlaceCrudMapper {
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
-                .build();
+                .build() : null;
     }
 
     public static List<PlaceDto> mapDtoList(List<PlaceEntity> entities) {

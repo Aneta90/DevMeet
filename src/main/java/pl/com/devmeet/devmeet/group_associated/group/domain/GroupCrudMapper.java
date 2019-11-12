@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 class GroupCrudMapper {
 
     public static GroupDto map(GroupEntity entity) {
-        return new GroupDto().builder()
+        return entity != null ? new GroupDto().builder()
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
                 .description(entity.getDescription())
@@ -21,11 +21,11 @@ class GroupCrudMapper {
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
-                .build();
+                .build() : null;
     }
 
     public static GroupEntity map(GroupDto dto) {
-        return new GroupEntity().builder()
+        return dto != null ? new GroupEntity().builder()
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
                 .messenger(MessengerCrudFacade.map(dto.getMessenger()))
@@ -35,7 +35,7 @@ class GroupCrudMapper {
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
-                .build();
+                .build() : null;
     }
 
     public static List<GroupDto> mapDtoList(List<GroupEntity> entities) {

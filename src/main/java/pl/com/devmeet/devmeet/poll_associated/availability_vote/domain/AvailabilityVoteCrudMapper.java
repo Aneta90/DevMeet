@@ -10,23 +10,23 @@ import java.util.stream.Collectors;
 class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
-        return AvailabilityVoteEntity.builder()
+        return dto != null ? AvailabilityVoteEntity.builder()
                 .poll(PollCrudFacade.map(dto.getPoll()))
                 .availability(AvailabilityCrudFacade.map(dto.getAvailability()))
                 .member(MemberCrudFacade.map(dto.getMember()))
                 .creationTime(dto.getCreationTime())
                 .isActive(dto.isActive())
-                .build();
+                .build() : null;
     }
 
     public static AvailabilityVoteDto map (AvailabilityVoteEntity entity){
-        return AvailabilityVoteDto.builder()
+        return entity != null ? AvailabilityVoteDto.builder()
                 .poll(PollCrudFacade.map(entity.getPoll()))
                 .availability(AvailabilityCrudFacade.map(entity.getAvailability()))
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .creationTime(entity.getCreationTime())
                 .isActive(entity.isActive())
-                .build();
+                .build() : null;
     }
 
     public static List<AvailabilityVoteEntity> mapToEntities(List<AvailabilityVoteDto> dtos){

@@ -8,19 +8,19 @@ import java.util.stream.Collectors;
 class PollCrudMapper {
 
     public static PollDto map (PollEntity entity){
-        return new PollDto().builder()
+        return entity != null ? new PollDto().builder()
                 .group(GroupCrudFacade.map(entity.getGroup()))
                 .creationTime(entity.getCreationTime())
                 .active(entity.isActive())
-                .build();
+                .build() : null;
     }
 
     public static PollEntity map (PollDto dto){
-        return new PollEntity().builder()
+        return dto != null ? new PollEntity().builder()
                 .group(GroupCrudFacade.map(dto.getGroup()))
                 .creationTime(dto.getCreationTime())
                 .active(dto.isActive())
-                .build();
+                .build() : null;
     }
 
     public static List<PollDto> mapToDtos(List<PollEntity> entities){

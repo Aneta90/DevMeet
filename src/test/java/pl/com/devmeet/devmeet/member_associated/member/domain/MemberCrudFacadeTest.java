@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated;
+package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.joda.time.DateTime;
 import org.junit.Before;

@@ -3,6 +3,7 @@ package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -307,14 +308,17 @@ public class AvailabilityVoteCrudFacadeTest {
         return voteDto;
     }
 
+    @Ignore
     @Test
     public void delete() {
     }
 
+    @Ignore
     @Test
     public void findEntity() {
     }
 
+    @Ignore
     @Test
     public void findEntities() {
     }

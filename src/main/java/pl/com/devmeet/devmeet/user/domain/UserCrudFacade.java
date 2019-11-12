@@ -82,4 +82,12 @@ public class UserCrudFacade implements UserCrudInterface {
     public boolean delete(UserDto dto) {
         return deleterInit().delete(dto);
     }
+
+    public static UserDto map (UserEntity entity){
+        return UserMapper.toDto(entity);
+    }
+
+    public static UserEntity map (UserDto dto) {
+        return UserMapper.toEntity(dto);
+    }
 }
