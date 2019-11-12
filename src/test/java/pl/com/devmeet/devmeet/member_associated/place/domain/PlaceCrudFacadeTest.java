@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated.availability.domain;
+package pl.com.devmeet.devmeet.member_associated.place.domain;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -10,37 +10,43 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
-import pl.com.devmeet.devmeet.member_associated.member.domain.*;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
+import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudRepository;
+import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.user.domain.*;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
-
-import static org.joda.time.DateTime.now;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
 
-public class AvailabilityCrudFacadeTest {
+public class PlaceCrudFacadeTest {
 
     @Autowired
-    private AvailabilityCrudRepository repository;
+    private PlaceCrudRepository repository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private UserRepository userRepository;
 
-    private AvailabilityCrudFacade availabilityCrudFacade;
+    private PlaceCrudFacade placeCrudFacade;
     private MemberCrudFacade memberCrudFacade;
     private UserCrudFacade userCrudFacade;
 
-    private AvailabilityDto testAvailabilityDto;
+    private PlaceDto testPlaceDto;
     private MemberDto testMemberDto;
     private UserDto testUserDto;
- //   private PlaceDto testPlaceDto;
+    private AvailabilityDto testAvailabilityDto;
 
     @Before
     public void setUp() {
@@ -58,12 +64,14 @@ public class AvailabilityCrudFacadeTest {
                 .nick("Wasacz")
                 .build();
 
-        testAvailabilityDto = new AvailabilityDto().builder()
+        testPlaceDto = new PlaceDto().builder()
                 .member(testMemberDto)
-                .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
-                .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
-                .availabilityVote(null)
-                .remoteWork(true)
+                .placeName("Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej")
+                .description("openspace koło Metra Politechniki")
+                .website("cziitt.pw.edu.pl")
+                .location("Rektorska 4, 00-614 Warszawa")
+            //    .availability(testAvailabilityDto)
+                .placeVotes(null)
                 .creationTime(null)
                 .modificationTime(null)
                 .isActive(true)
@@ -75,11 +83,11 @@ public class AvailabilityCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository); // tworzy obiekt fasady
+        return new MemberCrudFacade(memberRepository);
     }
 
-    private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(repository, memberRepository);
+    private PlaceCrudFacade initPlaceCrudFacade() {
+        return new PlaceCrudFacade(repository, memberRepository);
     }
 
 
@@ -125,10 +133,10 @@ public class AvailabilityCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_create_non_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
+        placeCrudFacade = initPlaceCrudFacade();
+        PlaceDto created = placeCrudFacade.create(testPlaceDto);
         assertThat(created.getMember()).isNotNull();
         assertThat(created).isNotNull();
         assertThat(created.getCreationTime()).isNotNull();
@@ -137,105 +145,107 @@ public class AvailabilityCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_create_existing_availability_THEN_EntityAlreadyExistsException() {
+    public void WHEN_try_to_create_existing_place_THEN_EntityAlreadyExistsException() {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        placeCrudFacade = initPlaceCrudFacade();
         try {
-            availabilityCrudFacade.create(testAvailabilityDto);
+            placeCrudFacade.create(testPlaceDto);
         } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             Assert.fail();
         }
         try {
-            availabilityCrudFacade.create(testAvailabilityDto);
+            placeCrudFacade.create(testPlaceDto);
             Assert.fail();
         } catch (EntityNotFoundException e) {
             Assert.fail();
         } catch (EntityAlreadyExistsException e) {
             assertThat(e)
                     .isInstanceOf(EntityAlreadyExistsException.class)
-                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
+                    .hasMessage(PlaceCrudStatusEnum.PLACE_ALREADY_EXISTS.toString());
         }
     }
 
     @Test
-    public void WHEN_found_availability_THEN_return_availability() throws EntityNotFoundException, EntityAlreadyExistsException {
+    public void WHEN_found_place_THEN_return_place() throws EntityNotFoundException, EntityAlreadyExistsException {
         initTestDB();
-        AvailabilityDto created;
-        AvailabilityDto found = null;
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        PlaceDto created;
+        PlaceDto found = null;
+        placeCrudFacade = initPlaceCrudFacade();
 
-        created = availabilityCrudFacade.create(testAvailabilityDto);
-        found = availabilityCrudFacade.read(testAvailabilityDto);
+        created = placeCrudFacade.create(testPlaceDto);
+        found = placeCrudFacade.read(testPlaceDto);
         assertThat(found).isNotNull();
     }
 
     @Test
-    public void WHEN_try_to_find_non_existing_availability_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_find_non_existing_place_THEN_return_EntityNotFoundException() {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        placeCrudFacade = initPlaceCrudFacade();
         try {
-            availabilityCrudFacade.read(testAvailabilityDto);
+            placeCrudFacade.read(testPlaceDto);
             Assert.fail();
         } catch (EntityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
+                    .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
 
     @Test
-    public void WHEN_try_to_find_all_availabilities_THEN_return_availabilities() throws EntityNotFoundException, EntityAlreadyExistsException {
+    public void WHEN_try_to_find_all_places_THEN_return_places() throws EntityNotFoundException, EntityAlreadyExistsException {
         initTestDB();
-        List<AvailabilityDto> found = null;
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        availabilityCrudFacade.create(testAvailabilityDto);
-        found = availabilityCrudFacade.readAll(testAvailabilityDto);
+        List<PlaceDto> found = null;
+        PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
+        placeCrudFacade.create(testPlaceDto);
+        found = placeCrudFacade.readAll(testPlaceDto);
         assertThat(found).isNotNull();
     }
 
     @Test
-    public void WHEN_try_to_update_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_try_to_update_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
-        AvailabilityDto updated = availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
-
-
-        assertThat(updated.isRemoteWork()).isFalse();
-
+        PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
+        PlaceDto created = placeCrudFacade.create(testPlaceDto);
+        PlaceDto updated = placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
-        assertThat(updated.getBeginTime()).isEqualTo(created.getBeginTime());
-        assertThat(updated.getEndTime()).isEqualTo(created.getEndTime());
-        assertThat(updated.getAvailabilityVote()).isEqualTo(created.getAvailabilityVote());
+        assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
+        assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
+        assertThat(updated.getWebsite()).isNotEqualTo(created.getWebsite());
+        assertThat(updated.getWebsite()).isEqualTo("www.pw.pl");
+        assertThat(updated.getDescription()).isEqualTo("openspace");
+        assertThat(updated.getLocation()).isEqualTo(created.getLocation());
+     //   assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
+        assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
+        assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());
-    //    assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
     }
 
-    private AvailabilityDto availabilityUpdatedValues(AvailabilityDto testAvailabilityDto) {
-        testAvailabilityDto.setRemoteWork(false);
-        return testAvailabilityDto;
+    private PlaceDto placeUpdatedValues(PlaceDto testPlaceDto) {
+        testPlaceDto.setWebsite("www.pw.pl");
+        testPlaceDto.setDescription("openspace");
+        return testPlaceDto;
     }
 
     @Test
-    public void WHEN_try_to_update_non_existing_availability_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_update_non_existing_place_THEN_return_EntityNotFoundException() {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         try {
-            availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+            placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
         } catch (EntityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
+                    .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
 
     @Test
-    public void WHEN_delete_existing_availability_THEN_return_availability() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_delete_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.create(testAvailabilityDto);
-        AvailabilityDto deleted = availabilityCrudFacade.delete(testAvailabilityDto);
+        PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
+        PlaceDto created = placeCrudFacade.create(testPlaceDto);
+        PlaceDto deleted = placeCrudFacade.delete(testPlaceDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
@@ -244,16 +254,16 @@ public class AvailabilityCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_non_existing_availability_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_delete_non_existing_place_THEN_return_EntityNotFoundException() {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
 
         try {
-            availabilityCrudFacade.delete(testAvailabilityDto);
+            placeCrudFacade.delete(testPlaceDto);
         } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             assertThat(e)
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
+                    .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
 }

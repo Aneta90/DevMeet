@@ -20,7 +20,7 @@ public class AvailabilityDto {
     private DateTime endTime;
     private boolean remoteWork;
 
-    private PlaceDto place;
+//    private PlaceDto place;
 
     private AvailabilityVoteEntity availabilityVote;
 

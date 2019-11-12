@@ -42,8 +42,8 @@ public class PlaceEntity {
 
     private String location;
 
-    @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private AvailabilityEntity availability;
+//    @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private AvailabilityEntity availability;
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PlaceVoteEntity> placeVotes;
