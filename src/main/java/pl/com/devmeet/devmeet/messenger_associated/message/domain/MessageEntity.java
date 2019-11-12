@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "messeges")
+@Table(name = "messages")
 @Entity
 public class MessageEntity {
 
@@ -29,14 +29,14 @@ public class MessageEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
- //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
- //   private MemberEntity fromMember;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private MemberEntity fromMember;
 
- //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
- //   private MemberEntity toMember;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private MemberEntity toMember;
 
- //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
- //   private GroupEntity toGroup;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private GroupEntity toGroup;
 
     private String message;
 
