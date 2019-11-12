@@ -97,7 +97,7 @@ public class PermissionCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository);
+        return new MemberCrudFacade(memberRepository, userRepository);
     }
 
     private PermissionCrudFacade initPermissionCrudFacade() {

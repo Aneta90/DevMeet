@@ -10,6 +10,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
     private PermissionCrudRepository permissionRepository;
     private GroupCrudRepository groupRepository;
     private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository) {
@@ -35,7 +37,7 @@ public class PermissionCrudFacade implements CrudInterface<PermissionDto, Permis
 
     private PermissionMemberFinder initMemberFinder() {
         return new PermissionMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository))
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
                 .build();
     }
 

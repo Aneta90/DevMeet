@@ -1,76 +1,82 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
+@Service
 public class MemberCrudFacade implements MemberCrudInterface {
 
-    @Autowired
     private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
-    public MemberCrudFacade(MemberRepository memberRepository) {
+    @Autowired
+    public MemberCrudFacade(MemberRepository memberRepository, UserRepository userRepository) {
         this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
-    private MemberCrudFinder finderInit() {
-        return new MemberCrudFinder(memberRepository);
+    private MemberUserFinder initUserFinder() {
+        return new MemberUserFinder(new UserCrudFacade(userRepository));
     }
 
-    private MemberCrudCreator creatorInit() {
-        return new MemberCrudCreator(memberRepository);
+    private MemberCrudSaver initSaver(){
+        return new MemberCrudSaver(memberRepository);
+    }
+
+    private MemberCrudFinder initFinder() {
+        return new MemberCrudFinder(memberRepository, initUserFinder());
+    }
+
+    private MemberCrudCreator initCreator() {
+        return new MemberCrudCreator(initFinder(), initSaver());
     }
 
     private MemberCrudDeleter deleterInit() {
-        return new MemberCrudDeleter(memberRepository);
+        return new MemberCrudDeleter(initFinder(),initSaver());
     }
 
     private MemberCrudUpdater updateInit() {
-        return new MemberCrudUpdater(memberRepository);
+        return new MemberCrudUpdater(initFinder(), initSaver());
     }
 
     @Override
-    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException {
-        return creatorInit().create(dto);
+    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+        return map(initCreator().createEntity(dto));
     }
 
     @Override
     public MemberDto read(MemberDto dto) throws EntityNotFoundException {
-        return finderInit().read(dto);
+        return map(findEntity(dto));
     }
 
     @Override
     public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
-        return updateInit().update(newDto, oldDto);
+        return map(updateInit().update(newDto, oldDto));
     }
 
     @Override
     public boolean delete(MemberDto dto) throws EntityNotFoundException {
-        return deleterInit().delete(dto);
+        return deleterInit().delete(dto) != null;
     }
 
     @Override
     public boolean isActive(MemberDto memberDto) throws EntityNotFoundException {
-        return finderInit().findEntity(memberDto).isActive();
+        return initFinder().findEntity(memberDto).isActive();
     }
 
     @Override
     public boolean isExist(MemberDto memberDto) {
-        return finderInit().isExist(memberDto);
+        return initFinder().isExist(memberDto);
     }
 
     @Override
     public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
-        return finderInit().findEntity(dto);
+        return initFinder().findEntity(dto);
     }
-
-   /* public Optional<List<MemberEntity>> memberEntityList(GroupDto groupDto){
-       return finderInit().memberListByGroup(groupDto);
-    }
-
-    public Optional<List<MemberEntity>> memberEntityList(PlaceDto placeDto){
-        return finderInit().memberListByPlace(placeDto);
-    }*/
 
     public static MemberEntity map(MemberDto dto) {
         return MemberMapper.map(dto);

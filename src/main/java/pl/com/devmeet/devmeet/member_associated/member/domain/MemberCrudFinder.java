@@ -1,18 +1,25 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeet.user.domain.UserDto;
+import pl.com.devmeet.devmeet.user.domain.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@RequiredArgsConstructor
 class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
 
+    @NonNull
     private MemberRepository memberRepository;
-
-    MemberCrudFinder(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    @NonNull
+    private MemberUserFinder userFinder;
 
     @Override
     public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
@@ -23,6 +30,10 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
         } else {
             throw new EntityNotFoundException("Member not found");
         }
+    }
+
+    private UserEntity findUser(UserDto dto) throws EntityNotFoundException {
+        return userFinder.findUser(dto);
     }
 
     private Optional<MemberEntity> findMember(MemberDto memberDto) {
@@ -37,9 +48,6 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
         return memberNick != null && !memberNick.equals("");
     }
 
-    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
-        return getDtoFromEntity(findEntity(dto));
-    }
 
     private MemberDto getDtoFromEntity(MemberEntity entity) {
         return MemberCrudInterface.map(entity);
@@ -50,14 +58,6 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {
         return null;
     }
-
-   /* Optional<List<MemberEntity>> memberListByGroup(GroupDto groupDto) {
-        return memberRepository.findByGroup(groupDto.getGroupName());
-    }
-
-    Optional<List<MemberEntity>> memberListByPlace(PlaceDto placeDto) {
-        return memberRepository.findByPlace(placeDto.getPlaceName());
-    }*/
 
     @Override
     public boolean isExist(MemberDto dto) {

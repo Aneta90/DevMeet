@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,14 +22,17 @@ public class MemberCrudFacadeTest {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    UserRepository userRepository;
+
     MemberDto memberDto;
 
     private MemberDto createdMemberDto;
     private MemberCrudFacade memberCrudFacade;
 
     @Before
-    public void setUp() throws EntityAlreadyExistsException {
-        memberCrudFacade = new MemberCrudFacade(memberRepository);
+    public void setUp() throws EntityAlreadyExistsException, EntityNotFoundException {
+        memberCrudFacade = new MemberCrudFacade(memberRepository, userRepository);
         memberDto = new MemberDto();
         memberDto.setNick("testMember");
         memberDto.setActive(true);
@@ -45,7 +49,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void WHEN_try_to_create_existing_member_then_throw_exception() throws EntityAlreadyExistsException {
+    public void WHEN_try_to_create_existing_member_then_throw_exception() throws EntityAlreadyExistsException, EntityNotFoundException {
         MemberDto existingMemberDto = new MemberDto();
         existingMemberDto.setNick("testMember");
         memberCrudFacade.create(existingMemberDto);

@@ -9,6 +9,7 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import java.util.List;
 
@@ -19,16 +20,18 @@ public class AvailabilityCrudFacade implements CrudInterface<AvailabilityDto, Av
 
     private AvailabilityCrudRepository availabilityRepository;
     private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public AvailabilityCrudFacade(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository) {
+    public AvailabilityCrudFacade(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.availabilityRepository = availabilityRepository;
         this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     private AvailabilityMemberFinder initMemberFinder() {
         return  new AvailabilityMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository))
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
                 .build();
     }
 

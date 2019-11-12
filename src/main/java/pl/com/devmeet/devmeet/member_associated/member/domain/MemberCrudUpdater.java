@@ -1,19 +1,19 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 
+@RequiredArgsConstructor
 public class MemberCrudUpdater {
 
+    @NonNull
     private MemberCrudFinder memberCrudFinder;
+    @NonNull
     private MemberCrudSaver memberCrudSaver;
 
-    MemberCrudUpdater(MemberRepository memberRepository) {
-        this.memberCrudFinder = new MemberCrudFinder(memberRepository);
-        this.memberCrudSaver = new MemberCrudSaver(memberRepository);
-    }
-
-    public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
+    public MemberEntity update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
 
         MemberEntity oldEntity = memberCrudFinder.findEntity(oldDto);
 

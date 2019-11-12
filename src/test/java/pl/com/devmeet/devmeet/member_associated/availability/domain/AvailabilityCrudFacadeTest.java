@@ -75,11 +75,11 @@ public class AvailabilityCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository); // tworzy obiekt fasady
+        return new MemberCrudFacade(memberRepository, userRepository); // tworzy obiekt fasady
     }
 
     private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(repository, memberRepository);
+        return new AvailabilityCrudFacade(repository, memberRepository, userRepository);
     }
 
 

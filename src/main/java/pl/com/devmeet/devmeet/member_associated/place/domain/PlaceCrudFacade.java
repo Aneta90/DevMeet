@@ -13,6 +13,7 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudCreator;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudRepository;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudSaver;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudUpdater;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import java.util.List;
 
@@ -23,16 +24,18 @@ public class PlaceCrudFacade implements CrudInterface<PlaceDto, PlaceEntity> {
 
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public PlaceCrudFacade(PlaceCrudRepository placeRepository, MemberRepository memberRepository) {
+    public PlaceCrudFacade(PlaceCrudRepository placeRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     private PlaceMemberFinder initMemberFinder() {
         return  new PlaceMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository))
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
                 .build();
     }
 

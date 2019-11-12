@@ -83,11 +83,11 @@ public class PlaceCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository);
+        return new MemberCrudFacade(memberRepository, userRepository);
     }
 
     private PlaceCrudFacade initPlaceCrudFacade() {
-        return new PlaceCrudFacade(repository, memberRepository);
+        return new PlaceCrudFacade(repository, memberRepository, userRepository);
     }
 
 

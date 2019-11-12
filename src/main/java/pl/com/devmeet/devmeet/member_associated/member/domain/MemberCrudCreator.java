@@ -1,36 +1,37 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeet.user.domain.UserDto;
+import pl.com.devmeet.devmeet.user.domain.UserEntity;
 
-public class MemberCrudCreator {
+import java.util.Optional;
 
-    private MemberCrudFinder memberCrudFinder;
-    private MemberCrudSaver memberCrudSaver;
+@RequiredArgsConstructor
+public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
 
-    MemberCrudCreator(MemberRepository repository) {
-        this.memberCrudFinder = new MemberCrudFinder(repository);
-        this.memberCrudSaver = new MemberCrudSaver(repository);
+    @NonNull
+    private MemberCrudFinder memberFinder;
+    @NonNull
+    private MemberCrudSaver saver;
+
+    @Override
+    public MemberEntity createEntity(MemberDto dto) throws IllegalArgumentException, EntityAlreadyExistsException, EntityNotFoundException {
+//        Optional<MemberEntity>
+
+        return null;
     }
 
-  /*  public MemberEntity createEntity(MemberDto dto) throws IllegalArgumentException, EntityAlreadyExistsException, EntityNotFoundException {
-        MemberEntity memberEntity = memberCrudFinder.findEntity(dto);
-        if (memberEntity != null) {
-            throw new MemberAlreadyExistsException("Member already exists in database");
-        }
-        return memberCrudSaver.saveEntity(MemberCrudFacade.map(dto));
-    }*/
-
-    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException {
-
-        if (memberCrudFinder.isExist(dto)) {
-            throw new EntityAlreadyExistsException("Member already exists in our database");
-        }
-
-        return saveMemberEntity(MemberCrudFacade.map(dto));
+    private UserEntity findUser(UserDto dto) throws EntityNotFoundException {
+        return memberFinder.getUserFinder().findUser(dto);
     }
 
-    private MemberDto saveMemberEntity(MemberEntity entity) {
-        return memberCrudSaver.saveEntity(entity);
+    private MemberEntity connectMemberWithUser (MemberEntity entity) throws EntityNotFoundException {
+        return null;
     }
 }
