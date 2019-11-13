@@ -22,7 +22,7 @@ class MemberUserFinder {
     @NonNull
     private UserCrudFacade userCrudFacade;
 
-    public UserEntity findUser (UserDto dto) throws EntityNotFoundException {
+    public UserEntity findUserEntity(UserDto dto) throws EntityNotFoundException {
         UserEntity userEntity;
 
         try {
@@ -30,14 +30,9 @@ class MemberUserFinder {
             if(userEntity != null)
                 return userEntity;
         }catch (IllegalArgumentException e){
-            throwBecauseNotFound();
+            throw new EntityNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
         }
 
-        throwBecauseNotFound();
-        return null;
-    }
-
-    private void throwBecauseNotFound() throws EntityNotFoundException {
         throw new EntityNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
     }
 }

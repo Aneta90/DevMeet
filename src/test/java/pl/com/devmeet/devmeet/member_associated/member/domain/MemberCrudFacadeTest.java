@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated;
+package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +27,7 @@ public class MemberCrudFacadeTest {
     UserRepository userRepository;
 
     MemberDto memberDto;
+    UserDto userDto;
 
     private MemberDto createdMemberDto;
     private MemberCrudFacade memberCrudFacade;

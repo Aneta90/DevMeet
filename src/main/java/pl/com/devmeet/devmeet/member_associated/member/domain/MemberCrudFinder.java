@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.UserEntity;
 
@@ -23,44 +23,35 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
 
     @Override
     public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
+        return findMember(dto);
+    }
 
-        Optional<MemberEntity> member = findMember(dto);
-        if (member.isPresent()) {
+    private MemberEntity findMember(MemberDto memberDto) throws EntityNotFoundException {
+        UserEntity userEntity = findUser(memberDto.getUser());
+        Optional<MemberEntity> member = memberRepository.findByUser(userEntity);
+
+        if (member.isPresent())
             return member.get();
-        } else {
-            throw new EntityNotFoundException("Member not found");
-        }
+        else
+            throw new EntityNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
     }
 
     private UserEntity findUser(UserDto dto) throws EntityNotFoundException {
-        return userFinder.findUser(dto);
+        return userFinder.findUserEntity(dto);
     }
-
-    private Optional<MemberEntity> findMember(MemberDto memberDto) {
-        String memberNick = memberDto.getNick();
-        if (checkMemberNick(memberNick)) {
-            return Optional.ofNullable(memberRepository.findByNick(memberNick));
-        }
-        return Optional.empty();
-    }
-
-    private boolean checkMemberNick(String memberNick) {
-        return memberNick != null && !memberNick.equals("");
-    }
-
-
-    private MemberDto getDtoFromEntity(MemberEntity entity) {
-        return MemberCrudInterface.map(entity);
-    }
-
 
     @Override
-    public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {
+    public List<MemberEntity> findEntities(MemberDto dto) {
         return null;
     }
 
     @Override
     public boolean isExist(MemberDto dto) {
-        return memberRepository.findByNick(dto.getNick()) != null;
+        try {
+            findMember(dto);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
     }
 }
