@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 class AvailabilityCrudMapper {
 
     public static AvailabilityDto map(AvailabilityEntity entity) {
-        return new AvailabilityDto().builder()
+        return entity != null ? new AvailabilityDto().builder()
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .beginTime(entity.getBeginTime())
                 .endTime(entity.getEndTime())
@@ -17,11 +17,11 @@ class AvailabilityCrudMapper {
                 .creationTime(entity.getCreationTime())
                 .modificationTime(entity.getModificationTime())
                 .isActive(entity.isActive())
-                .build();
+                .build() : null;
     }
 
     public static AvailabilityEntity map(AvailabilityDto dto) {
-        return new AvailabilityEntity().builder()
+        return dto != null ? new AvailabilityEntity().builder()
                 .member(MemberCrudFacade.map(dto.getMember()))
                 .beginTime(dto.getBeginTime())
                 .endTime(dto.getEndTime())
@@ -30,7 +30,7 @@ class AvailabilityCrudMapper {
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
-                .build();
+                .build() : null;
     }
 
     public static List<AvailabilityDto> mapDtoList(List<AvailabilityEntity> entities) {

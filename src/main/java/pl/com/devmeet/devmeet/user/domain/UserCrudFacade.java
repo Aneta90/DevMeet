@@ -87,7 +87,7 @@ public class UserCrudFacade implements UserCrudInterface {
         return UserMapper.toDto(entity);
     }
 
-    public static UserEntity map (UserDto dto){
+    public static UserEntity map (UserDto dto) {
         return UserMapper.toEntity(dto);
     }
 }

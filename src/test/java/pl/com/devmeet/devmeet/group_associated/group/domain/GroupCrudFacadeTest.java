@@ -32,7 +32,7 @@ public class GroupCrudFacadeTest {
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")
-//                .messenger(entity.getMessenger())
+                .messenger(null)
                 .membersLimit(5)
                 .memberCounter(6)
                 .meetingCounter(1)
