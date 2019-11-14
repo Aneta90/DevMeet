@@ -23,7 +23,7 @@ class UserCrudFinder implements CrudEntityFinder <UserDto, UserEntity> {
 
         if (phone != null && !phone.equals(""))
             foundUser = repository.findByPhoneAndPassword(phone, dto.getPassword());
-        else if (email != null && !phone.equals("")) //tu nie powinien być !email.equals("")
+        else if (email != null && !email.equals(""))
             foundUser = repository.findByEmailAndPassword(email, dto.getPassword());
 
         if (foundUser.isPresent())

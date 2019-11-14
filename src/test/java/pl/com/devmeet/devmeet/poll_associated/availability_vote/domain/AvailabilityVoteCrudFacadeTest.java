@@ -87,7 +87,6 @@ public class AvailabilityVoteCrudFacadeTest {
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
-                .place(null)
                 .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -99,7 +98,6 @@ public class AvailabilityVoteCrudFacadeTest {
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 1, 18, 0, 0))
                 .endTime(new DateTime(2020, 3, 1, 20, 0, 0))
-                .place(null)
                 .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -142,11 +140,11 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository);
+        return new MemberCrudFacade(memberRepository, userRepository);
     }
 
     private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(availabilityRepository, memberRepository);
+        return new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository);
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
@@ -162,8 +160,9 @@ public class AvailabilityVoteCrudFacadeTest {
                 availabilityVoteRepository,
                 pollCrudRepository,
                 groupRepository,
+                availabilityRepository,
                 memberRepository,
-                availabilityRepository);
+                userRepository);
     }
 
     private boolean initTestDB() {

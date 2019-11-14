@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollCrudFacade;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollCrudRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import java.util.List;
 
@@ -21,21 +22,24 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
     private AvailabilityVoteCrudRepository availabilityVoteRepository;
     private PollCrudRepository pollCrudRepository;
     private GroupCrudRepository groupRepository;
-    private MemberRepository memberRepository;
     private AvailabilityCrudRepository availabilityRepository;
+    private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public AvailabilityVoteCrudFacade(AvailabilityVoteCrudRepository availabilityVoteRepository,
                                       PollCrudRepository pollCrudRepository,
                                       GroupCrudRepository groupRepository,
+                                      AvailabilityCrudRepository availabilityRepository,
                                       MemberRepository memberRepository,
-                                      AvailabilityCrudRepository availabilityRepository) {
+                                      UserRepository userRepository) {
 
         this.availabilityVoteRepository = availabilityVoteRepository;
         this.pollCrudRepository = pollCrudRepository;
         this.groupRepository = groupRepository;
-        this.memberRepository = memberRepository;
         this.availabilityRepository = availabilityRepository;
+        this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     private AvailabilityVotePollFinder initPollFinder() {
@@ -43,11 +47,11 @@ public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVot
     }
 
     private AvailabilityVoteMemberFinder initMemberFinder() {
-        return new AvailabilityVoteMemberFinder(new MemberCrudFacade(memberRepository));
+        return new AvailabilityVoteMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
     }
 
     private AvailabilityVoteAvailabilityFinder initAvailabilityFinder() {
-        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudFacade(availabilityRepository, memberRepository));
+        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository));
     }
 
     private AvailabilityVoteCrudSaver initVoteSaver() {

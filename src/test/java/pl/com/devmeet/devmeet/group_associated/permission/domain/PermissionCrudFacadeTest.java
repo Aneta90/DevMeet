@@ -127,9 +127,7 @@ public class PermissionCrudFacadeTest {
             memberEntity = memberCrudFacade
                     .findEntity(memberCrudFacade
                             .create(testMemberDto));
-        } catch (EntityNotFoundException e) {
-            memberEntity = null;
-        } catch (EntityAlreadyExistsException e) {
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
             memberEntity = null;
         }
 
