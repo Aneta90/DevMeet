@@ -5,10 +5,14 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,18 +24,20 @@ class PlaceCrudCreator implements CrudEntityCreator<PlaceDto, PlaceEntity> {
     private MemberCrudFacade memberCrudFacade;
 
     @Override
-    public PlaceEntity createEntity(PlaceDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public PlaceEntity createEntity(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         PlaceEntity place;
         try {
             place = placeCrudFinder.findEntity(dto);
+
             if (!place.isActive() && place.getModificationTime() != null)
                 return placeCrudSaver.saveEntity(setDefaultValuesWhenPlaceExists(place));
-        } catch (EntityNotFoundException e) {
-            place= setDefaultValuesWhenPlaceNotExists(PlaceCrudFacade.map(dto));
+
+        } catch (PlaceNotFoundException e) {
+            place = setDefaultValuesWhenPlaceNotExists(PlaceCrudFacade.map(dto));
             return placeCrudSaver.saveEntity(place);
         }
 
-        throw new EntityAlreadyExistsException(PlaceCrudStatusEnum.PLACE_ALREADY_EXISTS.toString());
+        throw new PlaceAlreadyExistsException(PlaceCrudStatusEnum.PLACE_ALREADY_EXISTS.toString());
     }
 
     private PlaceEntity setDefaultValuesWhenPlaceNotExists(PlaceEntity place) {

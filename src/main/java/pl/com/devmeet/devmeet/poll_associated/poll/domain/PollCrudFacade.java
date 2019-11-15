@@ -3,16 +3,16 @@ package pl.com.devmeet.devmeet.poll_associated.poll.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 
 import java.util.List;
 
 @Service
-public class PollCrudFacade implements CrudInterface<PollDto, PollEntity> {
+public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> {
 
     private GroupCrudRepository groupCrudRepository;
     private PollCrudRepository pollCrudRepository;

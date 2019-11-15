@@ -2,14 +2,14 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
 import java.util.List;
 
 @Service
-public class GroupCrudFacade implements CrudInterface<GroupDto, GroupEntity> {
+public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntity> {
 
     private GroupCrudRepository repository;
 

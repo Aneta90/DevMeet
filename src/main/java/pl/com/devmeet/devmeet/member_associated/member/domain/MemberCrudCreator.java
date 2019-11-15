@@ -4,13 +4,16 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserEntity;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @RequiredArgsConstructor
-public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
+class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
 
     @NonNull
     private MemberCrudFinder memberFinder;
@@ -18,7 +21,7 @@ public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEnt
     private MemberCrudSaver saver;
 
     @Override
-    public MemberEntity createEntity(MemberDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public MemberEntity createEntity(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException {
         MemberEntity memberEntity;
 
         try {
@@ -29,13 +32,13 @@ public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEnt
                         setDefaultValuesIfMemberExistButNotActive(
                         mapToEntity(dto)));
 
-        } catch (EntityNotFoundException e) {
+        } catch (MemberNotFoundException e) {
             return saver.saveEntity(
                     setDefaultValuesIfMemberNotExist(
                     connectMemberWithUser(dto)));
         }
 
-        throw new EntityAlreadyExistsException(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
+        throw new MemberAlreadyExistsException(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
     }
 
     private MemberEntity mapToEntity(MemberDto dto) {
@@ -56,7 +59,7 @@ public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEnt
         return entity;
     }
 
-    private MemberEntity connectMemberWithUser(MemberDto memberDto) throws EntityNotFoundException {
+    private MemberEntity connectMemberWithUser(MemberDto memberDto) throws UserNotFoundException {
         UserEntity foundUser = findUser(memberDto);
         MemberEntity memberEntity = mapToEntity(memberDto);
 
@@ -65,7 +68,7 @@ public class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEnt
         return memberEntity;
     }
 
-    private UserEntity findUser(MemberDto memberDto) throws EntityNotFoundException {
+    private UserEntity findUser(MemberDto memberDto) throws UserNotFoundException {
         return memberFinder.getUserFinder()
                 .findUserEntity(memberDto.getUser());
     }

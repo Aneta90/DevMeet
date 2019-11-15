@@ -3,8 +3,10 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberFoundButNotActiveException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @RequiredArgsConstructor
 class MemberCrudDeleter {
@@ -14,21 +16,28 @@ class MemberCrudDeleter {
     @NonNull
     private MemberCrudSaver memberCrudSaver;
 
-    public MemberEntity delete(MemberDto memberDto) throws EntityNotFoundException {
+    public MemberEntity delete(MemberDto memberDto) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+        MemberEntity memberEntity = findMember(memberDto);
 
-        MemberEntity memberEntity = memberCrudFinder.findEntity(memberDto);
-        if (memberEntity.isActive()) {
+        if (memberEntity.isActive())
+            return saveMember(
+                    setDefaultValuesWhenMemberIsDelete(memberEntity));
 
-            memberEntity.setActive(false);
-            memberEntity.setModificationTime(DateTime.now());
-
-            return saveMemberEntity(memberEntity);
-        }
-
-            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_FOUND_BUT_NOT_ACTIVE.toString());
+        throw new MemberFoundButNotActiveException(MemberCrudStatusEnum.MEMBER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
-    private MemberEntity saveMemberEntity(MemberEntity entity) {
+    private MemberEntity setDefaultValuesWhenMemberIsDelete(MemberEntity memberEntity) {
+        memberEntity.setActive(false);
+        memberEntity.setModificationTime(DateTime.now());
+
+        return memberEntity;
+    }
+
+    private MemberEntity findMember(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+        return memberCrudFinder.findEntity(dto);
+    }
+
+    private MemberEntity saveMember(MemberEntity entity) {
         return memberCrudSaver.saveEntity(entity);
     }
 }

@@ -4,9 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status.AvailabilityVoteCrudStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteCrudStatusEnum;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteException;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,24 +23,24 @@ class AvailabilityVoteCrudUpdater implements CrudEntityUpdater<AvailabilityVoteD
     private AvailabilityVoteCrudSaver voteCrudSaver;
 
     @Override
-    public AvailabilityVoteEntity updateEntity(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException, UnsupportedOperationException {
+    public AvailabilityVoteEntity updateEntity(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, EntityNotFoundException, AvailabilityVoteException {
         AvailabilityVoteEntity oldVote = voteCrudFinder.findEntity(oldDto);
-        AvailabilityVoteEntity newVote = AvailabilityVoteCrudFacade.map(checkPollAndMemberAndAvailability(oldDto, newDto));
+        AvailabilityVoteEntity newVote = checkPollAndMemberAndAvailability(oldVote, newDto);
 
         return voteCrudSaver.saveEntity(newVote);
     }
 
-    private AvailabilityVoteDto checkPollAndMemberAndAvailability(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws EntityNotFoundException {
+    private AvailabilityVoteEntity checkPollAndMemberAndAvailability(AvailabilityVoteEntity oldEntity, AvailabilityVoteDto newDto) throws AvailabilityVoteException {
         if (newDto.getPoll() != null)
             if (newDto.getMember().getNick() != null)
                 if (newDto.getAvailability() != null)
-                    return newDto;
+                    return updateAllowedParameters(oldEntity, newDto);
 
-        throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_INCORRECT_POLL_MEMBER_OR_AVAILABILITY.toString());
+        throw new AvailabilityVoteException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_INCORRECT_POLL_MEMBER_OR_AVAILABILITY.toString());
     }
 
-    private AvailabilityVoteEntity updateAllowedParameters(AvailabilityVoteEntity oldEntity, AvailabilityVoteEntity newEntity) {
-        oldEntity.setAvailability(newEntity.getAvailability());
+    private AvailabilityVoteEntity updateAllowedParameters(AvailabilityVoteEntity oldEntity, AvailabilityVoteDto newDto) {
+        oldEntity.setAvailability(AvailabilityCrudFacade.map(newDto.getAvailability()));
         return oldEntity;
     }
 }

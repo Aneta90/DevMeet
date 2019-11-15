@@ -2,9 +2,9 @@ package pl.com.devmeet.devmeet.group_associated.permission.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
@@ -15,7 +15,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import java.util.List;
 
 @Service
-public class PermissionCrudFacade implements CrudInterface<PermissionDto, PermissionEntity> {
+public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, PermissionEntity> {
 
     private PermissionCrudRepository permissionRepository;
     private GroupCrudRepository groupRepository;

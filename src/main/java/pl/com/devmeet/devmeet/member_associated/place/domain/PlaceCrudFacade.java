@@ -3,24 +3,24 @@ package pl.com.devmeet.devmeet.member_associated.place.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.CrudFacadeMode;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudCreator;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudRepository;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudSaver;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudUpdater;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
 import static pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudMapper.mapDtoList;
 
 @Service
-public class PlaceCrudFacade implements CrudInterface<PlaceDto, PlaceEntity> {
+public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntity> {
 
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
@@ -77,38 +77,38 @@ public class PlaceCrudFacade implements CrudInterface<PlaceDto, PlaceEntity> {
 
 
     @Override
-    public PlaceDto create(PlaceDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public PlaceDto create(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
 
 
     @Override
-    public PlaceDto read(PlaceDto dto) throws EntityNotFoundException {
+    public PlaceDto read(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<PlaceDto> readAll(PlaceDto dto) throws EntityNotFoundException {
+    public List<PlaceDto> readAll(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
-    public PlaceDto update(PlaceDto oldDto, PlaceDto newDto) throws EntityNotFoundException {
+    public PlaceDto update(PlaceDto oldDto, PlaceDto newDto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public PlaceDto delete(PlaceDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public PlaceDto delete(PlaceDto dto) throws UserNotFoundException, MemberNotFoundException, PlaceNotFoundException, PlaceFoundButNotActiveException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public PlaceEntity findEntity(PlaceDto dto) throws EntityNotFoundException {
+    public PlaceEntity findEntity(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<PlaceEntity> findEntities(PlaceDto dto) throws UnsupportedOperationException, EntityNotFoundException {
+    public List<PlaceEntity> findEntities(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return initFinder().findEntities(dto);
     }
 

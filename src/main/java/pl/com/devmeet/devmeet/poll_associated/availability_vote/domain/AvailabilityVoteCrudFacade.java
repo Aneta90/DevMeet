@@ -2,9 +2,9 @@ package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityCrudRepository;
@@ -17,7 +17,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import java.util.List;
 
 @Service
-public class AvailabilityVoteCrudFacade implements CrudInterface<AvailabilityVoteDto, AvailabilityVoteEntity> {
+public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<AvailabilityVoteDto, AvailabilityVoteEntity> {
 
     private AvailabilityVoteCrudRepository availabilityVoteRepository;
     private PollCrudRepository pollCrudRepository;

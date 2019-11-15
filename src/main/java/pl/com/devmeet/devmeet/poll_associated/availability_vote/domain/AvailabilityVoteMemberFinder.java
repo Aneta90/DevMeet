@@ -3,11 +3,11 @@ package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status.AvailabilityVoteCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,11 +16,7 @@ public class AvailabilityVoteMemberFinder {
 
     private MemberCrudFacade memberCrudFacade;
 
-    public MemberEntity findMember(MemberDto dto) throws EntityNotFoundException {
-        try {
+    public MemberEntity findMember(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
             return memberCrudFacade.findEntity(dto);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_MEMBER_NOT_FOUND.toString());
-        }
     }
 }

@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.UserEntity;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,21 +25,21 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     private MemberUserFinder userFinder;
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return findMember(dto);
     }
 
-    private MemberEntity findMember(MemberDto memberDto) throws EntityNotFoundException {
+    private MemberEntity findMember(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException {
         UserEntity userEntity = findUser(memberDto.getUser());
         Optional<MemberEntity> member = memberRepository.findByUser(userEntity);
 
         if (member.isPresent())
             return member.get();
         else
-            throw new EntityNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
+            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
     }
 
-    private UserEntity findUser(UserDto dto) throws EntityNotFoundException {
+    private UserEntity findUser(UserDto dto) throws UserNotFoundException {
         return userFinder.findUserEntity(dto);
     }
 
@@ -50,7 +53,7 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
         try {
             findMember(dto);
             return true;
-        } catch (EntityNotFoundException e) {
+        } catch (UserNotFoundException | MemberNotFoundException e) {
             return false;
         }
     }

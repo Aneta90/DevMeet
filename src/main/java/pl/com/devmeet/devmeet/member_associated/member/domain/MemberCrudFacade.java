@@ -2,17 +2,20 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberFoundButNotActiveException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
 @Service
-public class MemberCrudFacade implements CrudInterface<MemberDto, MemberEntity> {
+public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEntity> {
 
     private MemberRepository memberRepository;
     private UserRepository userRepository;
@@ -48,32 +51,37 @@ public class MemberCrudFacade implements CrudInterface<MemberDto, MemberEntity> 
     }
 
     @Override
-    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public MemberDto create(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
+    public MemberDto read(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return map(findEntity(dto));
     }
 
     @Override
-    public List<MemberDto> readAll(MemberDto dto) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<MemberDto> readAll(MemberDto dto) throws CrudException {
+        throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
-        return map(initUpdater().update(newDto, oldDto));
+    public MemberDto update(MemberDto oldDto, MemberDto newDto ) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+        return map(initUpdater().update(oldDto, newDto));
     }
 
     @Override
-    public MemberDto delete(MemberDto dto) throws EntityNotFoundException {
+    public MemberDto delete(MemberDto dto) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
         return map(initDeleter().delete(dto));
     }
 
-    public boolean isActive(MemberDto memberDto) throws EntityNotFoundException {
-        return initFinder().findEntity(memberDto).isActive();
+    public boolean isActive(MemberDto memberDto) {
+        try {
+            initFinder().findEntity(memberDto).isActive();
+            return true;
+        } catch (UserNotFoundException | MemberNotFoundException e) {
+           return false;
+        }
     }
 
     public boolean isExist(MemberDto memberDto) {
@@ -81,13 +89,13 @@ public class MemberCrudFacade implements CrudInterface<MemberDto, MemberEntity> 
     }
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<MemberEntity> findEntities(MemberDto dto) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<MemberEntity> findEntities(MemberDto dto) throws CrudException {
+        throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     public static MemberEntity map(MemberDto dto) {

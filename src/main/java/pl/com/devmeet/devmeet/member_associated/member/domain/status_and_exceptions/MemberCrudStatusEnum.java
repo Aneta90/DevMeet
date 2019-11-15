@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.member_associated.member.domain.status;
+package pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions;
 
 /**
  * Created by IntelliJ IDEA.
