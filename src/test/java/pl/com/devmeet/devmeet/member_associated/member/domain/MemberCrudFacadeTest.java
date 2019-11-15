@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeet.user.domain.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,10 +27,12 @@ public class MemberCrudFacadeTest {
     MemberDto testMemberDto;
 
     private MemberDto createdMemberDto;
+
     private MemberCrudFacade memberCrudFacade;
+    private UserCrudFacade userCrudFacade;
 
     @Before
-    public void setUp() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void setUp() {
         testUserDto = new UserDto().builder()
                 .email("test@test.pl")
                 .phone("221234567")
@@ -41,6 +45,9 @@ public class MemberCrudFacadeTest {
                 .user(testUserDto)
                 .nick("Wasacz")
                 .build();
+
+        userCrudFacade = initUserCrudFacade();
+        memberCrudFacade = initMemberCrudFacade();
     }
 
     private UserCrudFacade initUserCrudFacade() {
@@ -55,7 +62,7 @@ public class MemberCrudFacadeTest {
         return new MemberCrudFacade(memberRepository, userRepository);
     }
 
-    private UserEntity initTestDB() {
+    private UserEntity initTestDatabaseByAddingUser() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
 
         return userCrudFacade
@@ -65,63 +72,88 @@ public class MemberCrudFacadeTest {
 
     @Test
     public void INIT_TEST_DB() {
-        UserEntity createdUser = initTestDB();
+        UserEntity createdUser = initTestDatabaseByAddingUser();
         assertThat(createdUser).isNotNull();
     }
 
     @Test
     public void WHEN_creating_non_existing_member_THEN_create_new_member() throws EntityAlreadyExistsException, EntityNotFoundException {
-        UserEntity createdUser = initTestDB();
-        MemberDto createdMember = createMember();
+        UserEntity createdUser = initTestDatabaseByAddingUser();
+        MemberDto member = createMember();
 
-        assertThat(createdMember).isNotNull();
-        assertThat(createdMember.getNick()).isEqualTo(testMemberDto.getNick());
-        assertThat(createdMember.getUser().getId()).isEqualTo(createdUser.getId());
-        assertThat(createdMember.getCreationTime()).isNotNull();
-        assertThat(createdMember.isActive()).isTrue();
+        assertThat(member).isNotNull();
+
+        assertThat(member.getUser().getId()).isEqualTo(createdUser.getId());
+        assertThat(member.getUser().isActive()).isTrue();
+
+        assertThat(member.getNick()).isEqualTo(testMemberDto.getNick());
+        assertThat(member.getCreationTime()).isNotNull();
+        assertThat(member.isActive()).isTrue();
     }
 
-    @Test(expected = EntityAlreadyExistsException.class)
-    public void WHEN_try_to_create_existing_member_THEN_throw_exception() throws EntityAlreadyExistsException, EntityNotFoundException {
-        initTestDB();
-        MemberDto createdMember = createMember();
+    @Test
+    public void WHEN_try_to_create_existing_member_THEN_throw_exception() {
+        initTestDatabaseByAddingUser();
+        MemberDto createdMember = null;
 
-        MemberDto existingMemberDto = new MemberDto();
-        existingMemberDto.setNick("testMember");
-        memberCrudFacade.create(existingMemberDto);
+        try {
+            createdMember = createMember();
+        } catch (EntityAlreadyExistsException | EntityNotFoundException e) {
+            Assert.fail();
+        }
+
+        try {
+            memberCrudFacade.create(createdMember);
+            Assert.fail();
+        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+            assertThat(e)
+                    .isInstanceOf(EntityAlreadyExistsException.class)
+                    .hasMessage(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
+        }
     }
 
     @Test
     public void WHEN_find_existing_member_THEN_return_memberDto() throws EntityNotFoundException, EntityAlreadyExistsException {
-        UserEntity createdUser = initTestDB();
-        MemberDto createdMember = createMember();
+        initTestDatabaseByAddingUser();
+        createMember();
 
         MemberDto foundMemberDto = memberCrudFacade.read(testMemberDto);
 
         assertThat(foundMemberDto).isNotNull();
         assertThat(foundMemberDto.getNick()).isEqualTo(testMemberDto.getNick());
-        assertThat(foundMemberDto.getUser()).isEqualToComparingFieldByFieldRecursively(testUserDto);
+        assertThat(foundMemberDto.getUser()).isNotNull();
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void WHEN_try_to_find_member_who_does_not_exist_THEN_return_MemberNotFoundException() throws EntityNotFoundException {
-        MemberDto notFoundMemberDto = new MemberDto();
-        notFoundMemberDto.setNick("null");
-        MemberDto memberNotFound = memberCrudFacade.read(notFoundMemberDto);
-        assertThat(memberNotFound).isNull();
+    @Test
+    public void WHEN_try_to_find_member_who_does_not_exist_THEN_return_MemberNotFoundException() {
+        initTestDatabaseByAddingUser();
+
+        try {
+            memberCrudFacade.read(testMemberDto);
+            Assert.fail();
+        } catch (EntityNotFoundException e) {
+            assertThat(e)
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
+        }
     }
 
     @Test
     public void WHEN_member_exists_THEN_return_true() {
+        initTestDatabaseByAddingUser();
+        try {
+            createMember();
+        } catch (EntityAlreadyExistsException | EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+
         boolean memberExists = memberCrudFacade.isExist(testMemberDto);
         assertThat(memberExists).isTrue();
     }
 
     @Test
     public void WHEN_member_does_not_exist_THEN_return_false() {
-        MemberDto memberNotExisted = new MemberDto();
-        testMemberDto.setNick("test");
-        boolean memberDoesNotExist = memberCrudFacade.isExist(memberNotExisted);
+        boolean memberDoesNotExist = memberCrudFacade.isExist(testMemberDto);
         assertThat(memberDoesNotExist).isFalse();
     }
 

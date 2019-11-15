@@ -6,15 +6,15 @@ public interface CrudInterface<D, E> {
 
     D create(D dto) throws EntityNotFoundException, EntityAlreadyExistsException;
 
-    D read(D dto) throws IllegalArgumentException, EntityNotFoundException;
+    D read(D dto) throws EntityNotFoundException;
 
-    List<D> readAll(D dto) throws IllegalArgumentException, EntityNotFoundException, UnsupportedOperationException;
+    List<D> readAll(D dto) throws EntityNotFoundException, UnsupportedOperationException;
 
-    D update(D oldDto, D newDto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException;
+    D update(D oldDto, D newDto) throws EntityNotFoundException, EntityAlreadyExistsException;
 
-    D delete(D dto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException;
+    D delete(D dto) throws EntityNotFoundException, EntityAlreadyExistsException;
 
-    E findEntity(D dto) throws IllegalArgumentException, EntityNotFoundException;
+    E findEntity(D dto) throws EntityNotFoundException;
 
-    List<E> findEntities(D dto) throws IllegalArgumentException, EntityNotFoundException, UnsupportedOperationException;
+    List<E> findEntities(D dto) throws EntityNotFoundException, UnsupportedOperationException;
 }

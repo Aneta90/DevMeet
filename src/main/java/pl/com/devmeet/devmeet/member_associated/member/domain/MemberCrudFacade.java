@@ -2,13 +2,17 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.devmeet.devmeet.domain_utils.CrudInterface;
 import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
+import java.util.List;
+
 @Service
-public class MemberCrudFacade implements MemberCrudInterface {
+public class MemberCrudFacade implements CrudInterface<MemberDto, MemberEntity> {
 
     private MemberRepository memberRepository;
     private UserRepository userRepository;
@@ -35,11 +39,11 @@ public class MemberCrudFacade implements MemberCrudInterface {
         return new MemberCrudCreator(initFinder(), initSaver());
     }
 
-    private MemberCrudDeleter deleterInit() {
+    private MemberCrudDeleter initDeleter() {
         return new MemberCrudDeleter(initFinder(),initSaver());
     }
 
-    private MemberCrudUpdater updateInit() {
+    private MemberCrudUpdater initUpdater() {
         return new MemberCrudUpdater(initFinder(), initSaver());
     }
 
@@ -54,21 +58,24 @@ public class MemberCrudFacade implements MemberCrudInterface {
     }
 
     @Override
+    public List<MemberDto> readAll(MemberDto dto) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    }
+
+    @Override
     public MemberDto update(MemberDto newDto, MemberDto oldDto) throws EntityNotFoundException {
-        return map(updateInit().update(newDto, oldDto));
+        return map(initUpdater().update(newDto, oldDto));
     }
 
     @Override
-    public boolean delete(MemberDto dto) throws EntityNotFoundException {
-        return deleterInit().delete(dto) != null;
+    public MemberDto delete(MemberDto dto) throws EntityNotFoundException {
+        return map(initDeleter().delete(dto));
     }
 
-    @Override
     public boolean isActive(MemberDto memberDto) throws EntityNotFoundException {
         return initFinder().findEntity(memberDto).isActive();
     }
 
-    @Override
     public boolean isExist(MemberDto memberDto) {
         return initFinder().isExist(memberDto);
     }
@@ -76,6 +83,11 @@ public class MemberCrudFacade implements MemberCrudInterface {
     @Override
     public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
         return initFinder().findEntity(dto);
+    }
+
+    @Override
+    public List<MemberEntity> findEntities(MemberDto dto) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     public static MemberEntity map(MemberDto dto) {

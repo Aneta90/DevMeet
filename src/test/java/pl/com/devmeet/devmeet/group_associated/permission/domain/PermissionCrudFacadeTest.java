@@ -50,7 +50,7 @@ public class PermissionCrudFacadeTest {
     @Before
     public void setUp() {
 
-        testUserDto = new UserDto().builder()
+        testUserDto = UserDto.builder()
                 .email("test@test.pl")
                 .phone("221234567")
                 .password("testPass")
@@ -58,12 +58,12 @@ public class PermissionCrudFacadeTest {
                 .loggedIn(true)
                 .build();
 
-        testMemberDto = new MemberDto().builder()
+        testMemberDto = MemberDto.builder()
                 .user(testUserDto)
                 .nick("WasatyJanusz")
                 .build();
 
-        testGroupDto = new GroupDto().builder()
+        testGroupDto = GroupDto.builder()
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")
@@ -76,7 +76,7 @@ public class PermissionCrudFacadeTest {
                 .isActive(false)
                 .build();
 
-        testPermissionDto = new PermissionDto().builder()
+        testPermissionDto = PermissionDto.builder()
                 .member(testMemberDto)
                 .group(testGroupDto)
                 .possibleToVote(true)

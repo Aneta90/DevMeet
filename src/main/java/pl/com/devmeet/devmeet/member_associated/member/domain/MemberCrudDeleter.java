@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status.MemberCrudStatusEnum;
 
 @RequiredArgsConstructor
 class MemberCrudDeleter {
@@ -13,7 +14,7 @@ class MemberCrudDeleter {
     @NonNull
     private MemberCrudSaver memberCrudSaver;
 
-    public MemberEntity delete(MemberDto memberDto) throws IllegalArgumentException, EntityNotFoundException {
+    public MemberEntity delete(MemberDto memberDto) throws EntityNotFoundException {
 
         MemberEntity memberEntity = memberCrudFinder.findEntity(memberDto);
         if (memberEntity.isActive()) {
@@ -24,7 +25,7 @@ class MemberCrudDeleter {
             return saveMemberEntity(memberEntity);
         }
 
-            throw new MemberNotFoundException("Member is not found in database or is not active");
+            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
     private MemberEntity saveMemberEntity(MemberEntity entity) {
