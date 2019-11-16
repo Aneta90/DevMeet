@@ -1,6 +1,8 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
 public class MessengerCrudFacade implements MessengerCrudInterface {
 

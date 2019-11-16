@@ -4,6 +4,8 @@ package pl.com.devmeet.devmeet.member_associated.place.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;

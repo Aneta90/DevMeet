@@ -1,5 +1,8 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+
 public interface MessengerCrudInterface {
 
     MessengerDto create(MessengerDto messengerDto) throws EntityAlreadyExistsException, EntityNotFoundException;
