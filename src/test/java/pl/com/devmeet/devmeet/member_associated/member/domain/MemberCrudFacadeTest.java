@@ -140,7 +140,7 @@ public class MemberCrudFacadeTest {
         } catch (MemberNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
+                    .hasMessage(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
         }
     }
 
@@ -163,13 +163,13 @@ public class MemberCrudFacadeTest {
     public void WHEN_try_to_update_existing_member_THEN_updated_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, MemberFoundButNotActiveException {
         initTestDatabaseByAddingUser();
         UserDto foundUser = initUserCrudFacade().read(testUserDto);
-        createMember();
+        MemberDto createdMember = createMember();
 
         MemberDto updatedMember = memberCrudFacade.update(testMemberDto, updateTestMemberDto(testMemberDto));
 
         assertThat(updatedMember.getUser()).isEqualToComparingFieldByFieldRecursively(foundUser);
 
-        assertThat(updatedMember.isActive()).isEqualTo(testMemberDto.isActive());
+        assertThat(updatedMember.isActive()).isEqualTo(createdMember.isActive());
         assertThat(updatedMember.getCreationTime()).isNotNull();
         assertThat(updatedMember.getModificationTime()).isNotNull();
     }
@@ -187,7 +187,11 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException {
+    public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, MemberFoundButNotActiveException {
+        initTestDatabaseByAddingUser();
+        memberCrudFacade.create(testMemberDto);
+        memberCrudFacade.delete(testMemberDto);
+
         try {
             memberCrudFacade.update(testMemberDto, updateTestMemberDto(testMemberDto));
             Assert.fail();
@@ -200,13 +204,15 @@ public class MemberCrudFacadeTest {
 
     @Test
     public void WHEN_try_to_update_not_existing_member_THEN_return_MemberNotFoundException() throws UserNotFoundException, MemberFoundButNotActiveException {
+        initTestDatabaseByAddingUser();
+
         try {
             memberCrudFacade.update(testMemberDto, updateTestMemberDto(testMemberDto));
             Assert.fail();
         } catch (MemberNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MemberCrudStatusEnum.MEMBER_MEMBER_NOT_FOUND.toString());
+                    .hasMessage(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
         }
     }
 
@@ -219,15 +225,17 @@ public class MemberCrudFacadeTest {
         assertThat(isMemberDeleted.isActive()).isFalse();
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test
     public void WHEN_try_to_delete_non_existing_member_THEN_throw_EntityNotFoundException() throws UserNotFoundException, MemberFoundButNotActiveException {
+        initTestDatabaseByAddingUser();
+
         try {
             memberCrudFacade.delete(testMemberDto);
             Assert.fail();
         } catch (MemberNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MemberCrudStatusEnum.MEMBER_MEMBER_NOT_FOUND.toString());
+                    .hasMessage(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
         }
     }
 }

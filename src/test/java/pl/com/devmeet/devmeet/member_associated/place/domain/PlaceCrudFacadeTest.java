@@ -118,7 +118,7 @@ public class PlaceCrudFacadeTest {
     @Test
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
-        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE);
+        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         UserEntity userEntity = userCrudFacade.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
@@ -126,6 +126,7 @@ public class PlaceCrudFacadeTest {
     @Test
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
+        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.create(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }
@@ -237,7 +238,7 @@ public class PlaceCrudFacadeTest {
             placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
         } catch (PlaceNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(PlaceNotFoundException.class)
                     .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }

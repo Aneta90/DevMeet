@@ -2,11 +2,11 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.UserEntity;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserCrudStatusEnum;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 /**
@@ -30,9 +30,9 @@ class MemberUserFinder {
             if(userEntity != null)
                 return userEntity;
         }catch (IllegalArgumentException e){
-            throw new UserNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
+            throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
         }
 
-        throw new UserNotFoundException(MemberCrudStatusEnum.MEMBER_USER_NOT_FOUND.toString());
+        throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
     }
 }

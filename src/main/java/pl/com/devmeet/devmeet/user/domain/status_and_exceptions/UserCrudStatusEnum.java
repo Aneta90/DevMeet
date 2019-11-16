@@ -7,7 +7,7 @@ package pl.com.devmeet.devmeet.user.domain.status_and_exceptions;
  * Time: 11:51
  */
 public enum UserCrudStatusEnum {
-    USER_NOT_EXISTS("User not exists"),
+    USER_NOT_FOUND("User not found"),
     USER_FOUND_BUT_NOT_ACTIVE("User found but not active"),
     USER_ALREADY_EXISTS("User already exists");
 

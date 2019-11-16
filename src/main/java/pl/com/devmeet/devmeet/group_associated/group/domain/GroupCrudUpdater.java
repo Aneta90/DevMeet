@@ -32,16 +32,14 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         if (oldGroup.isActive())
             return oldGroup;
         else
-            throw new GroupFoundButNotActiveException(GroupCrudStatusEnum
-                    .GROUP_FOUND_BUT_NOT_ACTIVE.toString());
+            throw new GroupFoundButNotActiveException(GroupCrudStatusEnum.GROUP_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
     private GroupDto checkIsNewGroupHasAName(GroupDto newGroup, GroupEntity oldGroup) throws GroupException {
         if (newGroup.getGroupName().equals(oldGroup.getGroupName()))
             return newGroup;
 
-        throw new GroupException(GroupCrudStatusEnum
-                .GROUP_INCORRECT_VALUES.toString());
+        throw new GroupException(GroupCrudStatusEnum.GROUP_INCORRECT_VALUES.toString());
     }
 
     private GroupEntity mapDtoToEntity(GroupDto dto) {

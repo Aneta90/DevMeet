@@ -123,6 +123,7 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
+        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.create(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }

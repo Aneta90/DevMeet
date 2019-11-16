@@ -172,7 +172,7 @@ public class PollCrudFacadeTest {
             Assert.fail();
         } catch (PollUnsupportedOperationException e) {
             assertThat(e)
-                    .isInstanceOf(UnsupportedOperationException.class)
+                    .isInstanceOf(PollUnsupportedOperationException.class)
                     .hasMessage(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
         }
     }

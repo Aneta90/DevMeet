@@ -166,6 +166,7 @@ public class PermissionCrudFacadeTest {
     @Test
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
         MemberCrudFacade memberFacade = initMemberCrudFacade();
+        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberFacade.findEntity(memberFacade.create(testMemberDto));
 
         assertThat(memberEntity).isNotNull();

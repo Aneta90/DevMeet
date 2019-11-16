@@ -165,7 +165,7 @@ public class GroupCrudFacadeTest {
             facade.delete(testGroup);
         } catch (GroupNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(GroupNotFoundException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }

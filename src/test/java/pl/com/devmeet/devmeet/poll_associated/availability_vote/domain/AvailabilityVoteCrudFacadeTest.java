@@ -256,7 +256,7 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     @Test
-    public void WHERE_try_to_create_already_existing_vote_THEN_return_EntityAlreadyExistsException() {
+    public void WHERE_try_to_create_already_existing_vote_THEN_return_EntityAlreadyExistsException() throws AvailabilityNotFoundException, MemberNotFoundException, GroupNotFoundException, UserNotFoundException, PollNotFoundException {
         initTestDB();
         AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
 
@@ -269,9 +269,9 @@ public class AvailabilityVoteCrudFacadeTest {
         try {
             voteCrudFacade.create(testVoteDto);
             Assert.fail();
-        } catch (AvailabilityNotFoundException | GroupNotFoundException | AvailabilityVoteAlreadyExistsException | PollNotFoundException | MemberNotFoundException | UserNotFoundException e) {
+        } catch (AvailabilityVoteAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(EntityAlreadyExistsException.class)
+                    .isInstanceOf(AvailabilityVoteAlreadyExistsException.class)
                     .hasMessage(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_ALREADY_EXISTS.toString());
         }
     }
@@ -291,15 +291,15 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_cant_find_vote_THEN_return_EntityNotFoundException() {
+    public void WHEN_cant_find_vote_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
         AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
 
         try {
             voteCrudFacade.read(testVoteDto);
-        } catch (MemberNotFoundException | UserNotFoundException | AvailabilityVoteNotFoundException e) {
+        } catch (AvailabilityVoteNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(AvailabilityVoteNotFoundException.class)
                     .hasMessage(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_NOT_FOUND.toString());
         }
     }
