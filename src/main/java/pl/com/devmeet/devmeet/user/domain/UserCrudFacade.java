@@ -11,10 +11,6 @@ public class UserCrudFacade implements UserCrudInterface {
 
     private UserRepository repository;
 
-
-    //    private String userNotFoundMessage = "User not found";
-//    private String defaultLoginTypeErrMessage = "User default login type not defined";
-
     @Autowired
     public UserCrudFacade(UserRepository repository) {
         this.repository = repository;

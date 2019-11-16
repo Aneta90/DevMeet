@@ -1,66 +1,60 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserDto;
+import pl.com.devmeet.devmeet.user.domain.UserEntity;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@RequiredArgsConstructor
 class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
 
+    @NonNull
     private MemberRepository memberRepository;
-
-    MemberCrudFinder(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    @NonNull
+    private MemberUserFinder userFinder;
 
     @Override
-    public MemberEntity findEntity(MemberDto dto) throws EntityNotFoundException {
+    public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+        return findMember(dto);
+    }
 
-        Optional<MemberEntity> member = findMember(dto);
-        if (member.isPresent()) {
+    private MemberEntity findMember(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException {
+        UserEntity userEntity = findUser(memberDto.getUser());
+        Optional<MemberEntity> member = memberRepository.findByUser(userEntity);
+
+        if (member.isPresent())
             return member.get();
-        } else {
-            throw new EntityNotFoundException("Member not found");
-        }
+        else
+            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
     }
 
-    private Optional<MemberEntity> findMember(MemberDto memberDto) {
-        String memberNick = memberDto.getNick();
-        if (checkMemberNick(memberNick)) {
-            return Optional.ofNullable(memberRepository.findByNick(memberNick));
-        }
-        return Optional.empty();
+    private UserEntity findUser(UserDto dto) throws UserNotFoundException {
+        return userFinder.findUserEntity(dto);
     }
-
-    private boolean checkMemberNick(String memberNick) {
-        return memberNick != null && !memberNick.equals("");
-    }
-
-    public MemberDto read(MemberDto dto) throws EntityNotFoundException {
-        return getDtoFromEntity(findEntity(dto));
-    }
-
-    private MemberDto getDtoFromEntity(MemberEntity entity) {
-        return MemberCrudInterface.map(entity);
-    }
-
 
     @Override
-    public List<MemberEntity> findEntities(MemberDto dto) throws IllegalArgumentException {
+    public List<MemberEntity> findEntities(MemberDto dto) {
         return null;
     }
 
-   /* Optional<List<MemberEntity>> memberListByGroup(GroupDto groupDto) {
-        return memberRepository.findByGroup(groupDto.getGroupName());
-    }
-
-    Optional<List<MemberEntity>> memberListByPlace(PlaceDto placeDto) {
-        return memberRepository.findByPlace(placeDto.getPlaceName());
-    }*/
-
     @Override
     public boolean isExist(MemberDto dto) {
-        return memberRepository.findByNick(dto.getNick()) != null;
+        try {
+            findMember(dto);
+            return true;
+        } catch (UserNotFoundException | MemberNotFoundException e) {
+            return false;
+        }
     }
 }

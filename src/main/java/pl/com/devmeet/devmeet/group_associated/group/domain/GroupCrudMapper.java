@@ -28,6 +28,7 @@ class GroupCrudMapper {
         return dto != null ? new GroupEntity().builder()
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
+                .description(dto.getDescription())
                 .messenger(MessengerCrudFacade.map(dto.getMessenger()))
                 .membersLimit(dto.getMembersLimit())
                 .memberCounter(dto.getMemberCounter())

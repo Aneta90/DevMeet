@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status;
+package pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions;
 
 public enum AvailabilityVoteCrudStatusEnum {
 

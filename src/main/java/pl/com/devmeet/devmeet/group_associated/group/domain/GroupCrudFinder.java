@@ -1,8 +1,9 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +17,13 @@ class GroupCrudFinder implements CrudEntityFinder<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupEntity findEntity(GroupDto dto) throws EntityNotFoundException {
+    public GroupEntity findEntity(GroupDto dto) throws GroupNotFoundException {
         Optional<GroupEntity> group = findGroup(dto);
 
         if (group.isPresent())
             return group.get();
         else
-            throw new EntityNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
+            throw new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
     }
 
     private Optional<GroupEntity> findGroup(GroupDto dto) {
@@ -35,7 +36,7 @@ class GroupCrudFinder implements CrudEntityFinder<GroupDto, GroupEntity> {
     }
 
     @Override
-    public List<GroupEntity> findEntities(GroupDto dto) throws EntityNotFoundException {
+    public List<GroupEntity> findEntities(GroupDto dto) throws GroupNotFoundException {
         Optional<List<GroupEntity>> groups;
 
         String groupName = dto.getGroupName();
@@ -47,7 +48,7 @@ class GroupCrudFinder implements CrudEntityFinder<GroupDto, GroupEntity> {
                 return groups.get();
         }
 
-        throw new EntityNotFoundException(GroupCrudStatusEnum.GROUPS_NOT_FOUND.toString());
+        throw new GroupNotFoundException(GroupCrudStatusEnum.GROUPS_NOT_FOUND.toString());
     }
 
     @Override

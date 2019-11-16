@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntitySaver;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @Builder
 @AllArgsConstructor
@@ -20,13 +23,13 @@ class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, Permissio
     private PermissionMemberFinder memberFinder;
 
     @Override
-    public PermissionEntity saveEntity(PermissionEntity entity) throws EntityNotFoundException {
+    public PermissionEntity saveEntity(PermissionEntity entity) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
         return permissionCrudRepository
                 .save(connectPermissionWithMember(
                         connectPermissionWithGroup(entity)));
     }
 
-    private PermissionEntity connectPermissionWithGroup(PermissionEntity permissionEntity) throws EntityNotFoundException {
+    private PermissionEntity connectPermissionWithGroup(PermissionEntity permissionEntity) throws GroupNotFoundException {
         GroupEntity groupEntity = permissionEntity.getGroup();
 
         if (groupEntity.getId() == null)
@@ -36,7 +39,7 @@ class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, Permissio
         return permissionEntity;
     }
 
-    private PermissionEntity connectPermissionWithMember(PermissionEntity permissionEntity) throws EntityNotFoundException {
+    private PermissionEntity connectPermissionWithMember(PermissionEntity permissionEntity) throws MemberNotFoundException, UserNotFoundException {
         MemberEntity memberEntity = permissionEntity.getMember();
 
         if (memberEntity.getId() == null)
