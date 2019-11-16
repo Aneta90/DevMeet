@@ -7,10 +7,13 @@ import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsExcepti
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.*;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -23,10 +26,11 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     private UserRepository userRepository;
 
     @Autowired
-    public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository) {
+    public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.permissionRepository = permissionRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     private PermissionGroupFinder initGroupFinder() {
@@ -79,37 +83,37 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     }
 
     @Override
-    public PermissionDto create(PermissionDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public PermissionDto create(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, PermissionAlreadyExistsException, GroupNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PermissionDto read(PermissionDto dto) throws EntityNotFoundException {
+    public PermissionDto read(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, PermissionNotFoundException {
         return map(findEntity(dto));
     }
 
     @Override
-    public List<PermissionDto> readAll(PermissionDto dto) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(PermissionCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<PermissionDto> readAll(PermissionDto dto) throws PermissionMethodNotImplemented {
+        throw new PermissionMethodNotImplemented(PermissionCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PermissionDto update(PermissionDto oldDto, PermissionDto newDto) throws EntityNotFoundException {
+    public PermissionDto update(PermissionDto oldDto, PermissionDto newDto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, PermissionException, PermissionNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public PermissionDto delete(PermissionDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public PermissionDto delete(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, PermissionAlreadyExistsException, GroupNotFoundException, PermissionNotFoundException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public PermissionEntity findEntity(PermissionDto dto) throws EntityNotFoundException {
+    public PermissionEntity findEntity(PermissionDto dto) throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<PermissionEntity> findEntities(PermissionDto dto) throws UnsupportedOperationException {
+    public List<PermissionEntity> findEntities(PermissionDto dto) throws PermissionMethodNotImplemented {
         return initFinder().findEntities(dto);
     }
 

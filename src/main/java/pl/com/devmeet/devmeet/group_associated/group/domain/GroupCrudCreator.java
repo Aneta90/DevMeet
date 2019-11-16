@@ -5,7 +5,9 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
 @AllArgsConstructor
 class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
@@ -19,7 +21,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupEntity createEntity(GroupDto dto) throws EntityAlreadyExistsException {
+    public GroupEntity createEntity(GroupDto dto) throws GroupAlreadyExistsException {
         GroupEntity group;
 
         try {
@@ -28,11 +30,11 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
             if (!group.isActive() && group.getModificationTime() != null)
                 return saver.saveEntity(setDefaultValuesWhenGroupExists(group));
 
-        } catch (EntityNotFoundException e) {
+        } catch (GroupNotFoundException e) {
             return saver.saveEntity(setDefaultValuesWhenGroupNotExists(GroupCrudFacade.map(dto)));
         }
         
-        throw new EntityAlreadyExistsException(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
+        throw new GroupAlreadyExistsException(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
     }
 
 

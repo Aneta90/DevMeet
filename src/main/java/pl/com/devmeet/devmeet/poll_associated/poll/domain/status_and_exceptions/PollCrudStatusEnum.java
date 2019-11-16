@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.poll_associated.poll.domain.status;
+package pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions;
 
 public enum PollCrudStatusEnum {
 

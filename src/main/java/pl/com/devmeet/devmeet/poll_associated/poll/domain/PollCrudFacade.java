@@ -8,6 +8,10 @@ import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsExcepti
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollAlreadyExistsException;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollUnsupportedOperationException;
 
 import java.util.List;
 
@@ -58,38 +62,38 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     }
 
     @Override
-    public PollDto create(PollDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public PollDto create(PollDto dto) throws PollAlreadyExistsException, GroupNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PollDto read(PollDto dto) throws IllegalArgumentException, EntityNotFoundException {
+    public PollDto read(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
     }
 
     @Override
-    public List<PollDto> readAll(PollDto dto) throws IllegalArgumentException, UnsupportedOperationException {
+    public List<PollDto> readAll(PollDto dto)  {
         throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PollDto update(PollDto oldDto, PollDto newDto) throws UnsupportedOperationException {
-       throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public PollDto update(PollDto oldDto, PollDto newDto) throws PollUnsupportedOperationException {
+       throw new PollUnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public PollDto delete(PollDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public PollDto delete(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public PollEntity findEntity(PollDto dto) throws EntityNotFoundException {
+    public PollEntity findEntity(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<PollEntity> findEntities(PollDto dto) throws IllegalArgumentException, EntityNotFoundException, UnsupportedOperationException {
-        throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
+    public List<PollEntity> findEntities(PollDto dto) throws PollUnsupportedOperationException {
+        throw new PollUnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     public static PollDto map(PollEntity entity) {

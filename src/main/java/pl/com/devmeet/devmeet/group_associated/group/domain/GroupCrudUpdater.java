@@ -4,7 +4,10 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
 class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
 
@@ -17,7 +20,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     }
 
     @Override
-    public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
         GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntity(oldDto));
 
         GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
@@ -25,19 +28,19 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
         return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
     }
 
-    private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup) throws EntityAlreadyExistsException {
+    private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup) throws GroupFoundButNotActiveException {
         if (oldGroup.isActive())
             return oldGroup;
         else
-            throw new EntityAlreadyExistsException(GroupCrudStatusEnum
+            throw new GroupFoundButNotActiveException(GroupCrudStatusEnum
                     .GROUP_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
-    private GroupDto checkIsNewGroupHasAName(GroupDto newGroup, GroupEntity oldGroup) throws EntityNotFoundException {
+    private GroupDto checkIsNewGroupHasAName(GroupDto newGroup, GroupEntity oldGroup) throws GroupException {
         if (newGroup.getGroupName().equals(oldGroup.getGroupName()))
             return newGroup;
 
-        throw new EntityNotFoundException(GroupCrudStatusEnum
+        throw new GroupException(GroupCrudStatusEnum
                 .GROUP_INCORRECT_VALUES.toString());
     }
 

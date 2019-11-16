@@ -7,8 +7,12 @@ import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 
 @AllArgsConstructor
@@ -21,7 +25,7 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
     private MemberCrudFacade memberCrudFacade;
 
     @Override
-    public AvailabilityEntity createEntity(AvailabilityDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public AvailabilityEntity createEntity(AvailabilityDto dto) throws AvailabilityAlreadyExistsException, MemberNotFoundException, UserNotFoundException {
         AvailabilityEntity availability;
 //        boolean availabilityActivity;
 
@@ -29,12 +33,12 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
             availability = availabilityCrudFinder.findEntity(dto);
             if (!availability.isActive() && availability.getModificationTime() != null)
                 return availabilityCrudSaver.saveEntity(setDefaultValuesWhenAvailabilityExists(availability));
-        } catch (EntityNotFoundException e) {
+        } catch (AvailabilityNotFoundException e) {
             availability= setDefaultValuesWhenAvailabilityNotExists(AvailabilityCrudFacade.map(dto));
             return availabilityCrudSaver.saveEntity(availability);
         }
 
-        throw new EntityAlreadyExistsException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
+        throw new AvailabilityAlreadyExistsException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_ALREADY_EXISTS.toString());
     }
 
     private AvailabilityEntity setDefaultValuesWhenAvailabilityNotExists(AvailabilityEntity availability) {

@@ -5,6 +5,10 @@ import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
 import java.util.List;
 
@@ -35,37 +39,37 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
     @Override
-    public GroupDto create(GroupDto dto) throws EntityAlreadyExistsException {
+    public GroupDto create(GroupDto dto) throws GroupAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public GroupDto read(GroupDto dto) throws EntityNotFoundException {
+    public GroupDto read(GroupDto dto) throws GroupNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<GroupDto> readAll(GroupDto dto) throws EntityNotFoundException {
+    public List<GroupDto> readAll(GroupDto dto) throws GroupNotFoundException {
         return mapDtoList(findEntities(dto));
     }
 
     @Override
-    public GroupDto update(GroupDto oldDto, GroupDto newDto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public GroupDto update(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public GroupDto delete(GroupDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public GroupEntity findEntity(GroupDto dto) throws EntityNotFoundException {
+    public GroupEntity findEntity(GroupDto dto) throws GroupNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<GroupEntity> findEntities(GroupDto dto) throws EntityNotFoundException {
+    public List<GroupEntity> findEntities(GroupDto dto) throws GroupNotFoundException {
         return initFinder().findEntities(dto);
     }
 

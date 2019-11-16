@@ -7,7 +7,12 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityDeleter;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionAlreadyExistsException;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exceptions.PermissionNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +23,7 @@ class PermissionCrudDeleter implements CrudEntityDeleter<PermissionDto, Permissi
     private PermissionCrudSaver permissionCrudSaver;
 
     @Override
-    public PermissionEntity deleteEntity(PermissionDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public PermissionEntity deleteEntity(PermissionDto dto) throws PermissionAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
         PermissionEntity permissionEntity = permissionCrudFinder.findEntity(dto);
         boolean permissionActivity = permissionEntity.isActive();
 
@@ -29,6 +34,6 @@ class PermissionCrudDeleter implements CrudEntityDeleter<PermissionDto, Permissi
             return permissionCrudSaver.saveEntity(permissionEntity);
         }
 
-        throw new EntityAlreadyExistsException(PermissionCrudStatusEnum.PERMISSION_FOUND_BUT_NOT_ACTIVE.toString());
+        throw new PermissionAlreadyExistsException(PermissionCrudStatusEnum.PERMISSION_FOUND_BUT_NOT_ACTIVE.toString());
     }
 }

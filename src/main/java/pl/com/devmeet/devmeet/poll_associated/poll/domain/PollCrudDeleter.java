@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityDeleter;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
-import pl.com.devmeet.devmeet.poll_associated.poll.domain.status.PollCrudStatusEnum;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollCrudStatusEnum;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +20,7 @@ class PollCrudDeleter implements CrudEntityDeleter<PollDto,PollEntity> {
     private PollCrudFinder pollCrudFinder;
 
     @Override
-    public PollEntity deleteEntity(PollDto dto) throws IllegalArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
+    public PollEntity deleteEntity(PollDto dto) throws PollNotFoundException, GroupNotFoundException {
        PollEntity foundPoll = pollCrudFinder.findEntity(dto);
        boolean pollActivity = foundPoll.isActive();
 
@@ -27,6 +29,6 @@ class PollCrudDeleter implements CrudEntityDeleter<PollDto,PollEntity> {
            return pollCrudSaver.saveEntity(foundPoll);
        }
 
-       throw new EntityAlreadyExistsException(PollCrudStatusEnum.POLL_FOUND_BUT_NOT_ACTIVE.toString());
+       throw new PollNotFoundException(PollCrudStatusEnum.POLL_FOUND_BUT_NOT_ACTIVE.toString());
     }
 }

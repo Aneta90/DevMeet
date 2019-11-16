@@ -5,9 +5,14 @@ import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
+import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -71,38 +76,38 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
 
 
     @Override
-    public AvailabilityDto create(AvailabilityDto dto) throws EntityAlreadyExistsException, EntityNotFoundException {
+    public AvailabilityDto create(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
 
     @Override
-    public AvailabilityDto read(AvailabilityDto dto) throws EntityNotFoundException {
+    public AvailabilityDto read(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws EntityNotFoundException {
+    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
     @Override
-    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws EntityNotFoundException {
+    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws UserNotFoundException, AvailabilityNotFoundException, AvailabilityException, MemberNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public AvailabilityDto delete(AvailabilityDto dto) throws EntityNotFoundException, EntityAlreadyExistsException {
+    public AvailabilityDto delete(AvailabilityDto dto) throws UserNotFoundException, AvailabilityNotFoundException, MemberNotFoundException, AvailabilityAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public AvailabilityEntity findEntity(AvailabilityDto dto) throws EntityNotFoundException {
+    public AvailabilityEntity findEntity(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws UnsupportedOperationException, EntityNotFoundException {
+    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return initFinder().findEntities(dto);
     }
 
