@@ -1,7 +1,5 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-
 public class MessengerCrudCreator {
 
     private MessengerCrudFinder messengerCrudFinder;

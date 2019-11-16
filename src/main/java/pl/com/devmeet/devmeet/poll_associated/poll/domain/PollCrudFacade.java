@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;

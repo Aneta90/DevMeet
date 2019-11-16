@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;

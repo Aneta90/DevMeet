@@ -1,7 +1,6 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
