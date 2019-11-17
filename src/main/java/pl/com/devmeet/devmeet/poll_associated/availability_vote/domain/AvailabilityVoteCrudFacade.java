@@ -91,6 +91,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
         return AvailabilityVoteCrudUpdater.builder()
                 .voteCrudFinder(initVoteFinder())
                 .voteCrudSaver(initVoteSaver())
+                .availabilityFinder(initAvailabilityFinder())
                 .build();
     }
 
