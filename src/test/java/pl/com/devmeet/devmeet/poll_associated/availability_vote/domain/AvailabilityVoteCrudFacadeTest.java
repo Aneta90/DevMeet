@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -40,6 +38,8 @@ import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -291,7 +291,7 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_cant_find_vote_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
+    public void WHEN_cant_find_vote_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
         AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
 
@@ -305,7 +305,38 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     @Test
-    public void readAll() {
+    public void WHEN_try_to_read_all_votes_in_the_poll_THEN_return_votes() {
+        initTestDB();
+        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteDto createdVote = null;
+        List<AvailabilityVoteDto> foundVotes = null;
+
+        try {
+            createdVote = voteCrudFacade.create(testVoteDto);
+        } catch (AvailabilityNotFoundException | GroupNotFoundException | AvailabilityVoteAlreadyExistsException | PollNotFoundException | MemberNotFoundException | UserNotFoundException e) {
+            Assert.fail();
+        }
+
+        try {
+            foundVotes = voteCrudFacade.readAll(testVoteDto);
+        } catch (GroupNotFoundException | AvailabilityVoteNotFoundException | PollNotFoundException e) {
+            Assert.fail();
+        }
+
+        assertThat(foundVotes.get(0)).isEqualToComparingFieldByFieldRecursively(createdVote);
+    }
+    @Test
+    public void WHEN_try_to_read_all_votes_in_the_poll_if_there_are_none_THEN_return_AvailabilityVoteNotFoundException() throws GroupNotFoundException, PollNotFoundException {
+        initTestDB();
+        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+
+        try {
+            voteCrudFacade.readAll(testVoteDto);
+        } catch (AvailabilityVoteNotFoundException e) {
+            assertThat(e)
+                    .isInstanceOf(AvailabilityVoteNotFoundException.class)
+                    .hasMessage(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTES_NOT_FOUND.toString());
+        }
     }
 
     @Test
