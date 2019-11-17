@@ -91,6 +91,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
         return AvailabilityVoteCrudUpdater.builder()
                 .voteCrudFinder(initVoteFinder())
                 .voteCrudSaver(initVoteSaver())
+                .availabilityFinder(initAvailabilityFinder())
                 .build();
     }
 
@@ -107,7 +108,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     }
 
     @Override
-    public AvailabilityVoteDto read(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException {
+    public AvailabilityVoteDto read(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
     }
 
@@ -127,7 +128,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     }
 
     @Override
-    public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException {
+    public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         return initVoteFinder().findEntity(dto);
     }
 

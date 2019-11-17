@@ -12,5 +12,5 @@ public interface AvailabilityVoteCrudRepository extends PagingAndSortingReposito
 
     Optional<List<AvailabilityVoteEntity>> findAllByPoll(PollEntity pollEntity);
 
-    Optional<AvailabilityVoteEntity> findByMemberAndIsActive (MemberEntity memberEntity, boolean isActive);
+    Optional<AvailabilityVoteEntity> findByMemberAndPoll(MemberEntity memberEntity, PollEntity pollEntity);
 }
