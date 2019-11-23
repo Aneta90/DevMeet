@@ -34,3 +34,6 @@ build/
 ### Linux ###
 .directory
 
+### Vaadin ###
+/node_modules/*
+
