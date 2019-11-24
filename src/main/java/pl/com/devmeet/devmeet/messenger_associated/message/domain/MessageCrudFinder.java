@@ -15,7 +15,7 @@ public class MessageCrudFinder {
         List<MessageEntity> foundMember = new ArrayList<>();
 
         if (memberNick != null && !memberNick.equals("")) {
-            foundMember = repository.findAllByFromMember(memberNick);
+            foundMember = repository.findMessagesFromMember(memberNick);
         }
         return foundMember;
     }
@@ -24,7 +24,7 @@ public class MessageCrudFinder {
         List<MessageEntity> foundMember = new ArrayList<>();
 
         if (memberNick != null && !memberNick.equals("")) {
-            foundMember = repository.findAllByToMember(memberNick);
+            foundMember = repository.findMessagesToMember(memberNick);
         }
         return foundMember;
     }

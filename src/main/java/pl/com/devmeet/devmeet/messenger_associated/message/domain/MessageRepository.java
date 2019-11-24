@@ -13,9 +13,9 @@ import java.util.UUID;
 public interface MessageRepository extends PagingAndSortingRepository<MessageEntity,UUID> {
 
     @Query("select m from MessageEntity m where m.fromMember.nick = :memberNick")
-    List<MessageEntity> findAllByFromMember(@Param("memberNick")String memberNick); //znajdź wszystkie wiadomości wysłane przez danego Membera
+    List<MessageEntity> findMessagesFromMember(@Param("memberNick")String memberNick); //znajdź wszystkie wiadomości wysłane przez danego Membera
 
     @Query("select m from MessageEntity m where m.toMember.nick = :memberNick")
-    List<MessageEntity> findAllByToMember(@Param("memberNick") String memberNick); //znajdź wszystkie wiadomości wysłane do danego Membera
+    List<MessageEntity> findMessagesToMember(@Param("memberNick") String memberNick); //znajdź wszystkie wiadomości wysłane do danego Membera
 
 }
