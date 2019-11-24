@@ -8,6 +8,6 @@ public class MessageCrudSaver {
     private MessageRepository messageRepository;
 
     public MessageEntity saveEntity(MessageEntity messageEntity) {
-        return messageRepository.save(messageEntity);
+        return  messageRepository.save(messageEntity);
     }
 }

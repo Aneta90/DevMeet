@@ -10,7 +10,8 @@ public class MessageCrudCreator {
         this.messageCrudFinder = new MessageCrudFinder(messageRepository);
     }
 
-    public MessageEntity create (MessageDto messageDto){ //tu nie sprawdzamy, czy dana wiadomość istnieje, bo można utworzyć wiele takich samych wiadomości
-            return messageCrudSaver.saveEntity(MessageMapper.toEntity(messageDto));
+    public MessageDto create(MessageDto messageDto) { //tu nie sprawdzamy, czy dana wiadomość istnieje, bo można utworzyć wiele takich samych wiadomości
+        MessageEntity messageEntity = MessageCrudInterface.map(messageDto);
+        return MessageCrudFacade.map(messageCrudSaver.saveEntity(messageEntity));
     }
 }

@@ -6,7 +6,7 @@ public interface MessageCrudInterface {
 
     MessageDto delete(MessageDto messageDto);
 
-    MessageDto edit(MessageDto messageDto);
+    MessageDto update(MessageDto messageDto);
 
     static MessageDto map(MessageEntity entity) {
         return MessageMapper.toDto(entity);
