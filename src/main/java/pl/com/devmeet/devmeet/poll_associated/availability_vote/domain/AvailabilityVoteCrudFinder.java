@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status.AvailabilityVoteCrudStatusEnum;
-import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteCrudStatusEnum;
+import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteNotFoundException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
+import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,37 +26,32 @@ class AvailabilityVoteCrudFinder implements CrudEntityFinder<AvailabilityVoteDto
     private AvailabilityVoteMemberFinder memberFinder;
 
     @Override
-    public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws IllegalArgumentException, EntityNotFoundException {
-        return findVote(dto);
+    public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
+        return findMemberVoteInPoll(dto);
     }
 
-    private AvailabilityVoteEntity findVote(AvailabilityVoteDto dto) throws EntityNotFoundException {
+    private AvailabilityVoteEntity findMemberVoteInPoll(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         MemberEntity memberEntity = findMember(dto);
+        PollEntity pollEntity = findPoll(dto);
 
-        Optional<AvailabilityVoteEntity> voteEntity = voteRepository.findByMemberAndIsActive(memberEntity, dto.isActive());
+        Optional<AvailabilityVoteEntity> voteEntity = voteRepository.findByMemberAndPoll(memberEntity, pollEntity);
 
         if (voteEntity.isPresent())
             return voteEntity.get();
 
-        throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_NOT_FOUND.toString());
+        throw new AvailabilityVoteNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_NOT_FOUND.toString());
     }
 
-    private MemberEntity findMember(AvailabilityVoteDto dto) throws EntityNotFoundException {
-        MemberDto memberDto = dto.getMember();
-
-        try {
-            return memberFinder.findMember(memberDto);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_MEMBER_NOT_FOUND.toString());
-        }
+    private MemberEntity findMember(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException {
+        return memberFinder.findMember(dto.getMember());
     }
 
     @Override
-    public List<AvailabilityVoteEntity> findEntities(AvailabilityVoteDto dto) throws IllegalArgumentException, EntityNotFoundException {
-        return findVotes(dto);
+    public List<AvailabilityVoteEntity> findEntities(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {
+        return findAllActiveAndNotActiveVotes(dto);
     }
 
-    private List<AvailabilityVoteEntity> findVotes(AvailabilityVoteDto dto) throws EntityNotFoundException {
+    private List<AvailabilityVoteEntity> findAllActiveAndNotActiveVotes(AvailabilityVoteDto dto) throws AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         PollEntity pollEntity = findPoll(dto);
 
         Optional<List<AvailabilityVoteEntity>> voteEntities = voteRepository.findAllByPoll(pollEntity);
@@ -62,21 +59,20 @@ class AvailabilityVoteCrudFinder implements CrudEntityFinder<AvailabilityVoteDto
         if (voteEntities.isPresent())
             return voteEntities.get();
 
-        throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTES_NOT_FOUND.toString());
+        throw new AvailabilityVoteNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTES_NOT_FOUND.toString());
     }
 
-    private PollEntity findPoll(AvailabilityVoteDto dto) throws EntityNotFoundException {
-        PollDto pollDto = dto.getPoll();
-
-        try {
-            return pollFinder.findPoll(pollDto);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_POLL_NOT_FOUND.toString());
-        }
+    private PollEntity findPoll(AvailabilityVoteDto dto) throws GroupNotFoundException, PollNotFoundException {
+        return pollFinder.findPoll(dto.getPoll());
     }
 
     @Override
     public boolean isExist(AvailabilityVoteDto dto) {
-        return false;
+        try {
+            findEntity(dto);
+            return true;
+        } catch (MemberNotFoundException | UserNotFoundException | AvailabilityVoteNotFoundException | GroupNotFoundException | PollNotFoundException e) {
+            return false;
+        }
     }
 }

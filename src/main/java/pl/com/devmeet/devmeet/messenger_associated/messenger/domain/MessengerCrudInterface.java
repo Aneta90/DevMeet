@@ -1,9 +1,7 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
-
-import java.util.Optional;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
 public interface MessengerCrudInterface {
 

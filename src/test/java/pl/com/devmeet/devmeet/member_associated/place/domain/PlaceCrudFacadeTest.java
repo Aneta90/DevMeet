@@ -1,6 +1,5 @@
 package pl.com.devmeet.devmeet.member_associated.place.domain;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,23 +7,25 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudFacade;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudRepository;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
+import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 
 @DataJpaTest
@@ -70,7 +71,7 @@ public class PlaceCrudFacadeTest {
                 .description("openspace koło Metra Politechniki")
                 .website("cziitt.pw.edu.pl")
                 .location("Rektorska 4, 00-614 Warszawa")
-            //    .availability(testAvailabilityDto)
+                //    .availability(testAvailabilityDto)
                 .placeVotes(null)
                 .creationTime(null)
                 .modificationTime(null)
@@ -83,11 +84,11 @@ public class PlaceCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository);
+        return new MemberCrudFacade(memberRepository, userRepository);
     }
 
     private PlaceCrudFacade initPlaceCrudFacade() {
-        return new PlaceCrudFacade(repository, memberRepository);
+        return new PlaceCrudFacade(repository, memberRepository, userRepository);
     }
 
 
@@ -98,15 +99,18 @@ public class PlaceCrudFacadeTest {
         UserEntity testUser = userCrudFacade
                 .findEntity(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
 
-        MemberEntity memberEntity;
+        MemberEntity memberEntity = null;
         try {
             memberEntity = memberCrudFacade
                     .findEntity(memberCrudFacade.create(testMemberDto));
-        } catch (EntityNotFoundException e) {
-            memberEntity = null;
-        } catch (EntityAlreadyExistsException e) {
-            memberEntity = null;
+        } catch (MemberNotFoundException e) {
+            e.printStackTrace();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        } catch (MemberAlreadyExistsException e) {
+            e.printStackTrace();
         }
+
         return testUser != null
                 && memberEntity != null;
     }
@@ -114,14 +118,15 @@ public class PlaceCrudFacadeTest {
     @Test
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
-        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE);
+        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         UserEntity userEntity = userCrudFacade.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
+        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.create(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }
@@ -133,7 +138,7 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         PlaceDto created = placeCrudFacade.create(testPlaceDto);
@@ -145,28 +150,26 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_create_existing_place_THEN_EntityAlreadyExistsException() {
+    public void WHEN_try_to_create_existing_place_THEN_EntityAlreadyExistsException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
             placeCrudFacade.create(testPlaceDto);
-        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+        } catch (MemberNotFoundException | UserNotFoundException | PlaceAlreadyExistsException e) {
             Assert.fail();
         }
         try {
             placeCrudFacade.create(testPlaceDto);
             Assert.fail();
-        } catch (EntityNotFoundException e) {
-            Assert.fail();
-        } catch (EntityAlreadyExistsException e) {
+        } catch (PlaceAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(EntityAlreadyExistsException.class)
+                    .isInstanceOf(PlaceAlreadyExistsException.class)
                     .hasMessage(PlaceCrudStatusEnum.PLACE_ALREADY_EXISTS.toString());
         }
     }
 
     @Test
-    public void WHEN_found_place_THEN_return_place() throws EntityNotFoundException, EntityAlreadyExistsException {
+    public void WHEN_found_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
         PlaceDto created;
         PlaceDto found = null;
@@ -178,21 +181,21 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_find_non_existing_place_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_find_non_existing_place_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
             placeCrudFacade.read(testPlaceDto);
             Assert.fail();
-        } catch (EntityNotFoundException e) {
+        } catch (PlaceNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(PlaceNotFoundException.class)
                     .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
 
     @Test
-    public void WHEN_try_to_find_all_places_THEN_return_places() throws EntityNotFoundException, EntityAlreadyExistsException {
+    public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
         List<PlaceDto> found = null;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
@@ -202,7 +205,7 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_try_to_update_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         PlaceDto created = placeCrudFacade.create(testPlaceDto);
@@ -214,7 +217,7 @@ public class PlaceCrudFacadeTest {
         assertThat(updated.getWebsite()).isEqualTo("www.pw.pl");
         assertThat(updated.getDescription()).isEqualTo("openspace");
         assertThat(updated.getLocation()).isEqualTo(created.getLocation());
-     //   assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
+        //   assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
         assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
@@ -228,20 +231,20 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_non_existing_place_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_update_non_existing_place_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         try {
             placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
-        } catch (EntityNotFoundException e) {
+        } catch (PlaceNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(PlaceNotFoundException.class)
                     .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
 
     @Test
-    public void WHEN_delete_existing_place_THEN_return_place() throws EntityAlreadyExistsException, EntityNotFoundException {
+    public void WHEN_delete_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException, PlaceFoundButNotActiveException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         PlaceDto created = placeCrudFacade.create(testPlaceDto);
@@ -254,15 +257,15 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_non_existing_place_THEN_return_EntityNotFoundException() {
+    public void WHEN_try_to_delete_non_existing_place_THEN_return_EntityNotFoundException() throws UserNotFoundException, MemberNotFoundException, PlaceFoundButNotActiveException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
 
         try {
             placeCrudFacade.delete(testPlaceDto);
-        } catch (EntityNotFoundException | EntityAlreadyExistsException e) {
+        } catch (PlaceNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(PlaceNotFoundException.class)
                     .hasMessage(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
         }
     }
