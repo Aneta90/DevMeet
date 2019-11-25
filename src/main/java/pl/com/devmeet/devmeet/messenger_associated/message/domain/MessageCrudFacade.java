@@ -2,18 +2,27 @@ package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeet.domain_utils.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import java.util.List;
 
 @Service
 public class MessageCrudFacade {
 
-    private MessageRepository repository;
+    MessageRepository repository;
+    GroupCrudRepository groupCrudRepository;
+    MemberRepository memberRepository;
+    UserRepository userRepository;
 
     @Autowired
-    public MessageCrudFacade(MessageRepository repository) {
+    public MessageCrudFacade(MessageRepository repository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.repository = repository;
+        this.groupCrudRepository = groupCrudRepository;
+        this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     private MessageCrudFinder finderInit() {

@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.user.domain;
 
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserStatusEnum;
 
 class UserCrudCreator {
 
@@ -50,7 +51,7 @@ class UserCrudCreator {
                 return setDefaultValuesToNewUserEntity(entity);
             }
         }
-        throw new IllegalArgumentException(defaultLoginTypeErrMessage);
+        throw new IllegalArgumentException(UserStatusEnum.USER_DEFAULT_LOGIN_TYPE_NOT_DEFINED.toString());
     }
 
     private UserEntity setDefaultValuesToNewUserEntity(UserEntity user) {

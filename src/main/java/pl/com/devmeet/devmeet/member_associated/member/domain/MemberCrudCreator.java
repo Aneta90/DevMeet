@@ -1,36 +1,75 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
+import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserEntity;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
-import pl.com.devmeet.devmeet.domain_utils.EntityAlreadyExistsException;
+@RequiredArgsConstructor
+class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
 
-public class MemberCrudCreator {
+    @NonNull
+    private MemberCrudFinder memberFinder;
+    @NonNull
+    private MemberCrudSaver saver;
 
-    private MemberCrudFinder memberCrudFinder;
-    private MemberCrudSaver memberCrudSaver;
+    @Override
+    public MemberEntity createEntity(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException {
+        MemberEntity memberEntity;
 
-    MemberCrudCreator(MemberRepository repository) {
-        this.memberCrudFinder = new MemberCrudFinder(repository);
-        this.memberCrudSaver = new MemberCrudSaver(repository);
+        try {
+            memberEntity = memberFinder.findEntity(dto);
+
+            if (!memberEntity.isActive())
+                return saver.saveEntity(
+                        setDefaultValuesIfMemberExistButNotActive(
+                        mapToEntity(dto)));
+
+        } catch (MemberNotFoundException e) {
+            return saver.saveEntity(
+                    setDefaultValuesIfMemberNotExist(
+                    connectMemberWithUser(dto)));
+        }
+
+        throw new MemberAlreadyExistsException(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
     }
 
-  /*  public MemberEntity createEntity(MemberDto dto) throws IllegalArgumentException, EntityAlreadyExistsException, EntityNotFoundException {
-        MemberEntity memberEntity = memberCrudFinder.findEntity(dto);
-        if (memberEntity != null) {
-            throw new MemberAlreadyExistsException("Member already exists in database");
-        }
-        return memberCrudSaver.saveEntity(MemberCrudFacade.map(dto));
-    }*/
-
-    public MemberDto create(MemberDto dto) throws EntityAlreadyExistsException {
-
-        if (memberCrudFinder.isExist(dto)) {
-            throw new EntityAlreadyExistsException("Member already exists in our database");
-        }
-
-        return saveMemberEntity(MemberCrudFacade.map(dto));
+    private MemberEntity mapToEntity(MemberDto dto) {
+        return MemberCrudFacade.map(dto);
     }
 
-    private MemberDto saveMemberEntity(MemberEntity entity) {
-        return memberCrudSaver.saveEntity(entity);
+    private MemberEntity setDefaultValuesIfMemberNotExist(MemberEntity entity) {
+        entity.setActive(true);
+        entity.setCreationTime(DateTime.now());
+
+        return entity;
+    }
+
+    private MemberEntity setDefaultValuesIfMemberExistButNotActive(MemberEntity entity){
+        entity.setActive(true);
+        entity.setModificationTime(DateTime.now());
+
+        return entity;
+    }
+
+    private MemberEntity connectMemberWithUser(MemberDto memberDto) throws UserNotFoundException {
+        UserEntity foundUser = findUser(memberDto);
+        MemberEntity memberEntity = mapToEntity(memberDto);
+
+        memberEntity.setUser(foundUser);
+
+        return memberEntity;
+    }
+
+    private UserEntity findUser(MemberDto memberDto) throws UserNotFoundException {
+        return memberFinder.getUserFinder()
+                .findUserEntity(memberDto.getUser());
     }
 }
