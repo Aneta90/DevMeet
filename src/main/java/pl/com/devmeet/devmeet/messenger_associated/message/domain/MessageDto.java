@@ -4,6 +4,7 @@ import lombok.*;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 
 @Data
 @NoArgsConstructor
@@ -13,11 +14,9 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 @Builder
 public class MessageDto {
 
-    private MemberDto fromMember;
+    private MessengerDto sender;
 
-    private MemberDto toMember;
-
-    private GroupDto toGroup;
+    private MessengerDto receiver;
 
     private String message;
 

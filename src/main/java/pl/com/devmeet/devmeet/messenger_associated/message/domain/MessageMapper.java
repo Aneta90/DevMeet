@@ -1,25 +1,25 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 
-public class MessageMapper {
+class MessageMapper {
 
     static MessageDto toDto(MessageEntity messageEntity) {
 
-        return new MessageDto().builder()
+        return messageEntity != null ? MessageDto.builder()
                 .creationTime(messageEntity.getCreationTime())
-                .toMember(MemberCrudFacade.map(messageEntity.getToMember()))
-                .fromMember(MemberCrudFacade.map(messageEntity.getFromMember()))
+                .sender(MessengerCrudFacade.map(messageEntity.getSender()))
+                .receiver(MessengerCrudFacade.map(messageEntity.getReceiver()))
                 .message(messageEntity.getMessage())
-                .build();
+                .build() : null;
     }
 
     static MessageEntity toEntity(MessageDto messageDto) {
-        return new MessageEntity().builder()
+        return messageDto != null ? MessageEntity.builder()
                 .creationTime(messageDto.getCreationTime())
-                .toMember(MemberCrudFacade.map(messageDto.getToMember()))
-                .fromMember(MemberCrudFacade.map(messageDto.getToMember()))
+                .sender(MessengerCrudFacade.map(messageDto.getSender()))
+                .receiver(MessengerCrudFacade.map(messageDto.getReceiver()))
                 .message(messageDto.getMessage())
-                .build();
+                .build() : null;
     }
 }
