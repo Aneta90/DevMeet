@@ -1,9 +1,11 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
+@Service
 public class MessengerCrudFacade implements MessengerCrudInterface {
 
     @Autowired

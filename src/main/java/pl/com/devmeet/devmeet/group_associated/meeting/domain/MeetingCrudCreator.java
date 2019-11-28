@@ -10,9 +10,9 @@ public class MeetingCrudCreator implements CrudEntityCreator<MeetingDto, Meeting
     private MeetingCrudFinder meetingCrudFinder;
     private MeetingCrudSaver meetingCrudSaver;
 
-    public MeetingCrudCreator(MeetingCrudFinder meetingCrudFinder, MeetingCrudSaver meetingCrudSaver) {
-        this.meetingCrudFinder = meetingCrudFinder;
-        this.meetingCrudSaver = meetingCrudSaver;
+    public MeetingCrudCreator(MeetingCrudRepository meetingCrudRepository) {
+        this.meetingCrudFinder = new MeetingCrudFinder(meetingCrudRepository);
+        this.meetingCrudSaver = new MeetingCrudSaver(meetingCrudRepository);
     }
 
     @Override
