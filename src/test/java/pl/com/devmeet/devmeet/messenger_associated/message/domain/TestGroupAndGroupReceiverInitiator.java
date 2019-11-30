@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRep
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 class TestGroupAndGroupReceiverInitiator {
 

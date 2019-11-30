@@ -10,5 +10,5 @@ public interface CrudEntityFinder<D, E> {
 
     List<E> findEntities(D dto) throws CrudException;
 
-    boolean isExist(D dto) throws CrudException;
+    boolean isExist(D dto);
 }

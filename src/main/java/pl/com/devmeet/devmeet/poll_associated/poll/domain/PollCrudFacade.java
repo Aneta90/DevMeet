@@ -82,7 +82,7 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     }
 
     @Override
-    public PollDto delete(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
+    public PollDto delete(PollDto dto) throws GroupNotFoundException, PollNotFoundException, PollAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
 

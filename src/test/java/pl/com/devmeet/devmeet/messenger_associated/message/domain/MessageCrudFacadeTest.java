@@ -150,7 +150,6 @@ public class MessageCrudFacadeTest {
         memberCrudFacade = initMemberCrudFacade();
         groupCrudFacade = initGroupCrudFacade();
         messengerCrudFacade = initMessengerCrudFacade();
-        messageCrudFacade = initMessageCrudFacade();
 
         UserEntity userEntityFirst = userCrudFacade.findEntity(userCrudFacade.create(firstUser, DefaultUserLoginTypeEnum.EMAIL));
         UserEntity userEntitySecond = userCrudFacade.findEntity(userCrudFacade.create(secondUser, DefaultUserLoginTypeEnum.EMAIL));
@@ -191,7 +190,6 @@ public class MessageCrudFacadeTest {
 
     @Test
     public void create_new_message() {
-
         initTestDB();
         MessageCrudFacade messageCrudFacade = initMessageCrudFacade();
         MessageDto messageEntity = messageCrudFacade.create(messageMemberToMember);

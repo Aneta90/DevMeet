@@ -1,31 +1,33 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerInfoStatusEnum;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 
-public class MessengerCrudDeleter {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class MessengerCrudDeleter {
 
     private MessengerCrudFinder messengerCrudFinder;
     private MessengerCrudSaver messengerCrudSaver;
 
-    public MessengerCrudDeleter(MessengerRepository messengerRepository) {
-        this.messengerCrudFinder = new MessengerCrudFinder(messengerRepository);
-        this.messengerCrudSaver = new MessengerCrudSaver(messengerRepository);
-    }
-
-    boolean delete(MessengerDto messengerDto) throws EntityNotFoundException {
-
+    public MessengerEntity delete(MessengerDto messengerDto) throws MessengerNotFoundException, MessengerAlreadyExistsException {
         MessengerEntity messengerEntity = messengerCrudFinder.findEntity(messengerDto);
-        if (messengerEntity.isActive()) {
 
-            messengerEntity.setActive(false);
+            if (messengerEntity.isActive()) {
+                messengerEntity.setActive(false);
 
-            return saveMessengerEntity(messengerEntity) != null;
-        } else {
-            throw new EntityNotFoundException("Member is not found in database or is not active");
-        }
+                return saveMessengerEntity(messengerEntity);
+            }
+
+            throw new MessengerAlreadyExistsException(MessengerInfoStatusEnum.MESSENGER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
-    private MessengerDto saveMessengerEntity(MessengerEntity entity) throws EntityNotFoundException {
+    private MessengerEntity saveMessengerEntity(MessengerEntity entity) {
         return messengerCrudSaver.saveEntity(entity);
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class MessageCrudFacade {
 
-    MessageRepository repository;
-    GroupCrudRepository groupCrudRepository;
-    MemberRepository memberRepository;
-    UserRepository userRepository;
+    private MessageRepository repository;
+    private GroupCrudRepository groupCrudRepository;
+    private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public MessageCrudFacade(MessageRepository repository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
@@ -58,13 +58,13 @@ public class MessageCrudFacade {
         return map(updaterInit().updateEntity(oldDto, newDto));
     }
 
-    public boolean deleteMessagesSentToMember(MessageDto dto) throws EntityNotFoundException { //usuń wiadomości wysłane do konkretnego Membera
-        return deleterInit().delete(dto.getToMember().getNick());
-    }
-
-    public boolean deleteMessagesSentFromMember(MessageDto dto) throws EntityNotFoundException { //usuń wiadomości wysłane do konkretnego Membera
-        return deleterInit().delete(dto.getFromMember().getNick());
-    }
+//    public boolean deleteMessagesSentToMember(MessageDto dto) throws EntityNotFoundException { //usuń wiadomości wysłane do konkretnego Membera
+//        return deleterInit().delete(dto.getToMember().getNick());
+//    }
+//
+//    public boolean deleteMessagesSentFromMember(MessageDto dto) throws EntityNotFoundException { //usuń wiadomości wysłane do konkretnego Membera
+//        return deleterInit().delete(dto.getFromMember().getNick());
+//    }
 
     public static MessageDto map(MessageEntity entity) {
         return MessageMapper.toDto(entity);
