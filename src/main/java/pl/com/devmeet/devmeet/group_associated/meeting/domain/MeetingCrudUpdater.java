@@ -1,7 +1,7 @@
 package pl.com.devmeet.devmeet.group_associated.meeting.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 
 public class MeetingCrudUpdater implements CrudEntityUpdater<MeetingDto, MeetingEntity> {
 
@@ -14,25 +14,25 @@ public class MeetingCrudUpdater implements CrudEntityUpdater<MeetingDto, Meeting
     }
 
     @Override
-    public MeetingEntity updateEntity(MeetingDto oldDto, MeetingDto newDto) throws EntityNotFoundException {
+    public MeetingEntity updateEntity(MeetingDto oldDto, MeetingDto newDto) throws MeetingNotFoundException {
 
         MeetingEntity foundOldEntity = meetingCrudFinder.findEntity(oldDto);
         if (foundOldEntity != null) {
             updateAllParameters(foundOldEntity, mapToEntity(newDto));
         } else {
-            throw new EntityNotFoundException("Meeting has been not found in our database");
+            throw new MeetingNotFoundException("Meeting has been not found in our database");
         }
 
-        return meetingCrudSaver.saveEntity(updateAllParameters(foundOldEntity, mapToEntity(newDto))); //?? check if works !!!
+        return meetingCrudSaver.saveEntity(updateAllParameters(foundOldEntity, mapToEntity(newDto)));
     }
 
     private MeetingEntity mapToEntity(MeetingDto meetingDto) {
-        return MeetingCrudFacade.maptoEntity(meetingDto);
+        return MeetingCrudFacade.mapToEntity(meetingDto);
     }
 
     private MeetingEntity updateAllParameters(MeetingEntity oldMeetingEntity, MeetingEntity newMeetingEntity) {
 
-        oldMeetingEntity.setMeetingNumber(newMeetingEntity.getMeetingNumber());
+        oldMeetingEntity.setMeetingNumber(oldMeetingEntity.getMeetingNumber());
         oldMeetingEntity.setPlace(newMeetingEntity.getPlace());
         oldMeetingEntity.setGroup(newMeetingEntity.getGroup());
         oldMeetingEntity.setActive(newMeetingEntity.isActive());

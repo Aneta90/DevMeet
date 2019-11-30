@@ -31,7 +31,7 @@ public class MeetingEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GroupEntity group;
 
-    private Integer meetingNumber; //??
+    private Integer meetingNumber;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
