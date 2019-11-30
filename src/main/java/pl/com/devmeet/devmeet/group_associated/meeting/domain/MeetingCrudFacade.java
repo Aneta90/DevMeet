@@ -3,9 +3,9 @@ package pl.com.devmeet.devmeet.group_associated.meeting.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
+import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 
 import java.util.List;
 
@@ -39,48 +39,51 @@ public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, Meetin
 
 
     @Override
-    public MeetingDto create(MeetingDto dto) throws CrudException {
+    public MeetingDto create(MeetingDto dto) throws MeetingAlreadyExistsException {
         return mapToDto(initCreator().createEntity(dto));
     }
 
     @Override
-    public MeetingDto read(MeetingDto dto) throws CrudException {
+    public MeetingDto read(MeetingDto dto) throws MeetingNotFoundException {
         return mapToDto(initFinder().findEntity(dto));
     }
 
-   @Override
-    public List<MeetingDto> readAll(MeetingDto dto) throws CrudException {
+    @Override
+    public List<MeetingDto> readAll(MeetingDto dto) {
         return null; //do sprawdzenia !!!
     }
 
-    public List<MeetingDto> readAll(GroupDto dto) throws CrudException {
-        return mapToDtosList(findEntities(dto)); //do spr.
+    public List<MeetingDto> readAll(GroupDto dto) throws MeetingNotFoundException {
+        return mapToDtosList(findEntities(dto));
+    }
+
+    public boolean isExist(MeetingDto meetingDto) {
+        return initFinder().isExist(meetingDto);
     }
 
     @Override
-    public MeetingDto update(MeetingDto oldDto, MeetingDto newDto) throws CrudException {
+    public MeetingDto update(MeetingDto oldDto, MeetingDto newDto) throws MeetingNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public MeetingDto delete(MeetingDto dto) throws EntityNotFoundException {
+    public MeetingDto delete(MeetingDto dto) throws MeetingNotFoundException {
         return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public MeetingEntity findEntity(MeetingDto dto) throws CrudException {
+    public MeetingEntity findEntity(MeetingDto dto) throws MeetingNotFoundException {
         return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<MeetingEntity> findEntities(MeetingDto dto) throws CrudException {
+    public List<MeetingEntity> findEntities(MeetingDto dto) throws MeetingNotFoundException {
         return null;
     }
 
-    public List<MeetingEntity> findEntities(GroupDto dto) throws CrudException {
+    public List<MeetingEntity> findEntities(GroupDto dto) throws MeetingNotFoundException {
         return initFinder().findEntities(dto);
     }
-
 
     public static List<MeetingEntity> mapToEntityList(List<MeetingDto> meetingDtosList) {
         return MeetingMapper.mapToEntities(meetingDtosList);
