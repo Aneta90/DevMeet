@@ -215,7 +215,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_existing_member_THEN_delete_member() throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException { //sprawdzic czy na pewno dobrze działa
+    public void WHEN_try_to_delete_existing_member_THEN_delete_member() throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException {
         initTestDatabaseByAddingUser();
         createMember();
 

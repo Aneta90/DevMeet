@@ -37,7 +37,7 @@ class AvailabilityVoteCrudMapper {
 
     public static List<AvailabilityVoteDto> mapToDtos(List<AvailabilityVoteEntity> entities){
         return entities.stream()
-                .map(entity -> map(entity))
+                .map(AvailabilityVoteCrudMapper::map)
                 .collect(Collectors.toList());
     }
  }
