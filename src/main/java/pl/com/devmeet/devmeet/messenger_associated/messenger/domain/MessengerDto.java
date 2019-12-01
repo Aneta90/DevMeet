@@ -11,17 +11,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 public class MessengerDto {
-
-    private String messengerName;
 
     private MemberDto member;
     private GroupDto group;
 
-    private List<MessageDto> messages;
+    private List<MessageDto> sent;
+    private List<MessageDto> received;
 
     private DateTime creationTime;
     private boolean isActive;

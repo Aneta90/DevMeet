@@ -1,9 +1,18 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
-
 public interface MessageCrudInterface {
 
-    MessageDto create(MessageDto messageDto) throws EntityAlreadyExistsException, EntityNotFoundException;
+    MessageDto create(MessageDto messageDto);
+
+    MessageDto delete(MessageDto messageDto);
+
+    MessageDto update(MessageDto messageDto);
+
+    static MessageDto map(MessageEntity entity) {
+        return MessageMapper.toDto(entity);
+    }
+
+    static MessageEntity map(MessageDto dto) {
+        return MessageMapper.toEntity(dto);
+    }
 }

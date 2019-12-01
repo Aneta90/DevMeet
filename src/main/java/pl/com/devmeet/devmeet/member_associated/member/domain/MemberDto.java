@@ -22,12 +22,12 @@ public class MemberDto {
     private UserDto user;
     private String nick;
 
+    private MessengerDto messenger;
+
     private List<GroupDto> groups;
 
     private List<AvailabilityDto> availabilities;
     private List<PlaceDto> places;
-
-    private MessengerDto messenger;
 
     private DateTime creationTime;
     private DateTime modificationTime;

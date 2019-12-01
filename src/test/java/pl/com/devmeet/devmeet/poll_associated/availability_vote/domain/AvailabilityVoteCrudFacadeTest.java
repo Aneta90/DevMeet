@@ -75,9 +75,6 @@ public class AvailabilityVoteCrudFacadeTest {
     private PollDto testPollDto;
     private AvailabilityVoteDto testVoteDto;
 
-    public AvailabilityVoteCrudFacadeTest() {
-    }
-
     @Before
     public void setUp() throws Exception {
 

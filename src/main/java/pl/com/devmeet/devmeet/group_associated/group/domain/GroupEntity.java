@@ -42,7 +42,7 @@ public class GroupEntity {
     private String website;
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(mappedBy = "group",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MessengerEntity messenger;
 
     private Integer membersLimit;
