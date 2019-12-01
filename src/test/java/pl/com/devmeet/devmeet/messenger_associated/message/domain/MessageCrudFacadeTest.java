@@ -133,8 +133,8 @@ public class MessageCrudFacadeTest {
         return new GroupCrudFacade(groupCrudRepository);
     }
 
-    private MessengerCrudFacade initMessengerCrudFacade(){
-        return new MessengerCrudFacade(messengerRepository);
+    private MessengerCrudFacade initMessengerCrudFacade() {
+        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
     }
 
     private MessageCrudFacade initMessageCrudFacade() {

@@ -2,9 +2,10 @@ package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import lombok.*;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerInfoStatusEnum;
@@ -23,33 +24,49 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
     private MessengerGroupFinder groupFinder;
     private MessengerMemberFinder memberFinder;
 
-
-    private MemberEntity findMember(MessengerDto dto) throws MemberNotFoundException, UserNotFoundException {
-        return memberFinder.findMember(dto.getMember());
-    }
-
-    private GroupEntity findGroup(MessengerDto dto) throws GroupNotFoundException {
-        return groupFinder.findGroup(dto.getGroup());
-    }
-
     @Override
-    public MessengerEntity findEntity(MessengerDto dto) throws MessengerNotFoundException {
+    public MessengerEntity findEntity(MessengerDto dto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         MemberEntity foundMember;
         GroupEntity foundGroup;
+        MemberDto memberDto = checkMemberIsNotNull(dto);
+        GroupDto groupDto = checkGroupIsNotNull(dto);
 
-        try {
-            foundMember = findMember(dto);
-            return findMemberMessenger(foundMember);
+        if (memberDto != null && groupDto == null) {
+                foundMember = findMember(memberDto);
+                return findMemberMessenger(foundMember);
 
-        } catch (MemberNotFoundException | UserNotFoundException e) {
-            try {
-                foundGroup = findGroup(dto);
+
+        } else if (groupDto != null && memberDto == null) {
+                foundGroup = findGroup(groupDto);
                 return findGroupMessenger(foundGroup);
 
-            } catch (GroupNotFoundException ex) {
-                throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGER_NOT_FOUND.toString());
-            }
         }
+
+        throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_MEMBER_OR_GROUP.toString());
+    }
+
+    public MemberDto checkMemberIsNotNull(MessengerDto messengerDto) {
+        try {
+            return messengerDto.getMember();
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public GroupDto checkGroupIsNotNull(MessengerDto messengerDto) {
+        try {
+            return messengerDto.getGroup();
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public MemberEntity findMember(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+        return memberFinder.findMember(dto);
+    }
+
+    public GroupEntity findGroup(GroupDto dto) throws GroupNotFoundException {
+        return groupFinder.findGroup(dto);
     }
 
     private MessengerEntity findMemberMessenger(MemberEntity memberEntity) throws MessengerNotFoundException {
@@ -73,14 +90,19 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
     @Override
     public List<MessengerEntity> findEntities(MessengerDto dto) throws MessengerNotFoundException {
         GroupEntity foundGroup;
+        GroupDto groupDto = checkGroupIsNotNull(dto);
 
-        try {
-            foundGroup = findGroup(dto);
-            return findAllGroupMembersMessengers(foundGroup);
+        if (groupDto != null) {
+            try {
+                foundGroup = findGroup(groupDto);
+                return findAllGroupMembersMessengers(foundGroup);
 
-        } catch (GroupNotFoundException e) {
-            throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGERS_OF_MEMBERS_NOT_FOUND.toString());
+            } catch (GroupNotFoundException e) {
+                throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGERS_OF_MEMBERS_NOT_FOUND.toString());
+            }
         }
+
+        throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_GROUP.toString());
     }
 
     private List<MessengerEntity> findAllGroupMembersMessengers(GroupEntity groupEntity) throws MessengerNotFoundException {
@@ -96,7 +118,7 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
     public boolean isExist(MessengerDto dto) {
         try {
             return findEntity(dto) != null;
-        } catch (MessengerNotFoundException e) {
+        } catch (MessengerNotFoundException | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
             return false;
         }
     }

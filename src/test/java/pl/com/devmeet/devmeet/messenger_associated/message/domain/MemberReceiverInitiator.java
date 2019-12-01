@@ -52,7 +52,7 @@ class MemberReceiverInitiator {
     }
 
     private void initMember() {
-        this.memberDto = new MemberDto().builder()
+        this.memberDto = MemberDto.builder()
                 .user(userDto)
                 .nick("testMember2")
                 .isActive(true)

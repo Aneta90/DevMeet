@@ -35,13 +35,13 @@ class MemberSenderInitiator {
     private MemberDto memberDto;
     private MessengerDto messengerDto;
 
-    public void init(){
+    public void init() {
         initUser();
         initMember();
         initMessenger();
     }
 
-    private void initUser (){
+    private void initUser() {
         this.userDto = UserDto.builder()
                 .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test@test.pl")
@@ -52,7 +52,7 @@ class MemberSenderInitiator {
                 .build();
     }
 
-    private void initMember(){
+    private void initMember() {
         this.memberDto = MemberDto.builder()
                 .user(userDto)
                 .nick("testMember")
@@ -62,7 +62,7 @@ class MemberSenderInitiator {
                 .build();
     }
 
-    private void initMessenger(){
+    private void initMessenger() {
         this.messengerDto = MessengerDto.builder()
                 .member(memberDto)
                 .build();

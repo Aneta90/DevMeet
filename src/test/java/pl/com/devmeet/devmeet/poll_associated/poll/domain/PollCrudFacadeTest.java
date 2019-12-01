@@ -201,15 +201,15 @@ public class PollCrudFacadeTest {
 
         try {
             pollCrudFacade.delete(testPollDto);
-        } catch (PollNotFoundException e) {
+        } catch (PollNotFoundException | PollAlreadyExistsException e) {
             Assert.fail();
         }
 
         try {
             initPollCrudFacade().delete(testPollDto);
-        } catch (PollNotFoundException e) {
+        } catch (PollNotFoundException | PollAlreadyExistsException e) {
             assertThat(e)
-                    .isInstanceOf(PollNotFoundException.class)
+                    .isInstanceOf(PollAlreadyExistsException.class)
                     .hasMessage(PollCrudStatusEnum.POLL_FOUND_BUT_NOT_ACTIVE.toString());
         }
     }

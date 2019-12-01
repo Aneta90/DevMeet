@@ -31,10 +31,10 @@ public class MessengerEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;
 
-    @OneToOne(mappedBy = "messenger", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private GroupEntity group;
 
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -48,5 +48,4 @@ public class MessengerEntity {
     private DateTime creationTime;
 
     private boolean isActive;
-
 }

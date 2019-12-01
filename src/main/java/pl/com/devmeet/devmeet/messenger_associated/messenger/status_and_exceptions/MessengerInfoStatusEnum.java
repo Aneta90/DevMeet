@@ -8,9 +8,10 @@ package pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_excepti
  */
 
 public enum MessengerInfoStatusEnum {
-    MESSENGER_NOT_FOUND("Messenger not found"),
     MESSENGER_NOT_FOUND_BY_MEMBER("Messenger not found by member"),
     MESSENGER_NOT_FOUND_BY_GROUP("Messenger not found by group"),
+    NOT_SPECIFIED_MEMBER_OR_GROUP("Member or group not specified"),
+    NOT_SPECIFIED_GROUP("Group not specified"),
     MESSENGERS_OF_MEMBERS_NOT_FOUND("Messengers of members are not found"),
     MESSENGER_ALREADY_EXISTS("Messenger already exists"),
     MESSENGER_FOUND_BUT_NOT_ACTIVE("Messenger was found but is not active"),

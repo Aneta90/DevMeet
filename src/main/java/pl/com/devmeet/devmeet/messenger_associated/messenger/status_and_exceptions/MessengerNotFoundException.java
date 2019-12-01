@@ -8,6 +8,7 @@ import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
  * Date: 29.11.2019
  * Time: 18:37
  */
+
 public class MessengerNotFoundException extends CrudException {
     public MessengerNotFoundException(String message) {
         super(message);
