@@ -25,7 +25,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class MemberSenderInitiator {
+class MemberSenderModel {
 
     private UserRepository userRepository;
     private MemberRepository memberRepository;

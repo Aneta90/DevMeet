@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class MessageCrudSaver {
+class MessageCrudSaver {
 
     private MessageRepository messageRepository;
 

@@ -1,12 +1,13 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -22,8 +23,13 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_excepti
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,8 +65,7 @@ public class MessageCrudFacadeTest {
     private MemberDto memberReceiver;
     private MessengerDto membersReceiverMessenger;
 
-    private MessageDto messageMemberToMember;
-    private MessageDto messageMemberToGroup;
+    int numberOfTestMessages = 10;
 
     @Before
     public void setUp() {
@@ -69,23 +74,10 @@ public class MessageCrudFacadeTest {
         initReceiverMember();
         initReceiverGroup();
 
-        messageMemberToMember = MessageDto.builder()
-                .creationTime(DateTime.now())
-                .sender(membersSenderMessenger)
-                .receiver(membersReceiverMessenger)
-                .message("test message from member to member")
-                .build();
-
-        messageMemberToGroup = MessageDto.builder()
-                .creationTime(DateTime.now())
-                .sender(membersSenderMessenger)
-                .receiver(groupsReceiverMessenger)
-                .message("test message from member to group (group chat feature)")
-                .build();
     }
 
     private void initSenderMember() {
-        MemberSenderInitiator senderInitiator = MemberSenderInitiator.builder()
+        MemberSenderModel senderInitiator = MemberSenderModel.builder()
                 .userRepository(userRepository)
                 .memberRepository(memberRepository)
                 .messengerRepository(messengerRepository)
@@ -98,7 +90,7 @@ public class MessageCrudFacadeTest {
     }
 
     private void initReceiverMember() {
-        MemberReceiverInitiator receiverInitiator = MemberReceiverInitiator.builder()
+        MemberReceiverModel receiverInitiator = MemberReceiverModel.builder()
                 .userRepository(userRepository)
                 .memberRepository(memberRepository)
                 .messengerRepository(messengerRepository)
@@ -111,14 +103,14 @@ public class MessageCrudFacadeTest {
     }
 
     private void initReceiverGroup() {
-        TestGroupAndGroupReceiverInitiator testGroupAndGroupReceiverInitiator = TestGroupAndGroupReceiverInitiator.builder()
+        TestGroupForMembersAndGroupReceiverInitiator testGroupForMembersAndGroupReceiverInitiator = TestGroupForMembersAndGroupReceiverInitiator.builder()
                 .groupRepository(groupCrudRepository)
                 .messengerRepository(messengerRepository)
                 .build();
-        testGroupAndGroupReceiverInitiator.init();
+        testGroupForMembersAndGroupReceiverInitiator.init();
 
-        this.testGroupAndReceiverGroup = testGroupAndGroupReceiverInitiator.getGroupDto();
-        this.groupsReceiverMessenger = testGroupAndGroupReceiverInitiator.getMessengerDto();
+        this.testGroupAndReceiverGroup = testGroupForMembersAndGroupReceiverInitiator.getGroupDto();
+        this.groupsReceiverMessenger = testGroupForMembersAndGroupReceiverInitiator.getMessengerDto();
     }
 
     private UserCrudFacade initUserCrudFacade() {
@@ -182,6 +174,23 @@ public class MessageCrudFacadeTest {
                 && groupEntity != null;
     }
 
+    private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException {
+        List<MessageDto> result = new ArrayList<>();
+        MessageCrudFacade messageCrudFacade = initMessageCrudFacade();
+        List<MessageDto> messagesToSave = initTestMessagesGenerator(sender, receiver, numberOfTestMessages);
+
+        for (MessageDto message : messagesToSave) {
+            result.add(messageCrudFacade.create(message));
+        }
+
+        return result;
+    }
+
+    private List<MessageDto> initTestMessagesGenerator(MessengerDto sender, MessengerDto receiver, int numberOfTestMessages) {
+        return new TestMessagesGenerator()
+                .generate(sender, receiver, numberOfTestMessages);
+    }
+
     @Test
     public void INIT_TEST_DB() {
         boolean initDB = initTestDB();
@@ -189,41 +198,57 @@ public class MessageCrudFacadeTest {
     }
 
     @Test
-    public void create_new_message() {
+    public void create_new_message() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException {
         initTestDB();
-        MessageCrudFacade messageCrudFacade = initMessageCrudFacade();
-        MessageDto messageEntity = messageCrudFacade.create(messageMemberToMember);
+        int numberOfMessagesLocal = 1;
+        List<MessageDto> createdMessages = saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, numberOfMessagesLocal);
 
-        assertThat(messageEntity).isNotNull();
-        assertThat(messageEntity.getMessage()).isEqualTo("testMessagee");
-        assertThat(messageEntity.getCreationTime()).isNotNull();
-//        assertThat(messageEntity.getFromMember()).isEqualTo(memberSender);
+        assertThat(createdMessages.size()).isEqualTo(numberOfMessagesLocal);
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getSender().getMember().getNick()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getReceiver().getMember().getNick()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getMessage()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getCreationTime()).isNotNull());
     }
 
+    @Ignore
     @Test
     public void findEntityFromMember() {
     }
 
+    @Ignore
     @Test
     public void findEntityToMember() {
     }
 
+    @Ignore
     @Test
     public void update() {
     }
 
+    @Ignore
     @Test
     public void deleteMessagesSentToMember() {
     }
 
+    @Ignore
     @Test
     public void deleteMessagesSentFromMember() {
     }
 
+    @Ignore
     @Test
     public void map() {
     }
 
+    @Ignore
     @Test
     public void map1() {
     }

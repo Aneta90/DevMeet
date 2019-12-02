@@ -13,9 +13,9 @@ public interface CrudFacadeInterface<D, E> {
 
     List<D> readAll(D dto) throws CrudException;
 
-    D update(D oldDto, D newDto) throws CrudException, MemberFoundButNotActiveException;
+    D update(D oldDto, D newDto) throws CrudException;
 
-    D delete(D dto) throws CrudException, MemberFoundButNotActiveException;
+    D delete(D dto) throws CrudException;
 
     E findEntity(D dto) throws CrudException;
 

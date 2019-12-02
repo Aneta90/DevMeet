@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 
-public class MessageCrudDeleter {
+class MessageCrudDeleter {
 
     private MessageCrudFinder messageCrudFinder;
     private MessageCrudSaver messageCrudSaver;

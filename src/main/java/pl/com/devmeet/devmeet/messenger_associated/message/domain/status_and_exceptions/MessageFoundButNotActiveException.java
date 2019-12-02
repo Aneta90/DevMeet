@@ -5,11 +5,12 @@ import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 /**
  * Created by IntelliJ IDEA.
  * User: Kamil Ptasinski
- * Date: 15.11.2019
- * Time: 23:11
+ * Date: 02.12.2019
+ * Time: 17:36
  */
-public class MemberFoundButNotActiveException extends CrudException {
-    public MemberFoundButNotActiveException(String message) {
+
+public class MessageFoundButNotActiveException extends CrudException {
+    public MessageFoundButNotActiveException(String message) {
         super(message);
     }
 }

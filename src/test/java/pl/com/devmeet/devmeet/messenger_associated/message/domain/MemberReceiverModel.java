@@ -24,7 +24,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class MemberReceiverInitiator {
+class MemberReceiverModel {
 
     private UserRepository userRepository;
     private MemberRepository memberRepository;

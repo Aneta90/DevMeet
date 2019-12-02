@@ -5,8 +5,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -18,6 +20,9 @@ public interface MessageRepository extends PagingAndSortingRepository<MessageEnt
 //    @Query("select m from MessageEntity m where m.toMember.nick = ?1")
 //    List<MessageEntity> findMessagesToMember(String memberNick); //znajdź wszystkie wiadomości wysłane do danego Membera
 
+    Optional<MessageEntity> findByMessage(MessageEntity message);
 
+    Optional<List<MessageEntity>> findAllBySender(MessengerEntity senderMessenger);
 
+    Optional<List<MessageEntity>> findAllByReceiver(MessengerEntity receiverMemberOrGroupMessenger);
 }

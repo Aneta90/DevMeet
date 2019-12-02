@@ -20,7 +20,7 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRep
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-class TestGroupAndGroupReceiverInitiator {
+class TestGroupForMembersAndGroupReceiverInitiator {
 
     private GroupCrudRepository groupRepository;
     private MessengerRepository messengerRepository;
