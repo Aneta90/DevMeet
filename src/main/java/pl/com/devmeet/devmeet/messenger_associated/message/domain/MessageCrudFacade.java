@@ -7,7 +7,6 @@ import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberFoundButNotActiveException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
@@ -19,7 +18,7 @@ import java.util.List;
 @Service
 public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, MessageEntity> {
 
-    private MessageRepository repository;
+    private MessageRepository messageRepository;
 
     private MessengerRepository messengerRepository;
     private GroupCrudRepository groupCrudRepository;
@@ -27,8 +26,9 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     private UserRepository userRepository;
 
     @Autowired
-    public MessageCrudFacade(MessageRepository repository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
-        this.repository = repository;
+    public MessageCrudFacade(MessageRepository messageRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+        this.messageRepository = messageRepository;
+        this.messengerRepository = messengerRepository;
         this.groupCrudRepository = groupCrudRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
@@ -44,7 +44,7 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     }
 
     private MessageCrudFinder initFinder() {
-        return new MessageCrudFinder(repository);
+        return new MessageCrudFinder(messageRepository, initMessengerFinder());
     }
 
     private MessageCrudCreator initCreator() {
@@ -56,15 +56,15 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     }
 
     private MessageCrudSaver initSaver() {
-        return new MessageCrudSaver(repository);
+        return new MessageCrudSaver(messageRepository);
     }
 
     private MessageCrudUpdater initUpdater() {
-        return new MessageCrudUpdater(repository);
+        return new MessageCrudUpdater(initFinder(), initSaver());
     }
 
     private MessageCrudDeleter initDeleter() {
-        return new MessageCrudDeleter(repository);
+        return new MessageCrudDeleter(initFinder(), initSaver());
     }
 
     @Override

@@ -22,7 +22,10 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_excepti
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
@@ -132,6 +135,7 @@ public class MessageCrudFacadeTest {
     private MessageCrudFacade initMessageCrudFacade() {
         return new MessageCrudFacade(
                 messageRepository,
+                messengerRepository,
                 groupCrudRepository,
                 memberRepository,
                 userRepository);
@@ -167,11 +171,35 @@ public class MessageCrudFacadeTest {
             e.printStackTrace();
         }
 
+        MessengerEntity memberSenderMessengerEntity = null;
+        try {
+            membersSenderMessenger = messengerCrudFacade.create(membersSenderMessenger);
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        MessengerEntity memberReceiverMessengerEntity = null;
+        try {
+            membersReceiverMessenger = messengerCrudFacade.create(membersReceiverMessenger);
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        MessengerEntity groupReceiverMessengerEntity = null;
+        try {
+            groupsReceiverMessenger = messengerCrudFacade.create(groupsReceiverMessenger);
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            e.printStackTrace();
+        }
+
         return userEntityFirst != null
                 && userEntitySecond != null
                 && memberEntityFirst != null
                 && memberEntitySecond != null
-                && groupEntity != null;
+                && groupEntity != null
+                && memberSenderMessengerEntity != null
+                && memberReceiverMessengerEntity != null
+                && groupReceiverMessengerEntity != null;
     }
 
     private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException {
@@ -200,7 +228,7 @@ public class MessageCrudFacadeTest {
     @Test
     public void create_new_message() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException {
         initTestDB();
-        int numberOfMessagesLocal = 1;
+        int numberOfMessagesLocal = 10;
         List<MessageDto> createdMessages = saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, numberOfMessagesLocal);
 
         assertThat(createdMessages.size()).isEqualTo(numberOfMessagesLocal);
@@ -216,6 +244,9 @@ public class MessageCrudFacadeTest {
         createdMessages
                 .forEach(messageDto ->
                         assertThat(messageDto.getCreationTime()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.isActive()).isTrue());
     }
 
     @Ignore

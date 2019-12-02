@@ -11,6 +11,7 @@ class MessageMapper {
                 .sender(MessengerCrudFacade.map(messageEntity.getSender()))
                 .receiver(MessengerCrudFacade.map(messageEntity.getReceiver()))
                 .message(messageEntity.getMessage())
+                .isActive(messageEntity.isActive())
                 .build() : null;
     }
 
@@ -20,6 +21,7 @@ class MessageMapper {
                 .sender(MessengerCrudFacade.map(messageDto.getSender()))
                 .receiver(MessengerCrudFacade.map(messageDto.getReceiver()))
                 .message(messageDto.getMessage())
+                .isActive(messageDto.isActive())
                 .build() : null;
     }
 }

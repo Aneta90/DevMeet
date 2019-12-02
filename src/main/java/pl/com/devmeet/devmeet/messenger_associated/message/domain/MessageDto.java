@@ -21,4 +21,6 @@ public class MessageDto {
     private String message;
 
     private DateTime creationTime;
+
+    private boolean isActive;
 }

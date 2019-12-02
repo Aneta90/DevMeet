@@ -55,7 +55,7 @@ class MemberSenderModel {
     private void initMember() {
         this.memberDto = MemberDto.builder()
                 .user(userDto)
-                .nick("testMember")
+                .nick("testMember1")
                 .isActive(true)
                 .modificationTime(DateTime.now())
                 .creationTime(DateTime.now())

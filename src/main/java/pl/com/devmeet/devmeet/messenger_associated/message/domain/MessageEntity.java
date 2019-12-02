@@ -41,4 +41,6 @@ public class MessageEntity {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime creationTime;
+
+    private boolean isActive;
 }

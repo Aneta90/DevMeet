@@ -66,12 +66,12 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto ) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+    public MemberDto update(MemberDto oldDto, MemberDto newDto ) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
         return map(initUpdater().update(oldDto, newDto));
     }
 
     @Override
-    public MemberDto delete(MemberDto dto) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+    public MemberDto delete(MemberDto dto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
         return map(initDeleter().delete(dto));
     }
 

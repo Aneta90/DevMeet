@@ -1,15 +1,17 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class MessageCrudUpdater {
 
-    private MessageRepository messageRepository;
-    private MessageCrudSaver messageCrudSaver;
     private MessageCrudFinder messageCrudFinder;
-
-    public MessageCrudUpdater(MessageRepository repository) {
-        this.messageCrudSaver = new MessageCrudSaver(repository);
-        this.messageCrudFinder = new MessageCrudFinder(repository);
-    }
+    private MessageCrudSaver messageCrudSaver;
 
     public MessageEntity updateEntity(MessageDto oldDto, MessageDto newDto) {
 

@@ -16,17 +16,32 @@ import java.util.stream.Collectors;
  */
 class TestMessagesGenerator {
 
+    private int index = -1;
+
     public List<MessageDto> generate(MessengerDto sender, MessengerDto receiver, int numberOfMessages) {
         String senderNickname = sender.getMember().getNick();
         String receiverNickname = receiver.getMember().getNick();
 
         return testMessagesGenerator(senderNickname, receiverNickname, numberOfMessages).stream()
-                .map(message -> MessageDto.builder()
+                .map(message ->
+                        messageBuilderWithSwitcher(sender, receiver, message, index++)
+                )
+                .collect(Collectors.toList());
+    }
+
+    private MessageDto messageBuilderWithSwitcher(MessengerDto sender, MessengerDto receiver, String message, int numberOfMessages) {
+        return numberOfMessages % 2 == 0 ?
+                MessageDto.builder()
+                        .sender(receiver)
+                        .receiver(sender)
+                        .message(message)
+                        .build()
+                :
+                MessageDto.builder()
                         .sender(sender)
                         .receiver(receiver)
                         .message(message)
-                        .build())
-                .collect(Collectors.toList());
+                        .build();
     }
 
     private List<String> testMessagesGenerator(String senderNickname, String receiverNickname, int numberOfMessages) {
@@ -34,7 +49,7 @@ class TestMessagesGenerator {
         int index = 0;
 
         while (index < numberOfMessages) {
-            result.add(senderNickname + " to " + receiverNickname + " test message number: " + index);
+            result.add(senderNickname + " to " + receiverNickname + " test message number: " + (index + 1));
             index++;
         }
 
