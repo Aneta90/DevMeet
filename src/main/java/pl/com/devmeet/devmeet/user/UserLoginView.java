@@ -44,10 +44,10 @@ public class UserLoginView extends UI {
         Button submitButton = new Button("Log in");
         submitButton.setId("submitbutton");
 
-        UI.getCurrent().getPage()
-                .executeJs("document.getElementById('submitbutton')" +
-                        ".addEventListener('click', () => document.getElementById('ironform')" +
-                        ".submit());");
+//        UI.getCurrent().getPage()
+//                .executeJs("document.getElementById('submitbutton')" +
+//                        ".addEventListener('click', () => document.getElementById('ironform')" +
+//                        ".submit());");
 
         FormLayout formLayout = new FormLayout();
         formLayout.add(loginTextField, passwordField, submitButton);
