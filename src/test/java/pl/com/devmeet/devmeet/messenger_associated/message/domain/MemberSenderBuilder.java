@@ -25,7 +25,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class MemberSenderInitiator {
+class MemberSenderBuilder {
 
     private UserRepository userRepository;
     private MemberRepository memberRepository;
@@ -35,7 +35,7 @@ class MemberSenderInitiator {
     private MemberDto memberDto;
     private MessengerDto messengerDto;
 
-    public void init() {
+    public void build() {
         initUser();
         initMember();
         initMessenger();
@@ -55,7 +55,7 @@ class MemberSenderInitiator {
     private void initMember() {
         this.memberDto = MemberDto.builder()
                 .user(userDto)
-                .nick("testMember")
+                .nick("testMember1")
                 .isActive(true)
                 .modificationTime(DateTime.now())
                 .creationTime(DateTime.now())
