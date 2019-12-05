@@ -6,23 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingDto;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingEntity;
-import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionDto;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionEntity;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
-import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -32,17 +25,15 @@ import java.util.UUID;
 @Entity
 public class GroupEntity {
 
-    @javax.persistence.Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID Id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
 
     private String groupName;
     private String website;
     private String description;
 
-    @OneToOne(mappedBy = "group",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MessengerEntity messenger;
 
     private Integer membersLimit;
