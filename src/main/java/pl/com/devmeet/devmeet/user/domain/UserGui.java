@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.user.domain;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -23,6 +24,7 @@ class UserGui extends VerticalLayout {
     private H1 header1;
     private Grid<UserDto> userGrid;
     private TextField textFieldEmail;
+    private ComboBox<String> comboBoxIsActive;
 
     public UserGui(UserService service) {
         this.service = service;
@@ -32,13 +34,17 @@ class UserGui extends VerticalLayout {
         Notification.show("User", 2000, Notification.Position.MIDDLE);
 
         FormLayout filtersLayout = new FormLayout();
-        textFieldEmail = new TextField("Email");
         header1 = new H1("devmeet app - user");
-        filtersLayout.add(header1, textFieldEmail);
+        comboBoxIsActive = new ComboBox<>("Activated");
+        comboBoxIsActive.setItems("yes", "no");
+        comboBoxIsActive.addValueChangeListener(e -> filterUserList());
+        textFieldEmail = new TextField("Email");
+        filtersLayout.add(textFieldEmail, comboBoxIsActive);
 
         userGrid = new Grid<>(UserDto.class);
         userGrid.removeColumnByKey("id");
         userGrid.removeColumnByKey("password");
+        userGrid.removeColumnByKey("active");
         userGrid.removeColumnByKey("creationTime");
         userGrid.removeColumnByKey("loginTime");
         userGrid.removeColumnByKey("modificationTime");
@@ -49,7 +55,17 @@ class UserGui extends VerticalLayout {
                 GridVariant.LUMO_ROW_STRIPES);
         refreshGrid(userList);
 
-        add(filtersLayout, userGrid);
+        add(header1, filtersLayout, userGrid);
+    }
+
+    private void filterUserList() {
+        if (comboBoxIsActive.getValue() != null) {
+            if (comboBoxIsActive.getValue().equals("yes"))
+                userList = service.findAllByIsActive(true);
+            if (comboBoxIsActive.getValue().equals("no"))
+                userList = service.findAllByIsActive(false);
+        } else userList = service.findAll();
+        refreshGrid(userList);
     }
 
     private void refreshGrid(List<UserDto> userList) {
