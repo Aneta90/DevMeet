@@ -9,6 +9,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ class UserGui extends VerticalLayout {
     // vaadin components
     private H1 header1;
     private Grid<UserDto> userGrid;
-    private TextField textFieldEmail;
+    private TextField textFieldEmailorPhone;
     private ComboBox<String> comboBoxIsActive;
 
     public UserGui(UserService service) {
@@ -38,8 +39,11 @@ class UserGui extends VerticalLayout {
         comboBoxIsActive = new ComboBox<>("Activated");
         comboBoxIsActive.setItems("yes", "no");
         comboBoxIsActive.addValueChangeListener(e -> filterUserList());
-        textFieldEmail = new TextField("Email");
-        filtersLayout.add(textFieldEmail, comboBoxIsActive);
+        textFieldEmailorPhone = new TextField("Email or Phone", e -> filterUserList());
+        textFieldEmailorPhone.setPlaceholder("filter");
+        textFieldEmailorPhone.setValueChangeMode(ValueChangeMode.EAGER);
+        textFieldEmailorPhone.setClearButtonVisible(true);
+        filtersLayout.add(textFieldEmailorPhone, comboBoxIsActive);
 
         userGrid = new Grid<>(UserDto.class);
         userGrid.removeColumnByKey("id");
@@ -64,6 +68,9 @@ class UserGui extends VerticalLayout {
                 userList = service.findAllByIsActive(true);
             if (comboBoxIsActive.getValue().equals("no"))
                 userList = service.findAllByIsActive(false);
+        } else if (textFieldEmailorPhone.getValue() != null
+                && !textFieldEmailorPhone.getValue().isEmpty()) {
+            userList = service.findAllByEmailAndPhone(textFieldEmailorPhone.getValue());
         } else userList = service.findAll();
         refreshGrid(userList);
     }
