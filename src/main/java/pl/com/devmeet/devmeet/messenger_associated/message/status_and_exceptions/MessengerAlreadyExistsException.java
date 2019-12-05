@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.messenger_associated.message.domain.status_and_exceptions;
+package pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions;
 
 import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 

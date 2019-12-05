@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageArgumentNotSpecifiedException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageCrudStatusEnum;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
@@ -22,24 +23,19 @@ class MessageCrudCreator implements CrudEntityCreator<MessageDto, MessageEntity>
     private MessengerFinder messengerFinder;
 
     @Override
-    public MessageEntity createEntity(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException {
+    public MessageEntity createEntity(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException {
         MessageWithMessengersConnector messengersConnector = new MessageWithMessengersConnector();
-        MessageEntity messageEntity = null;
 
         MessengerEntity sender = messengerFinder.findMessenger(dto.getSender());
         MessengerEntity receiver = messengerFinder.findMessenger(dto.getReceiver());
 
-        try {
-            messageCrudFinder.findEntity(dto);
+        dto = messageChecker(dto);
 
-        } catch (CrudException e) {
-            return messageCrudSaver.saveEntity(
-                    setDefaultValuesWhenMessageNotExists(
-                            messengersConnector
-                                    .connectMessengers(MessageCrudFacade.map(dto), sender, receiver)));
-        }
+        return messageCrudSaver.saveEntity(
+                setDefaultValuesWhenMessageNotExists(
+                        messengersConnector
+                                .connectMessengers(MessageCrudFacade.map(dto), sender, receiver)));
 
-        return null;
     }
 
     private MessageEntity setDefaultValuesWhenMessageNotExists(MessageEntity messageEntity) {
@@ -47,5 +43,24 @@ class MessageCrudCreator implements CrudEntityCreator<MessageDto, MessageEntity>
         messageEntity.setActive(true);
 
         return messageEntity;
+    }
+
+    private MessageDto messageChecker(MessageDto messageDto) throws MessageArgumentNotSpecifiedException {
+        String message;
+
+        try {
+            message = messageDto.getMessage();
+            checkIsMessageIsNotEmpty(message);
+
+        } catch (NullPointerException e) {
+            throw new MessageArgumentNotSpecifiedException(MessageCrudStatusEnum.MESSAGE_IS_EMPTY.toString());
+        }
+
+        return messageDto;
+    }
+
+    private void checkIsMessageIsNotEmpty(String message) throws MessageArgumentNotSpecifiedException {
+        if (message.equals(""))
+            throw new MessageArgumentNotSpecifiedException(MessageCrudStatusEnum.MESSAGE_IS_EMPTY.toString());
     }
 }

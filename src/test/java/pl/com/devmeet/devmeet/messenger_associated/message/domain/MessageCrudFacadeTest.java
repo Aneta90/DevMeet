@@ -1,13 +1,13 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -20,6 +20,10 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageArgumentNotSpecifiedException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageCrudStatusEnum;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageFoundButNotActiveException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageNotFoundException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
@@ -32,7 +36,6 @@ import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundExce
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,7 +71,8 @@ public class MessageCrudFacadeTest {
     private MemberDto memberReceiver;
     private MessengerDto membersReceiverMessenger;
 
-    int numberOfTestMessages = 10;
+    private String standardTestMessageText = "Standard test message text.";
+//    int numberOfTestMessages = 3; // <-- better if this parameter is smaller than 10
 
     @Before
     public void setUp() {
@@ -80,40 +84,43 @@ public class MessageCrudFacadeTest {
     }
 
     private void initSenderMember() {
-        MemberSenderModel senderInitiator = MemberSenderModel.builder()
+        MemberSenderBuilder senderBuilder = MemberSenderBuilder.builder()
                 .userRepository(userRepository)
                 .memberRepository(memberRepository)
                 .messengerRepository(messengerRepository)
                 .build();
-        senderInitiator.init();
 
-        this.firstUser = senderInitiator.getUserDto();
-        this.memberSender = senderInitiator.getMemberDto();
-        this.membersSenderMessenger = senderInitiator.getMessengerDto();
+        senderBuilder.build();
+
+        this.firstUser = senderBuilder.getUserDto();
+        this.memberSender = senderBuilder.getMemberDto();
+        this.membersSenderMessenger = senderBuilder.getMessengerDto();
     }
 
     private void initReceiverMember() {
-        MemberReceiverModel receiverInitiator = MemberReceiverModel.builder()
+        MemberReceiverBuilder receiverBuilder = MemberReceiverBuilder.builder()
                 .userRepository(userRepository)
                 .memberRepository(memberRepository)
                 .messengerRepository(messengerRepository)
                 .build();
-        receiverInitiator.init();
 
-        this.secondUser = receiverInitiator.getUserDto();
-        this.memberReceiver = receiverInitiator.getMemberDto();
-        this.membersReceiverMessenger = receiverInitiator.getMessengerDto();
+        receiverBuilder.build();
+
+        this.secondUser = receiverBuilder.getUserDto();
+        this.memberReceiver = receiverBuilder.getMemberDto();
+        this.membersReceiverMessenger = receiverBuilder.getMessengerDto();
     }
 
     private void initReceiverGroup() {
-        TestGroupForMembersAndGroupReceiverInitiator testGroupForMembersAndGroupReceiverInitiator = TestGroupForMembersAndGroupReceiverInitiator.builder()
+        TestGroupForMembersAndGroupReceiverBuilder testGroupForMembersAndGroupReceiverBuilder = TestGroupForMembersAndGroupReceiverBuilder.builder()
                 .groupRepository(groupCrudRepository)
                 .messengerRepository(messengerRepository)
                 .build();
-        testGroupForMembersAndGroupReceiverInitiator.init();
 
-        this.testGroupAndReceiverGroup = testGroupForMembersAndGroupReceiverInitiator.getGroupDto();
-        this.groupsReceiverMessenger = testGroupForMembersAndGroupReceiverInitiator.getMessengerDto();
+        testGroupForMembersAndGroupReceiverBuilder.build();
+
+        this.testGroupAndReceiverGroup = testGroupForMembersAndGroupReceiverBuilder.getGroupDto();
+        this.groupsReceiverMessenger = testGroupForMembersAndGroupReceiverBuilder.getMessengerDto();
     }
 
     private UserCrudFacade initUserCrudFacade() {
@@ -173,22 +180,22 @@ public class MessageCrudFacadeTest {
 
         MessengerEntity memberSenderMessengerEntity = null;
         try {
-            membersSenderMessenger = messengerCrudFacade.create(membersSenderMessenger);
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            memberSenderMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(membersSenderMessenger));
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
 
         MessengerEntity memberReceiverMessengerEntity = null;
         try {
-            membersReceiverMessenger = messengerCrudFacade.create(membersReceiverMessenger);
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            memberReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(membersReceiverMessenger));
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
 
         MessengerEntity groupReceiverMessengerEntity = null;
         try {
-            groupsReceiverMessenger = messengerCrudFacade.create(groupsReceiverMessenger);
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
+            groupReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(groupsReceiverMessenger));
+        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -202,21 +209,18 @@ public class MessageCrudFacadeTest {
                 && groupReceiverMessengerEntity != null;
     }
 
-    private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException {
+    private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, String message, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
         List<MessageDto> result = new ArrayList<>();
         MessageCrudFacade messageCrudFacade = initMessageCrudFacade();
-        List<MessageDto> messagesToSave = initTestMessagesGenerator(sender, receiver, numberOfTestMessages);
 
-        for (MessageDto message : messagesToSave) {
-            result.add(messageCrudFacade.create(message));
+        List<MessageDto> messagesToSave = new TestMessagesGenerator(message)
+                .generateConversation(sender, receiver, numberOfTestMessages);
+
+        for (MessageDto messageDto : messagesToSave) {
+            result.add(messageCrudFacade.create(messageDto));
         }
 
         return result;
-    }
-
-    private List<MessageDto> initTestMessagesGenerator(MessengerDto sender, MessengerDto receiver, int numberOfTestMessages) {
-        return new TestMessagesGenerator()
-                .generate(sender, receiver, numberOfTestMessages);
     }
 
     @Test
@@ -226,18 +230,18 @@ public class MessageCrudFacadeTest {
     }
 
     @Test
-    public void create_new_message() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException {
+    public void WHEN_create_new_messages_from_MEMBER_to_MEMBER_THEN_return_messages() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
         initTestDB();
-        int numberOfMessagesLocal = 10;
-        List<MessageDto> createdMessages = saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, numberOfMessagesLocal);
+        int numberOfMessagesLocal = 4;
+        List<MessageDto> createdMessages = saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
 
         assertThat(createdMessages.size()).isEqualTo(numberOfMessagesLocal);
         createdMessages
                 .forEach(messageDto ->
-                        assertThat(messageDto.getSender().getMember().getNick()).isNotNull());
+                        assertThat(messageDto.getSender().getMember()).isNotNull());
         createdMessages
                 .forEach(messageDto ->
-                        assertThat(messageDto.getReceiver().getMember().getNick()).isNotNull());
+                        assertThat(messageDto.getReceiver().getMember()).isNotNull());
         createdMessages
                 .forEach(messageDto ->
                         assertThat(messageDto.getMessage()).isNotNull());
@@ -249,38 +253,209 @@ public class MessageCrudFacadeTest {
                         assertThat(messageDto.isActive()).isTrue());
     }
 
-    @Ignore
     @Test
-    public void findEntityFromMember() {
+    public void WHEN_create_new_messages_from_MEMBER_to_GROUP_THEN_return_messages() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
+        initTestDB();
+        int numberOfMessagesLocal = 4;
+        List<MessageDto> createdMessages = saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        assertThat(createdMessages.size()).isEqualTo(numberOfMessagesLocal);
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getSender().getMember()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getReceiver().getGroup()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getMessage()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getCreationTime()).isNotNull());
+        createdMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.isActive()).isTrue());
     }
 
-    @Ignore
     @Test
-    public void findEntityToMember() {
+    public void WHEN_try_to_send_empty_message_THEN_throw_MessageArgumentNotSpecifiedException() {
+        initTestDB();
+        String emptyMessage = "";
+
+        try {
+            saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, emptyMessage, 1);
+            Assert.fail();
+
+        } catch (GroupNotFoundException | UserNotFoundException | MessengerNotFoundException | MemberNotFoundException e) {
+            Assert.fail();
+
+        } catch (MessageArgumentNotSpecifiedException e) {
+            assertThat(e)
+                    .isInstanceOf(CrudException.class)
+                    .hasMessage(MessageCrudStatusEnum.MESSAGE_IS_EMPTY.toString());
+        }
     }
 
-    @Ignore
     @Test
-    public void update() {
+    public void WHEN_found_messages_MEMBER_to_MEMBER_THEN_return_messages() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+        initTestDB();
+        int numberOfMessagesLocal = 4;
+        saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        MessageDto singleMessage = MessageDto.builder()
+                .sender(membersSenderMessenger)
+                .build();
+
+        String senderMemberNick = membersSenderMessenger.getMember().getNick();
+        List<MessageDto> foundMessages = initMessageCrudFacade().readAll(singleMessage);
+
+
+        assertThat(foundMessages.size()).isEqualTo((numberOfMessagesLocal / 2));
+        foundMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getSender().getMember().getNick().equals(senderMemberNick)).isTrue());
+        foundMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getReceiver().getMember().getNick().equals(senderMemberNick)).isFalse());
     }
 
-    @Ignore
     @Test
-    public void deleteMessagesSentToMember() {
+    public void WHEN_found_messages_in_GROUP_THEN_return_messages() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+        initTestDB();
+        int numberOfMessagesLocal = 4;
+        saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        MessageDto singleMessage = MessageDto.builder()
+                .receiver(groupsReceiverMessenger)
+                .build();
+
+        String groupName = singleMessage.getReceiver().getGroup().getGroupName();
+        List<MessageDto> foundMessages = initMessageCrudFacade().readAllGroupMessages(singleMessage);
+
+        assertThat(foundMessages.size()).isEqualTo(numberOfMessagesLocal);
+        foundMessages
+                .forEach(messageDto ->
+                        assertThat(messageDto.getReceiver().getGroup().getGroupName()).isEqualTo(groupName));
     }
 
-    @Ignore
     @Test
-    public void deleteMessagesSentFromMember() {
+    public void WHEN_sender_is_not_specified_THEN_return_MessageArgumentNotSpecified() throws UserNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException, MessengerNotFoundException, GroupNotFoundException {
+        initTestDB();
+        MessageDto singleMessage = new MessageDto();
+        saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, standardTestMessageText, 1);
+
+        try {
+            initMessageCrudFacade().readAll(singleMessage);
+            Assert.fail();
+
+        } catch (UserNotFoundException | MessengerNotFoundException | MemberNotFoundException | GroupNotFoundException | MessageNotFoundException e) {
+            Assert.fail();
+
+        } catch (MessageArgumentNotSpecifiedException e) {
+            assertThat(e)
+                    .isInstanceOf(CrudException.class)
+                    .hasMessage(MessageCrudStatusEnum.NOT_SPECIFIED_SENDER.toString());
+        }
     }
 
-    @Ignore
     @Test
-    public void map() {
+    public void WHEN_try_to_get_all_chat_group_messages_and_receiver_is_not_specified_THEN_return_MessageArgumentNotSpecified() throws UserNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException, MessengerNotFoundException, GroupNotFoundException {
+        initTestDB();
+        MessageDto singleMessage = new MessageDto();
+        saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, 1);
+
+        try {
+            initMessageCrudFacade().readAllGroupMessages(singleMessage);
+            Assert.fail();
+
+        } catch (UserNotFoundException | MessengerNotFoundException | MemberNotFoundException | GroupNotFoundException | MessageNotFoundException e) {
+            Assert.fail();
+
+        } catch (MessageArgumentNotSpecifiedException e) {
+            assertThat(e)
+                    .isInstanceOf(CrudException.class)
+                    .hasMessage(MessageCrudStatusEnum.NOT_SPECIFIED_RECEIVER.toString());
+        }
     }
 
-    @Ignore
     @Test
-    public void map1() {
+    public void WHEN_update_message_THEN_return_updated_message() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException, MessageNotFoundException {
+        initTestDB();
+        int numberOfMessagesLocal = 1;
+        List<MessageDto> savedMessages = saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        String newMessageText = "UPDATED TEXT";
+        MessageDto oldVersionMessage = savedMessages.get(0);
+        MessageDto newVersionMessage = MessageDto.builder()
+                .message(newMessageText)
+                .build();
+
+        MessageDto updated = initMessageCrudFacade().update(oldVersionMessage, newVersionMessage);
+
+        assertThat(updated.getSender()).isNotNull();
+        assertThat(updated.getReceiver()).isNotNull();
+        assertThat(updated.getMessage()).isEqualTo(newMessageText);
+    }
+
+    @Test
+    public void WHEN_try_to_update_empty_message_text_THEN_return_MessageArgumentNotSpecifiedException() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
+        initTestDB();
+        int numberOfMessagesLocal = 1;
+        List<MessageDto> savedMessages = saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        String newMessageText = "";
+        MessageDto oldVersionMessage = savedMessages.get(0);
+        MessageDto newVersionMessage = MessageDto.builder()
+                .message(newMessageText)
+                .build();
+
+        try {
+            initMessageCrudFacade().update(oldVersionMessage, newVersionMessage);
+            Assert.fail();
+
+        } catch (MessageNotFoundException e) {
+            Assert.fail();
+
+        } catch (MessageArgumentNotSpecifiedException e) {
+            assertThat(e)
+                    .isInstanceOf(CrudException.class)
+                    .hasMessage(MessageCrudStatusEnum.MESSAGE_IS_EMPTY.toString());
+        }
+    }
+
+    @Test
+    public void WHEN_delete_existing_message_THEN_return_deleted_message() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException, MessageNotFoundException, MessageFoundButNotActiveException {
+        initTestDB();
+        int numberOfMessagesLocal = 3;
+        List<MessageDto> savedMessages = saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        MessageDto messageToDelete = savedMessages.get(0);
+        MessageDto deleted = initMessageCrudFacade().delete(messageToDelete);
+
+        assertThat(deleted.getSender()).isNotNull();
+        assertThat(deleted.getReceiver()).isNotNull();
+        assertThat(deleted.getCreationTime()).isNotNull();
+        assertThat(deleted.isActive()).isFalse();
+        assertThat(deleted.getModificationTime()).isNotNull();
+    }
+
+    @Test
+    public void WHEN_try_to_delete_deleted_message_THEN_return_MessageFoundButNotActiveException() throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException, MessageNotFoundException, MessageFoundButNotActiveException {
+        initTestDB();
+        int numberOfMessagesLocal = 3;
+        List<MessageDto> savedMessages = saveMessagesInToDb(membersSenderMessenger, groupsReceiverMessenger, standardTestMessageText, numberOfMessagesLocal);
+
+        MessageDto messageToDelete = savedMessages.get(0);
+        initMessageCrudFacade().delete(messageToDelete);
+
+        try {
+            initMessageCrudFacade().delete(messageToDelete);
+            Assert.fail();
+
+        } catch (MessageFoundButNotActiveException e) {
+            assertThat(e)
+                    .isInstanceOf(CrudException.class)
+                    .hasMessage(MessageCrudStatusEnum.MESSAGE_FOUND_BUT_NOT_ACTIVE.toString());
+        }
     }
 }

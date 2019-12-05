@@ -8,12 +8,16 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageArgumentNotSpecifiedException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageFoundButNotActiveException;
+import pl.com.devmeet.devmeet.messenger_associated.message.status_and_exceptions.MessageNotFoundException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, MessageEntity> {
@@ -44,7 +48,10 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     }
 
     private MessageCrudFinder initFinder() {
-        return new MessageCrudFinder(messageRepository, initMessengerFinder());
+        return MessageCrudFinder.builder()
+                .repository(messageRepository)
+                .messengerFinder(initMessengerFinder())
+                .build();
     }
 
     private MessageCrudCreator initCreator() {
@@ -56,50 +63,62 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     }
 
     private MessageCrudSaver initSaver() {
-        return new MessageCrudSaver(messageRepository);
+        return MessageCrudSaver.builder()
+                .messageRepository(messageRepository)
+                .build();
     }
 
     private MessageCrudUpdater initUpdater() {
-        return new MessageCrudUpdater(initFinder(), initSaver());
+        return MessageCrudUpdater.builder()
+                .messageCrudSaver(initSaver())
+                .messageCrudFinder(initFinder())
+                .build();
     }
 
     private MessageCrudDeleter initDeleter() {
-        return new MessageCrudDeleter(initFinder(), initSaver());
+        return MessageCrudDeleter.builder()
+                .messageCrudSaver(initSaver())
+                .messageCrudFinder(initFinder())
+                .build();
     }
 
     @Override
-    public MessageDto create(MessageDto dto) throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException {
+    public MessageDto create(MessageDto dto) throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public MessageDto read(MessageDto dto) throws CrudException {
-        return null;
+    public MessageDto read(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+        return map(findEntity(dto));
     }
 
     @Override
-    public List<MessageDto> readAll(MessageDto dto) throws CrudException {
-        return null;
+    public List<MessageDto> readAll(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+        return mapToDtos(findEntities(dto));
+    }
+
+    public List<MessageDto> readAllGroupMessages(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+        return mapToDtos(initFinder().findEntitiesByGroupForGroupChat(dto));
     }
 
     @Override
-    public MessageDto update(MessageDto oldDto, MessageDto newDto) throws CrudException {
-        return null;
+    public MessageDto update(MessageDto oldDto, MessageDto newDto) throws MessageNotFoundException, GroupNotFoundException, MessengerNotFoundException, UserNotFoundException, MessageArgumentNotSpecifiedException, MemberNotFoundException {
+        return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
     @Override
-    public MessageDto delete(MessageDto dto) throws CrudException {
-        return null;
+    public MessageDto delete(MessageDto dto) throws MessageNotFoundException, GroupNotFoundException, MessengerNotFoundException, UserNotFoundException, MessageArgumentNotSpecifiedException, MemberNotFoundException, MessageFoundButNotActiveException {
+        return map(initDeleter().deleteEntity(dto));
     }
 
     @Override
-    public MessageEntity findEntity(MessageDto dto) throws CrudException {
-        return null;
+    public MessageEntity findEntity(MessageDto dto) throws MessageNotFoundException, GroupNotFoundException, MessengerNotFoundException, UserNotFoundException, MessageArgumentNotSpecifiedException, MemberNotFoundException {
+        return initFinder().findEntity(dto);
     }
 
     @Override
-    public List<MessageEntity> findEntities(MessageDto dto) throws CrudException {
-        return null;
+    public List<MessageEntity> findEntities(MessageDto dto) throws MessageNotFoundException, GroupNotFoundException, MessengerNotFoundException, UserNotFoundException, MessageArgumentNotSpecifiedException, MemberNotFoundException {
+        return initFinder().findEntities(dto);
     }
 
     public static MessageDto map(MessageEntity entity) {
@@ -108,5 +127,11 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
 
     public static MessageEntity map(MessageDto dto) {
         return MessageMapper.toEntity(dto);
+    }
+
+    public static List<MessageDto> mapToDtos(List<MessageEntity> entities) {
+        return entities.stream()
+                .map(MessageCrudFacade::map)
+                .collect(Collectors.toList());
     }
 }

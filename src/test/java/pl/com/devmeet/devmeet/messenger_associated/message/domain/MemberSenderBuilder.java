@@ -25,7 +25,7 @@ import pl.com.devmeet.devmeet.user.domain.UserRepository;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class MemberSenderModel {
+class MemberSenderBuilder {
 
     private UserRepository userRepository;
     private MemberRepository memberRepository;
@@ -35,7 +35,7 @@ class MemberSenderModel {
     private MemberDto memberDto;
     private MessengerDto messengerDto;
 
-    public void init() {
+    public void build() {
         initUser();
         initMember();
         initMessenger();
