@@ -78,4 +78,12 @@ class UserApi {
         return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
     }
 
+    // delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity removeUserById(@PathVariable Long id) {
+        return (userService.delete(id))
+                ? new ResponseEntity(HttpStatus.OK)
+                : new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
 }
