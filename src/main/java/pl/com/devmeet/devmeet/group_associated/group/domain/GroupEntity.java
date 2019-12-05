@@ -21,9 +21,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "groups")
-//Warning: 'groups' is a reserved keyword and should be quoted: https://dev.mysql.com/doc/refman/8.0/en/keywords.html
 @Entity
+@Table(name = "tgroup")
 public class GroupEntity {
 
     @Id

@@ -9,7 +9,7 @@ values ('2019-01-01 00:00:00', true, 'a', 1),
        ('2019-01-01 00:00:00', true, 'b', 2),
        ('2019-01-01 00:00:00', true, 'c', 3)
 ;
-insert into groups(creation_time, description, group_name, is_active, members_limit)
+insert into tgroup(creation_time, description, group_name, is_active, members_limit)
 values ('2019-01-01 00:00:00', 'java junior developers', 'devmeet', true, 4),
        ('2019-01-01 00:00:00', 'python junior developers', 'snakes', true, 3)
 ;
