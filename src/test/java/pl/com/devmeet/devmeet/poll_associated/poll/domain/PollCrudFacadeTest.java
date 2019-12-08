@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
@@ -79,7 +77,7 @@ public class PollCrudFacadeTest {
         try {
             groupEntity = groupCrudFacade
                     .findEntity(groupCrudFacade
-                            .create(testGroupDto));
+                            .add(testGroupDto));
         } catch (GroupNotFoundException e) {
             e.printStackTrace();
         } catch (GroupAlreadyExistsException e) {
@@ -98,7 +96,7 @@ public class PollCrudFacadeTest {
     @Test
     public void WHEN_create_not_existing_poll_THEN_return_poll() throws PollAlreadyExistsException, GroupNotFoundException {
         initTestDB();
-        PollDto pollDto = initPollCrudFacade().create(testPollDto);
+        PollDto pollDto = initPollCrudFacade().add(testPollDto);
 
         assertThat(pollDto).isNotNull();
         assertThat(pollDto.getGroup()).isNotNull();
@@ -111,13 +109,13 @@ public class PollCrudFacadeTest {
         initTestDB();
         PollCrudFacade pollCrudFacade = initPollCrudFacade();
         try {
-            pollCrudFacade.create(testPollDto);
+            pollCrudFacade.add(testPollDto);
         } catch (PollAlreadyExistsException | GroupNotFoundException e) {
             Assert.fail();
         }
 
         try {
-            pollCrudFacade.create(testPollDto);
+            pollCrudFacade.add(testPollDto);
             Assert.fail();
         } catch (PollAlreadyExistsException e) {
             assertThat(e)
@@ -130,8 +128,8 @@ public class PollCrudFacadeTest {
     public void WHEN_found_active_poll_THEN_return_poll() throws PollAlreadyExistsException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
         PollCrudFacade pollCrudFacade = initPollCrudFacade();
-        PollDto pollDto = pollCrudFacade.create(testPollDto);
-        PollDto found = pollCrudFacade.read(pollDto);
+        PollDto pollDto = pollCrudFacade.add(testPollDto);
+        PollDto found = pollCrudFacade.find(pollDto);
 
         assertThat(found).isNotNull();
         assertThat(found.isActive()).isTrue();
@@ -141,7 +139,7 @@ public class PollCrudFacadeTest {
     public void WHEN_try_to_find_not_existing_poll_THEN_return_EntityNotFoundException() throws GroupNotFoundException {
         initTestDB();
         try {
-            initPollCrudFacade().read(testPollDto);
+            initPollCrudFacade().find(testPollDto);
             Assert.fail();
         } catch (PollNotFoundException e) {
             assertThat(e)
@@ -181,7 +179,7 @@ public class PollCrudFacadeTest {
     public void WHEN_delete_active_poll_THEN_return_poll() throws PollAlreadyExistsException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
         PollCrudFacade pollCrudFacade = initPollCrudFacade();
-        pollCrudFacade.create(testPollDto);
+        pollCrudFacade.add(testPollDto);
         PollDto deleted = pollCrudFacade.delete(testPollDto);
 
         assertThat(deleted).isNotNull();
@@ -194,7 +192,7 @@ public class PollCrudFacadeTest {
         PollCrudFacade pollCrudFacade = initPollCrudFacade();
 
         try {
-            pollCrudFacade.create(testPollDto);
+            pollCrudFacade.add(testPollDto);
         } catch (PollAlreadyExistsException e) {
             Assert.fail();
         }

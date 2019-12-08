@@ -159,42 +159,42 @@ public class MessageCrudFacadeTest {
 
         MemberEntity memberEntityFirst = null;
         try {
-            memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.create(memberSender));
+            memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(memberSender));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
-            memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.create(memberReceiver));
+            memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(memberReceiver));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade.findEntity(groupCrudFacade.create(testGroupAndReceiverGroup));
+            groupEntity = groupCrudFacade.findEntity(groupCrudFacade.add(testGroupAndReceiverGroup));
         } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
             e.printStackTrace();
         }
 
         MessengerEntity memberSenderMessengerEntity = null;
         try {
-            memberSenderMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(membersSenderMessenger));
+            memberSenderMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersSenderMessenger));
         } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
 
         MessengerEntity memberReceiverMessengerEntity = null;
         try {
-            memberReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(membersReceiverMessenger));
+            memberReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersReceiverMessenger));
         } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
 
         MessengerEntity groupReceiverMessengerEntity = null;
         try {
-            groupReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.create(groupsReceiverMessenger));
+            groupReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(groupsReceiverMessenger));
         } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
             e.printStackTrace();
         }
@@ -217,7 +217,7 @@ public class MessageCrudFacadeTest {
                 .generateConversation(sender, receiver, numberOfTestMessages);
 
         for (MessageDto messageDto : messagesToSave) {
-            result.add(messageCrudFacade.create(messageDto));
+            result.add(messageCrudFacade.add(messageDto));
         }
 
         return result;
@@ -307,7 +307,7 @@ public class MessageCrudFacadeTest {
                 .build();
 
         String senderMemberNick = membersSenderMessenger.getMember().getNick();
-        List<MessageDto> foundMessages = initMessageCrudFacade().readAll(singleMessage);
+        List<MessageDto> foundMessages = initMessageCrudFacade().findAll(singleMessage);
 
 
         assertThat(foundMessages.size()).isEqualTo((numberOfMessagesLocal / 2));
@@ -345,7 +345,7 @@ public class MessageCrudFacadeTest {
         saveMessagesInToDb(membersSenderMessenger, membersReceiverMessenger, standardTestMessageText, 1);
 
         try {
-            initMessageCrudFacade().readAll(singleMessage);
+            initMessageCrudFacade().findAll(singleMessage);
             Assert.fail();
 
         } catch (UserNotFoundException | MessengerNotFoundException | MemberNotFoundException | GroupNotFoundException | MessageNotFoundException e) {

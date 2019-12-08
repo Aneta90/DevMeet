@@ -62,17 +62,17 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     }
 
     @Override
-    public PollDto create(PollDto dto) throws PollAlreadyExistsException, GroupNotFoundException {
+    public PollDto add(PollDto dto) throws PollAlreadyExistsException, GroupNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public PollDto read(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
+    public PollDto find(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
     }
 
     @Override
-    public List<PollDto> readAll(PollDto dto)  {
+    public List<PollDto> findAll(PollDto dto)  {
         throw new UnsupportedOperationException(CrudErrorEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 

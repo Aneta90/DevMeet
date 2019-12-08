@@ -77,18 +77,18 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
 
     @Override
-    public PlaceDto create(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
+    public PlaceDto add(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
 
 
     @Override
-    public PlaceDto read(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
+    public PlaceDto find(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
     @Override
-    public List<PlaceDto> readAll(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
+    public List<PlaceDto> findAll(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 

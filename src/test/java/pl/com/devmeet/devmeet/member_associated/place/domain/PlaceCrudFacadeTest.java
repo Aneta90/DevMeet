@@ -7,8 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
@@ -102,7 +100,7 @@ public class PlaceCrudFacadeTest {
         MemberEntity memberEntity = null;
         try {
             memberEntity = memberCrudFacade
-                    .findEntity(memberCrudFacade.create(testMemberDto));
+                    .findEntity(memberCrudFacade.add(testMemberDto));
         } catch (MemberNotFoundException e) {
             e.printStackTrace();
         } catch (UserNotFoundException e) {
@@ -127,7 +125,7 @@ public class PlaceCrudFacadeTest {
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
         initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
-        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.create(testMemberDto));
+        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }
 
@@ -141,7 +139,7 @@ public class PlaceCrudFacadeTest {
     public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.create(testPlaceDto);
+        PlaceDto created = placeCrudFacade.add(testPlaceDto);
         assertThat(created.getMember()).isNotNull();
         assertThat(created).isNotNull();
         assertThat(created.getCreationTime()).isNotNull();
@@ -154,12 +152,12 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
-            placeCrudFacade.create(testPlaceDto);
+            placeCrudFacade.add(testPlaceDto);
         } catch (MemberNotFoundException | UserNotFoundException | PlaceAlreadyExistsException e) {
             Assert.fail();
         }
         try {
-            placeCrudFacade.create(testPlaceDto);
+            placeCrudFacade.add(testPlaceDto);
             Assert.fail();
         } catch (PlaceAlreadyExistsException e) {
             assertThat(e)
@@ -175,8 +173,8 @@ public class PlaceCrudFacadeTest {
         PlaceDto found = null;
         placeCrudFacade = initPlaceCrudFacade();
 
-        created = placeCrudFacade.create(testPlaceDto);
-        found = placeCrudFacade.read(testPlaceDto);
+        created = placeCrudFacade.add(testPlaceDto);
+        found = placeCrudFacade.find(testPlaceDto);
         assertThat(found).isNotNull();
     }
 
@@ -185,7 +183,7 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
-            placeCrudFacade.read(testPlaceDto);
+            placeCrudFacade.find(testPlaceDto);
             Assert.fail();
         } catch (PlaceNotFoundException e) {
             assertThat(e)
@@ -199,8 +197,8 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         List<PlaceDto> found = null;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        placeCrudFacade.create(testPlaceDto);
-        found = placeCrudFacade.readAll(testPlaceDto);
+        placeCrudFacade.add(testPlaceDto);
+        found = placeCrudFacade.findAll(testPlaceDto);
         assertThat(found).isNotNull();
     }
 
@@ -208,7 +206,7 @@ public class PlaceCrudFacadeTest {
     public void WHEN_try_to_update_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.create(testPlaceDto);
+        PlaceDto created = placeCrudFacade.add(testPlaceDto);
         PlaceDto updated = placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
@@ -247,7 +245,7 @@ public class PlaceCrudFacadeTest {
     public void WHEN_delete_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException, PlaceFoundButNotActiveException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.create(testPlaceDto);
+        PlaceDto created = placeCrudFacade.add(testPlaceDto);
         PlaceDto deleted = placeCrudFacade.delete(testPlaceDto);
 
         assertThat(deleted).isNotNull();

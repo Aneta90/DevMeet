@@ -79,17 +79,17 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     }
 
     @Override
-    public MessengerDto create(MessengerDto messengerDto) throws MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
+    public MessengerDto add(MessengerDto messengerDto) throws MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return map(initCreator().createEntity(messengerDto));
     }
 
     @Override
-    public MessengerDto read(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
+    public MessengerDto find(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return map(findEntity(messengerDto));
     }
 
     @Override
-    public List<MessengerDto> readAll(MessengerDto dto) throws MessengerNotFoundException {
+    public List<MessengerDto> findAll(MessengerDto dto) throws MessengerNotFoundException {
         return mapToDtos(findEntities(dto));
     }
 

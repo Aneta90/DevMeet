@@ -97,19 +97,19 @@ public class MeetingCrudFacadeTest {
     }
 
     private MeetingDto createMeeting() throws MeetingAlreadyExistsException {
-        return initMeetingCrudFacade().create(meetingDto);
+        return initMeetingCrudFacade().add(meetingDto);
     }
 
     private MeetingDto createSecondMeeting() throws MeetingAlreadyExistsException {
-        return initMeetingCrudFacade().create(secondMeeting);
+        return initMeetingCrudFacade().add(secondMeeting);
     }
 
     private GroupDto createGroup() throws GroupAlreadyExistsException {
-        return initGroupCruFacade().create(groupDto);
+        return initGroupCruFacade().add(groupDto);
     }
 
     private PlaceDto createPlace() throws PlaceAlreadyExistsException, MemberNotFoundException, UserNotFoundException {
-        return initPlaceCrudFacade().create(placeDto);
+        return initPlaceCrudFacade().add(placeDto);
     }
 
 
@@ -146,7 +146,7 @@ public class MeetingCrudFacadeTest {
         }
 
         try {
-            meetingCrudFacade.create(existingMeetingDto);
+            meetingCrudFacade.add(existingMeetingDto);
             Assert.fail();
         } catch (MeetingAlreadyExistsException e) {
             assertThat(e)
@@ -157,7 +157,7 @@ public class MeetingCrudFacadeTest {
     @Test
     public void when_try_to_read_existing_meeting_then_read() throws MeetingNotFoundException, MeetingAlreadyExistsException {
         MeetingDto createdMeetingDto = createMeeting();
-        MeetingDto foundMeeting = meetingCrudFacade.read(createdMeetingDto);
+        MeetingDto foundMeeting = meetingCrudFacade.find(createdMeetingDto);
         assertThat(foundMeeting).isNotNull();
         assertThat(foundMeeting.getGroup().getGroupName()).isEqualTo("Dancing group");
         assertThat(foundMeeting.getMeetingNumber()).isEqualTo(1);

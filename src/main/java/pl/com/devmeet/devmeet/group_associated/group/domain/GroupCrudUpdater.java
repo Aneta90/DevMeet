@@ -1,5 +1,8 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
@@ -7,23 +10,29 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exception
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
 
     private GroupCrudSaver groupCrudSaver;
     private GroupCrudFinder groupCrudFinder;
 
-    public GroupCrudUpdater(GroupCrudRepository repository) {
-        this.groupCrudSaver = new GroupCrudSaver(repository);
-        this.groupCrudFinder = new GroupCrudFinder(repository);
-    }
-
     @Override
     public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntity(oldDto));
+        GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntityByGroup(oldDto));
 
         GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
 
         return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
+    }
+
+    public GroupEntity updateEntity(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+        return updateEntity(oldDto, GroupDto.builder()
+                .groupName(groupName)
+                .website(website)
+                .description(description)
+                .build());
     }
 
     private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup) throws GroupFoundButNotActiveException {

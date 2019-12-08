@@ -2,8 +2,6 @@ package pl.com.devmeet.devmeet.user.user_member_connector;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
@@ -25,7 +23,7 @@ class MemberFinder {
 
     public MemberDto addNewMember(UserDto userDto, String memberNickname) throws UserNotFoundException, MemberAlreadyExistsException {
         return memberCrudFacade
-                .create(MemberDto.builder()
+                .add(MemberDto.builder()
                         .user(userDto)
                         .nick(memberNickname)
                         .build());
@@ -33,7 +31,7 @@ class MemberFinder {
 
     public MemberDto findMember(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
         return memberCrudFacade
-                .read(MemberDto.builder()
+                .find(MemberDto.builder()
                         .user(userDto)
                         .build()
                 );

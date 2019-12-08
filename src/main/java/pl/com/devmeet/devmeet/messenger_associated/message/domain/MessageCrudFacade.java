@@ -83,17 +83,17 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     }
 
     @Override
-    public MessageDto create(MessageDto dto) throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException {
+    public MessageDto add(MessageDto dto) throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException {
         return map(initCreator().createEntity(dto));
     }
 
     @Override
-    public MessageDto read(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+    public MessageDto find(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
         return map(findEntity(dto));
     }
 
     @Override
-    public List<MessageDto> readAll(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
+    public List<MessageDto> findAll(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
         return mapToDtos(findEntities(dto));
     }
 
