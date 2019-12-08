@@ -14,10 +14,12 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollAlreadyExistsException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollCrudStatusEnum;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollUnsupportedOperationException;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -30,6 +32,10 @@ public class PollCrudFacadeTest {
 
     @Autowired
     private GroupCrudRepository groupCrudRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private PollCrudFacade pollCrudFacade;
     private GroupCrudFacade groupCrudFacade;
@@ -63,11 +69,11 @@ public class PollCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
     }
 
     private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(groupCrudRepository, pollCrudRepository);
+        return new PollCrudFacade(pollCrudRepository, groupCrudRepository, memberRepository, userRepository);
     }
 
     private boolean initTestDB() {
@@ -76,7 +82,7 @@ public class PollCrudFacadeTest {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade
-                    .findEntity(groupCrudFacade
+                    .findEntityByGroup(groupCrudFacade
                             .add(testGroupDto));
         } catch (GroupNotFoundException e) {
             e.printStackTrace();

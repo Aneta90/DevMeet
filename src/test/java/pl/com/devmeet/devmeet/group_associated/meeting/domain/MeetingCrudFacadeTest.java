@@ -114,7 +114,7 @@ public class MeetingCrudFacadeTest {
 
 
     private GroupCrudFacade initGroupCruFacade() {
-        return new GroupCrudFacade(groupCrudRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
     }
 
     private PlaceCrudFacade initPlaceCrudFacade() {

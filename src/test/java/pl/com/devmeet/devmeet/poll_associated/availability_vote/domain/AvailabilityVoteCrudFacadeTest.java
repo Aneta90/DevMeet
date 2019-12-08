@@ -179,11 +179,11 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupRepository);
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
     }
 
     private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(groupRepository, pollCrudRepository);
+        return new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository);
     }
 
     private AvailabilityVoteCrudFacade initVoteCrudFacade() {
@@ -237,7 +237,7 @@ public class AvailabilityVoteCrudFacadeTest {
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade.findEntity(groupCrudFacade.add(testGroupDto));
+            groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupDto));
         } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
             e.printStackTrace();
         }

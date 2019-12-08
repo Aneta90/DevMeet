@@ -94,7 +94,7 @@ public class PermissionCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
@@ -117,7 +117,7 @@ public class PermissionCrudFacadeTest {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade
-                    .findEntity(groupCrudFacade
+                    .findEntityByGroup(groupCrudFacade
                             .add(testGroupDto));
         } catch (GroupNotFoundException e) {
             e.printStackTrace();
@@ -156,7 +156,7 @@ public class PermissionCrudFacadeTest {
     @Test
     public void GROUP_CRUD_FACADE_WR() throws GroupAlreadyExistsException, GroupNotFoundException {
         GroupCrudFacade groupFacade = initGroupCrudFacade();
-        GroupEntity groupEntity = groupFacade.findEntity(groupFacade.add(testGroupDto));
+        GroupEntity groupEntity = groupFacade.findEntityByGroup(groupFacade.add(testGroupDto));
 
         assertThat(groupEntity).isNotNull();
     }

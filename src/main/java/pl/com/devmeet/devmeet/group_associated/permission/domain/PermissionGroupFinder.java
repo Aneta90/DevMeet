@@ -18,6 +18,6 @@ class PermissionGroupFinder {
     private GroupCrudFacade groupCrudFacade;
 
     public GroupEntity findGroup(GroupDto dto) throws GroupNotFoundException {
-            return groupCrudFacade.findEntity(dto);
+            return groupCrudFacade.findEntityByGroup(dto);
     }
 }

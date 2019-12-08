@@ -96,7 +96,7 @@ public class MessengerCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupFacade() {
-        return new GroupCrudFacade(groupRepository);
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
     }
 
     private boolean initTestDB() {
@@ -118,7 +118,7 @@ public class MessengerCrudFacadeTest {
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade.findEntity(groupCrudFacade.add(firstTestGroupDto));
+            groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(firstTestGroupDto));
         } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
             e.printStackTrace();
         }

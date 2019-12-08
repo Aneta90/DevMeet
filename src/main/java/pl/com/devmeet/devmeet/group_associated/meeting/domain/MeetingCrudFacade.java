@@ -43,12 +43,10 @@ public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, Meetin
         return mapToDto(initCreator().createEntity(dto));
     }
 
-    @Override
     public MeetingDto find(MeetingDto dto) throws MeetingNotFoundException {
         return mapToDto(initFinder().findEntity(dto));
     }
 
-    @Override
     public List<MeetingDto> findAll(MeetingDto dto) {
         return null; //do sprawdzenia !!!
     }
@@ -71,12 +69,10 @@ public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, Meetin
         return map(initDeleter().deleteEntity(dto));
     }
 
-    @Override
     public MeetingEntity findEntity(MeetingDto dto) throws MeetingNotFoundException {
         return initFinder().findEntity(dto);
     }
 
-    @Override
     public List<MeetingEntity> findEntities(MeetingDto dto) throws MeetingNotFoundException {
         return null;
     }

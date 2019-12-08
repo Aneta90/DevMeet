@@ -46,10 +46,10 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     }
 
     private MessengerGroupFinder initGroupFinder() {
-        return new MessengerGroupFinder(new GroupCrudFacade(groupRepository));
+        return new MessengerGroupFinder(new GroupCrudFacade(groupRepository, memberRepository, userRepository));
     }
 
-    private MessengerCrudSaver initSaver(){
+    private MessengerCrudSaver initSaver() {
         return MessengerCrudSaver.builder()
                 .memberRepository(memberRepository)
                 .messengerRepository(messengerRepository)
@@ -83,12 +83,10 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
         return map(initCreator().createEntity(messengerDto));
     }
 
-    @Override
     public MessengerDto find(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return map(findEntity(messengerDto));
     }
 
-    @Override
     public List<MessengerDto> findAll(MessengerDto dto) throws MessengerNotFoundException {
         return mapToDtos(findEntities(dto));
     }
@@ -98,12 +96,10 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
         throw new CrudException(MessengerInfoStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
-    @Override
     public MessengerEntity findEntity(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return initFinder().findEntity(messengerDto);
     }
 
-    @Override
     public List<MessengerEntity> findEntities(MessengerDto dto) throws MessengerNotFoundException {
         return initFinder().findEntities(dto);
     }
@@ -126,7 +122,7 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
         return MessengerMapper.map(messengerEntity);
     }
 
-    private List<MessengerDto> mapToDtos(List<MessengerEntity> entities){
+    private List<MessengerDto> mapToDtos(List<MessengerEntity> entities) {
         return entities.stream()
                 .map(MessengerCrudFacade::map)
                 .collect(Collectors.toList());
