@@ -3,13 +3,9 @@ package pl.com.devmeet.devmeet.group_associated.group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 
@@ -29,23 +25,17 @@ class GroupApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto>> getGroups(@RequestParam(required = false) String searchText) throws GroupNotFoundException, GroupAlreadyExistsException {
+    public ResponseEntity<List<GroupDto>> getGroups(@RequestParam(required = false) String searchText) {
+        return new ResponseEntity<>(group.findBySearchText(searchText), HttpStatus.OK);
+    }
 
-        GroupDto testGroup = new GroupDto().builder()
-                .groupName("Java test group")
-                .website("www.testWebsite.com")
-                .description("Welcome to test group")
-                .messenger(null)
-                .membersLimit(5)
-                .memberCounter(6)
-                .meetingCounter(1)
-                .creationTime(null)
-                .modificationTime(null)
-                .isActive(false)
-                .build();
-
-        group.add(testGroup);
-        return new ResponseEntity<>(group.findAll(), HttpStatus.OK); //new GroupDto to be removed
+    @GetMapping("{id}")
+    public ResponseEntity<GroupDto> getById(@PathVariable Long id) throws GroupNotFoundException {
+        return new ResponseEntity<>(group.findById(id), HttpStatus.OK);
+//        // if returned type is Optional<>
+//        return group.findById(id);
+//                .map(ResponseEntity::ok)
+//                .orElseGet(ResponseEntity.notFound().build()));
     }
 
 }

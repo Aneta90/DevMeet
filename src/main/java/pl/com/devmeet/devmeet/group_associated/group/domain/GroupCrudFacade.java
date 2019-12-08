@@ -3,16 +3,15 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.*;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
-import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
-import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntity> {
@@ -77,9 +76,18 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return mapDtoList(findAllEntities());
     }
 
+    public List<GroupDto> findBySearchText(String searchText) {
+        if (searchText != null)
+            return mapDtoList(groupCrudRepository.findAllBySearchText(searchText));
+        else return mapDtoList(findAllEntities());
+    }
 
-    public GroupEntity findById(Long id) throws GroupNotFoundException {
+    public GroupEntity findEntityById(Long id) throws GroupNotFoundException {
         return initFinder().findById(id);
+    }
+
+    public GroupDto findById(Long id) throws GroupNotFoundException { //może zwracać Optional<GroupDto> zamiast rzucać wyjątki???
+        return map(findEntityById(id));
     }
 
     public GroupEntity findEntityByGroup(GroupDto groupDto) throws GroupNotFoundException {

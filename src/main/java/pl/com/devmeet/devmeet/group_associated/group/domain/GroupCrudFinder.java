@@ -14,7 +14,6 @@ import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundExce
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor

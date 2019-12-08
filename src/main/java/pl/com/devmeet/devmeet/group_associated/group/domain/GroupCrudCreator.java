@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupArgumentsNotSpecifiedException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
