@@ -73,17 +73,10 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return map(findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description));
     }
 
-    public GroupDto findByMemberAndGroupName(MemberDto memberDto, String groupName) throws UserNotFoundException, GroupArgumentsNotSpecifiedException, MemberNotFoundException, GroupNotFoundException {
-        return map(initFinder().findEntityByMemberAndGroupName(memberDto, groupName));
-    }
-
     public List<GroupDto> findAll() {
         return mapDtoList(findAllEntities());
     }
 
-    public List<GroupDto> findAllByMember(MemberDto dto) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
-        return mapDtoList(findEntitiesByMember(dto));
-    }
 
     public GroupEntity findById(UUID id) throws GroupNotFoundException {
         return initFinder().findById(id);
@@ -95,10 +88,6 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
 
     public GroupEntity findEntityByGroupNameAndWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
         return initFinder().findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description);
-    }
-
-    public List<GroupEntity> findEntitiesByMember(MemberDto memberEntity) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
-        return initFinder().findEntitiesByMember(memberEntity);
     }
 
     public List<GroupEntity> findAllEntities() {
@@ -118,7 +107,6 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException {
         return map(initDeleter().deleteEntity(dto));
     }
-
 
     public static GroupDto map(GroupEntity entity) {
         return GroupCrudMapper.map(entity);

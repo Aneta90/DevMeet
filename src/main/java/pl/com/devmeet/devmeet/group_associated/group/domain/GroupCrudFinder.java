@@ -33,18 +33,6 @@ class GroupCrudFinder {
         throw new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
     }
 
-    public GroupEntity findEntityByMemberAndGroupName(MemberDto memberDto, String groupName) throws MemberNotFoundException, UserNotFoundException, GroupArgumentsNotSpecifiedException, GroupNotFoundException {
-        MemberEntity foundMember = findMember(memberDto);
-        checkIsGroupNameNotEmpty(groupName);
-
-        Optional<GroupEntity> groupEntity = groupCrudRepository.findByMemberAndGroupName(foundMember, groupName);
-
-        if (groupEntity.isPresent())
-            return groupEntity.get();
-
-        throw new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
-    }
-
     public GroupEntity findEntityByGroup(GroupDto dto) throws GroupNotFoundException {
         String groupName;
         String website;
@@ -65,19 +53,6 @@ class GroupCrudFinder {
             return group.get();
         else
             throw new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
-    }
-
-    public List<GroupEntity> findEntitiesByMember(MemberDto dto) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
-        Optional<List<GroupEntity>> groups;
-
-        MemberEntity foundMember = findMember(dto);
-
-        groups = groupCrudRepository.findAllByMember(foundMember);
-
-        if (groups.isPresent())
-            return groups.get();
-
-        throw new GroupNotFoundException(GroupCrudStatusEnum.GROUPS_NOT_FOUND.toString());
     }
 
     public boolean isExist(GroupDto dto) {
