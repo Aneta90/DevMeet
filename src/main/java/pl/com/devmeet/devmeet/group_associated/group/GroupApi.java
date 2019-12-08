@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
@@ -30,12 +31,12 @@ class GroupApi {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GroupDto> getById(@PathVariable Long id) throws GroupNotFoundException {
-        return new ResponseEntity<>(group.findById(id), HttpStatus.OK);
-//        // if returned type is Optional<>
-//        return group.findById(id);
-//                .map(ResponseEntity::ok)
-//                .orElseGet(ResponseEntity.notFound().build()));
+    public ResponseEntity<GroupDto> getById(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(group.findById(id), HttpStatus.OK);
+        } catch (GroupNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        }
     }
 
 }
