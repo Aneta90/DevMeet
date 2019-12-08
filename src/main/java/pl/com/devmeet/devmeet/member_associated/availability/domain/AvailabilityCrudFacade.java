@@ -76,18 +76,15 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
 
 
     @Override
-    public AvailabilityDto create(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
+    public AvailabilityDto add(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
-
-    @Override
-    public AvailabilityDto read(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
+    public AvailabilityDto find(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
     }
 
-    @Override
-    public List<AvailabilityDto> readAll(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
+    public List<AvailabilityDto> findAll(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return mapDtoList(initFinder().findEntities(dto));
     }
 
@@ -101,12 +98,10 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
         return map(initDeleter().deleteEntity(dto));
     }
 
-    @Override
     public AvailabilityEntity findEntity(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }
 
-    @Override
     public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return initFinder().findEntities(dto);
     }

@@ -57,7 +57,7 @@ public class MemberCrudFacadeTest {
     }
 
     private MemberDto createMember() throws UserNotFoundException, MemberAlreadyExistsException {
-        return initMemberCrudFacade().create(testMemberDto);
+        return initMemberCrudFacade().add(testMemberDto);
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
@@ -105,7 +105,7 @@ public class MemberCrudFacadeTest {
         }
 
         try {
-            memberCrudFacade.create(createdMember);
+            memberCrudFacade.add(createdMember);
             Assert.fail();
         } catch (MemberAlreadyExistsException e) {
             assertThat(e)
@@ -120,7 +120,7 @@ public class MemberCrudFacadeTest {
         UserDto foundUser = initUserCrudFacade().read(testUserDto);
         createMember();
 
-        MemberDto foundMemberDto = memberCrudFacade.read(testMemberDto);
+        MemberDto foundMemberDto = memberCrudFacade.find(testMemberDto);
 
         assertThat(foundMemberDto).isNotNull();
         assertThat(foundMemberDto.getNick()).isEqualTo(testMemberDto.getNick());
@@ -133,7 +133,7 @@ public class MemberCrudFacadeTest {
         initTestDatabaseByAddingUser();
 
         try {
-            memberCrudFacade.read(testMemberDto);
+            memberCrudFacade.find(testMemberDto);
             Assert.fail();
         } catch (MemberNotFoundException e) {
             assertThat(e)
@@ -187,7 +187,7 @@ public class MemberCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, MemberFoundButNotActiveException {
         initTestDatabaseByAddingUser();
-        memberCrudFacade.create(testMemberDto);
+        memberCrudFacade.add(testMemberDto);
         memberCrudFacade.delete(testMemberDto);
 
         try {

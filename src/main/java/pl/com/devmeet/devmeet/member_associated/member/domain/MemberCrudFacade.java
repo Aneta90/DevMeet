@@ -51,27 +51,27 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
     }
 
     @Override
-    public MemberDto create(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException {
+    public MemberDto add(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
-    @Override
-    public MemberDto read(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+
+    public MemberDto find(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return map(findEntity(dto));
     }
 
-    @Override
-    public List<MemberDto> readAll(MemberDto dto) throws CrudException {
+
+    public List<MemberDto> findAll(MemberDto dto) throws CrudException {
         throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto ) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+    public MemberDto update(MemberDto oldDto, MemberDto newDto ) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
         return map(initUpdater().update(oldDto, newDto));
     }
 
     @Override
-    public MemberDto delete(MemberDto dto) throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException {
+    public MemberDto delete(MemberDto dto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
         return map(initDeleter().delete(dto));
     }
 
@@ -88,12 +88,12 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         return initFinder().isExist(memberDto);
     }
 
-    @Override
+
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }
 
-    @Override
+
     public List<MemberEntity> findEntities(MemberDto dto) throws CrudException {
         throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
