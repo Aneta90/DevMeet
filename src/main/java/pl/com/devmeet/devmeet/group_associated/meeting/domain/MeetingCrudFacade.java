@@ -39,17 +39,15 @@ public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, Meetin
 
 
     @Override
-    public MeetingDto create(MeetingDto dto) throws MeetingAlreadyExistsException {
+    public MeetingDto add(MeetingDto dto) throws MeetingAlreadyExistsException {
         return mapToDto(initCreator().createEntity(dto));
     }
 
-    @Override
-    public MeetingDto read(MeetingDto dto) throws MeetingNotFoundException {
+    public MeetingDto find(MeetingDto dto) throws MeetingNotFoundException {
         return mapToDto(initFinder().findEntity(dto));
     }
 
-    @Override
-    public List<MeetingDto> readAll(MeetingDto dto) {
+    public List<MeetingDto> findAll(MeetingDto dto) {
         return null; //do sprawdzenia !!!
     }
 
@@ -71,12 +69,10 @@ public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, Meetin
         return map(initDeleter().deleteEntity(dto));
     }
 
-    @Override
     public MeetingEntity findEntity(MeetingDto dto) throws MeetingNotFoundException {
         return initFinder().findEntity(dto);
     }
 
-    @Override
     public List<MeetingEntity> findEntities(MeetingDto dto) throws MeetingNotFoundException {
         return null;
     }

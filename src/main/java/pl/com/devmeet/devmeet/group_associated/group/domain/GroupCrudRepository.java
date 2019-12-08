@@ -10,10 +10,6 @@ import java.util.Optional;
 @Repository
 public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, Long> {
 
-    Optional<GroupEntity> findByGroupName(String groupName);
-
-    Optional<List<GroupEntity>> findAllByGroupName(String groupName);
-
-    Optional<List<GroupEntity>> findAllByMembers(MemberEntity member);
+    Optional<GroupEntity> findByGroupNameAndWebsiteAndDescription(String groupName, String website, String description);
 
 }

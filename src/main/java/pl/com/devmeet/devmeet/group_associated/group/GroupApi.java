@@ -30,7 +30,22 @@ class GroupApi {
 
     @GetMapping
     public ResponseEntity<List<GroupDto>> getGroups(@RequestParam(required = false) String searchText) throws GroupNotFoundException, GroupAlreadyExistsException {
-        return new ResponseEntity<>(group.readAll(group.create(new GroupDto("G1"))), HttpStatus.OK); //new GroupDto to be removed
+
+        GroupDto testGroup = new GroupDto().builder()
+                .groupName("Java test group")
+                .website("www.testWebsite.com")
+                .description("Welcome to test group")
+                .messenger(null)
+                .membersLimit(5)
+                .memberCounter(6)
+                .meetingCounter(1)
+                .creationTime(null)
+                .modificationTime(null)
+                .isActive(false)
+                .build();
+
+        group.add(testGroup);
+        return new ResponseEntity<>(group.findAll(), HttpStatus.OK); //new GroupDto to be removed
     }
 
 }

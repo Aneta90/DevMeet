@@ -36,8 +36,4 @@ public class GroupDto {
     private DateTime modificationTime;
     private boolean isActive;
 
-    public GroupDto(String groupName) {
-        this.groupName = groupName;
-        this.creationTime = DateTime.now();
-    }
 }
