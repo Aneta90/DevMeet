@@ -45,7 +45,6 @@ public class GroupCrudFacadeTest {
                 .modificationTime(null)
                 .isActive(false)
                 .build();
-
     }
 
     private GroupCrudFacade initGroupFacade() {

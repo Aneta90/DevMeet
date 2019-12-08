@@ -78,7 +78,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
 
-    public GroupEntity findById(UUID id) throws GroupNotFoundException {
+    public GroupEntity findById(Long id) throws GroupNotFoundException {
         return initFinder().findById(id);
     }
 

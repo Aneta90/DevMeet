@@ -24,7 +24,7 @@ class GroupCrudFinder {
     private GroupCrudRepository groupCrudRepository;
     private GroupMemberFinder memberFinder;
 
-    public GroupEntity findById(UUID id) throws GroupNotFoundException {
+    public GroupEntity findById(Long id) throws GroupNotFoundException {
         Optional<GroupEntity> found = groupCrudRepository.findById(id);
 
         if (found.isPresent())
