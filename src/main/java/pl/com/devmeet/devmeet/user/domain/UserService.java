@@ -95,7 +95,13 @@ class UserService {
 
     // delete
 
-    // TO BE IMPLEMENTED
+    boolean delete(Long id) {
+        if (repository.findById(id).isPresent()) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
     // custom methods
 

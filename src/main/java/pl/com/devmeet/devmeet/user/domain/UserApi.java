@@ -25,7 +25,7 @@ class UserApi {
     // get
 
     @GetMapping
-    public List<UserDto> getAllUsers(@RequestParam(required = false) String searchEmalOrPhone) {
+    public List<UserDto> getFiltered(@RequestParam(required = false) String searchEmalOrPhone) {
         if (searchEmalOrPhone != null)
             return userService.findAllByEmailAndPhone(searchEmalOrPhone);
         else return userService.findAll();
@@ -76,6 +76,14 @@ class UserApi {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+    }
+
+    // delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity removeUserById(@PathVariable Long id) {
+        return (userService.delete(id))
+                ? new ResponseEntity(HttpStatus.OK)
+                : new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
 }

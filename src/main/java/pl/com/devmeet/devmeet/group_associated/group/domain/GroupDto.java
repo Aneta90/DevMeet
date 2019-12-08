@@ -4,9 +4,9 @@ import lombok.*;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingDto;
 import pl.com.devmeet.devmeet.group_associated.permission.domain.PermissionDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollDto;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 
 import java.util.List;
 
@@ -35,4 +35,9 @@ public class GroupDto {
     private DateTime creationTime;
     private DateTime modificationTime;
     private boolean isActive;
+
+    public GroupDto(String groupName) {
+        this.groupName = groupName;
+        this.creationTime = DateTime.now();
+    }
 }

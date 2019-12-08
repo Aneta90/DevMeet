@@ -6,10 +6,9 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UUID> {
+public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, Long> {
 
     Optional<GroupEntity> findByGroupNameAndWebsiteAndDescription(String groupName, String website, String description);
 
