@@ -21,6 +21,6 @@ class MessengerGroupFinder {
     private GroupCrudFacade groupCrudFacade;
 
     public GroupEntity findGroup (GroupDto groupDto) throws GroupNotFoundException {
-        return groupCrudFacade.findEntity(groupDto);
+        return groupCrudFacade.findEntityByGroup(groupDto);
     }
 }

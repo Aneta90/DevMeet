@@ -11,10 +11,6 @@ import java.util.UUID;
 @Repository
 public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEntity, UUID> {
 
-    Optional<GroupEntity> findByGroupName(String groupName);
-
-    Optional<List<GroupEntity>> findAllByGroupName(String groupName);
-
-    Optional<List<GroupEntity>> findAllByMembers(MemberEntity member);
+    Optional<GroupEntity> findByGroupNameAndWebsiteAndDescription(String groupName, String website, String description);
 
 }

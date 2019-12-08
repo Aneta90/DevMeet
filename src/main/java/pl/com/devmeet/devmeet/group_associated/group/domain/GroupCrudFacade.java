@@ -3,54 +3,95 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.*;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntity> {
 
-    private GroupCrudRepository repository;
+    private GroupCrudRepository groupCrudRepository;
+    private MemberRepository memberRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public GroupCrudFacade(GroupCrudRepository repository) {
-        this.repository = repository;
+    public GroupCrudFacade(GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+        this.groupCrudRepository = groupCrudRepository;
+        this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
+    }
+
+    private GroupMemberFinder initMemberFinder() {
+        return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
+    }
+
+    private GroupCrudSaver initSaver() {
+        return new GroupCrudSaver(groupCrudRepository);
     }
 
     private GroupCrudCreator initCreator() {
-        return new GroupCrudCreator(repository);
+        return GroupCrudCreator.builder()
+                .groupCrudFinder(initFinder())
+                .groupCrudSaver(initSaver())
+                .build();
     }
 
     private GroupCrudFinder initFinder() {
-        return new GroupCrudFinder(repository);
+        return GroupCrudFinder.builder()
+                .groupCrudRepository(groupCrudRepository)
+                .memberFinder(initMemberFinder())
+                .build();
     }
 
     private GroupCrudUpdater initUpdater() {
-        return new GroupCrudUpdater(repository);
+        return GroupCrudUpdater.builder()
+                .groupCrudFinder(initFinder())
+                .groupCrudSaver(initSaver())
+                .build();
     }
 
     private GroupCrudDeleter initDeleter() {
-        return new GroupCrudDeleter(repository);
+        return GroupCrudDeleter.builder()
+                .groupCrudFinder(initFinder())
+                .groupCrudSaver(initSaver())
+                .build();
     }
 
     @Override
-    public GroupDto create(GroupDto dto) throws GroupAlreadyExistsException {
+    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
 
-    @Override
-    public GroupDto read(GroupDto dto) throws GroupNotFoundException {
-        return map(initFinder().findEntity(dto));
+    public GroupDto findByGroupNameWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
+        return map(findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description));
     }
 
-    @Override
-    public List<GroupDto> readAll(GroupDto dto) throws GroupNotFoundException {
-        return mapDtoList(findEntities(dto));
+    public List<GroupDto> findAll() {
+        return mapDtoList(findAllEntities());
+    }
+
+
+    public GroupEntity findById(UUID id) throws GroupNotFoundException {
+        return initFinder().findById(id);
+    }
+
+    public GroupEntity findEntityByGroup(GroupDto groupDto) throws GroupNotFoundException {
+        return initFinder().findEntityByGroup(groupDto);
+    }
+
+    public GroupEntity findEntityByGroupNameAndWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
+        return initFinder().findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description);
+    }
+
+    public List<GroupEntity> findAllEntities() {
+        return initFinder().findAllEntities();
     }
 
     @Override
@@ -58,19 +99,13 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
+    public GroupDto update(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+        return map(initUpdater().updateEntity(oldDto, groupName, website, description));
+    }
+
     @Override
     public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException {
         return map(initDeleter().deleteEntity(dto));
-    }
-
-    @Override
-    public GroupEntity findEntity(GroupDto dto) throws GroupNotFoundException {
-        return initFinder().findEntity(dto);
-    }
-
-    @Override
-    public List<GroupEntity> findEntities(GroupDto dto) throws GroupNotFoundException {
-        return initFinder().findEntities(dto);
     }
 
     public static GroupDto map(GroupEntity entity) {

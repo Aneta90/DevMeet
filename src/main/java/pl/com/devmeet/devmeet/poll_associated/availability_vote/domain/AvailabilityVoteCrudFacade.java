@@ -52,7 +52,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     }
 
     private AvailabilityVotePollFinder initPollFinder() {
-        return new AvailabilityVotePollFinder(new PollCrudFacade(groupRepository, pollCrudRepository));
+        return new AvailabilityVotePollFinder(new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository));
     }
 
     private AvailabilityVoteMemberFinder initMemberFinder() {
@@ -103,17 +103,15 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     }
 
     @Override
-    public AvailabilityVoteDto create(AvailabilityVoteDto dto) throws AvailabilityNotFoundException, GroupNotFoundException, AvailabilityVoteAlreadyExistsException, PollNotFoundException, MemberNotFoundException, UserNotFoundException {
+    public AvailabilityVoteDto add(AvailabilityVoteDto dto) throws AvailabilityNotFoundException, GroupNotFoundException, AvailabilityVoteAlreadyExistsException, PollNotFoundException, MemberNotFoundException, UserNotFoundException {
         return map(initVoteCreator().createEntity(dto));
     }
 
-    @Override
-    public AvailabilityVoteDto read(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
+    public AvailabilityVoteDto find(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
     }
 
-    @Override
-    public List<AvailabilityVoteDto> readAll(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {
+    public List<AvailabilityVoteDto> findAll(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {
         return mapToDtos(findEntities(dto));
     }
 
@@ -127,12 +125,10 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
         return map(initVoteDeleter().deleteEntity(dto));
     }
 
-    @Override
     public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         return initVoteFinder().findEntity(dto);
     }
 
-    @Override
     public List<AvailabilityVoteEntity> findEntities(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {
         return initVoteFinder().findEntities(dto);
     }

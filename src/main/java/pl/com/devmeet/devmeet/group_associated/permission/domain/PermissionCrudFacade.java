@@ -35,7 +35,7 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
 
     private PermissionGroupFinder initGroupFinder() {
         return new PermissionGroupFinder().builder()
-                .groupCrudFacade(new GroupCrudFacade(groupRepository))
+                .groupCrudFacade(new GroupCrudFacade(groupRepository, memberRepository, userRepository))
                 .build();
     }
 
@@ -83,17 +83,15 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     }
 
     @Override
-    public PermissionDto create(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, PermissionAlreadyExistsException, GroupNotFoundException {
+    public PermissionDto add(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, PermissionAlreadyExistsException, GroupNotFoundException {
         return map(initCreator().createEntity(dto));
     }
 
-    @Override
-    public PermissionDto read(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, PermissionNotFoundException {
+    public PermissionDto find(PermissionDto dto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, PermissionNotFoundException {
         return map(findEntity(dto));
     }
 
-    @Override
-    public List<PermissionDto> readAll(PermissionDto dto) throws PermissionMethodNotImplemented {
+    public List<PermissionDto> findAll(PermissionDto dto) throws PermissionMethodNotImplemented {
         throw new PermissionMethodNotImplemented(PermissionCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
@@ -107,12 +105,10 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
         return map(initDeleter().deleteEntity(dto));
     }
 
-    @Override
     public PermissionEntity findEntity(PermissionDto dto) throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
         return initFinder().findEntity(dto);
     }
 
-    @Override
     public List<PermissionEntity> findEntities(PermissionDto dto) throws PermissionMethodNotImplemented {
         return initFinder().findEntities(dto);
     }

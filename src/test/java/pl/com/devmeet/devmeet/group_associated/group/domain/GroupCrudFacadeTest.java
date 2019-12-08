@@ -8,9 +8,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.*;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.user.domain.UserRepository;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,14 +22,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GroupCrudFacadeTest {
 
     @Autowired
-    private GroupCrudRepository repository;
+    private GroupCrudRepository groupRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private GroupCrudFacade facade;
     private GroupDto testGroup;
 
     @Before
-    public void setUp() throws Exception {
-        facade = new GroupCrudFacade(repository);
+    public void setUp() {
 
         testGroup = new GroupDto().builder()
                 .groupName("Java test group")
@@ -43,8 +48,12 @@ public class GroupCrudFacadeTest {
 
     }
 
+    private GroupCrudFacade initGroupFacade() {
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
+    }
+
     private GroupDto createGroup() throws GroupAlreadyExistsException {
-        return facade.create(testGroup);
+        return initGroupFacade().add(testGroup);
     }
 
     @Test
@@ -65,7 +74,7 @@ public class GroupCrudFacadeTest {
         }
 
         try {
-            facade.create(testGroup);
+            initGroupFacade().add(testGroup);
             Assert.fail();
         } catch (GroupAlreadyExistsException e) {
             assertThat(e)
@@ -77,8 +86,9 @@ public class GroupCrudFacadeTest {
     @Test
     public void WHEN_create_exist_group_but_not_active_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException {
         GroupDto createdFirst = createGroup();
-        GroupDto deletedFirst = facade.delete(testGroup);
-        GroupDto createdSecond = facade.create(modifiedTestGroup(testGroup));
+        GroupCrudFacade groupCrudFacade = initGroupFacade();
+        GroupDto deletedFirst = groupCrudFacade.delete(testGroup);
+        GroupDto createdSecond = groupCrudFacade.add(modifiedTestGroup(createdFirst));
 
         assertThat(createdFirst).isNotNull();
         assertThat(deletedFirst).isNotNull();
@@ -98,24 +108,28 @@ public class GroupCrudFacadeTest {
     @Test
     public void WHEN_found_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException {
         assertThat(createGroup()).isNotNull();
-        assertThat(facade.read(testGroup)).isNotNull();
+        assertThat(initGroupFacade().findEntityByGroup(testGroup)).isNotNull();
     }
 
     @Test
     public void WHEN_group_not_found_THEN_return_EntityNotFoundException_group_not_found() {
         try {
-            facade.findEntity(testGroup);
+            initGroupFacade().findEntityByGroup(testGroup);
             Assert.fail();
         } catch (GroupNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(GroupNotFoundException.class)
+                    .isInstanceOf(CrudException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
 
-    @Ignore
     @Test
-    public void readAll() {
+    public void findAll() throws GroupAlreadyExistsException {
+        createGroup();
+        List<GroupDto> foundGroups = initGroupFacade().findAll();
+        int groupsSize = foundGroups.size();
+
+        assertThat(foundGroups.size()).isEqualTo(groupsSize);
     }
 
     @Test
@@ -123,7 +137,7 @@ public class GroupCrudFacadeTest {
         GroupDto group = createGroup();
         GroupDto update = modifiedTestGroup(testGroup);
 
-        GroupDto modifiedGroup = facade.update(testGroup, update);
+        GroupDto modifiedGroup = initGroupFacade().update(group, update);
 
         assertThat(modifiedGroup.getGroupName()).isEqualTo(update.getGroupName());
         assertThat(modifiedGroup.getWebsite()).isEqualTo(update.getWebsite());
@@ -141,10 +155,10 @@ public class GroupCrudFacadeTest {
     public void WHEN_try_to_update_not_existing_group_THEN_return_EntityNotFoundException_group_not_found() throws GroupException, GroupFoundButNotActiveException {
         GroupDto update = modifiedTestGroup(testGroup);
         try {
-            facade.update(testGroup, update);
+            initGroupFacade().update(testGroup, update);
         } catch (GroupNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(GroupNotFoundException.class)
+                    .isInstanceOf(CrudException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
@@ -152,7 +166,7 @@ public class GroupCrudFacadeTest {
     @Test
     public void WHEN_delete_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException {
         GroupDto group = createGroup();
-        GroupDto deleted = facade.delete(group);
+        GroupDto deleted = initGroupFacade().delete(group);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(group.isActive());
@@ -162,10 +176,10 @@ public class GroupCrudFacadeTest {
     @Test
     public void WHEN_try_to_delete_not_existing_group_THEN_return_return_EntityNotFoundException_group_not_found() throws GroupFoundButNotActiveException {
         try {
-            facade.delete(testGroup);
+            initGroupFacade().delete(testGroup);
         } catch (GroupNotFoundException e) {
             assertThat(e)
-                    .isInstanceOf(GroupNotFoundException.class)
+                    .isInstanceOf(CrudException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
         }
     }
@@ -174,7 +188,7 @@ public class GroupCrudFacadeTest {
     @Test
     public void findEntity() throws GroupAlreadyExistsException, GroupNotFoundException {
         GroupDto created = createGroup();
-        GroupEntity foundEntity = facade.findEntity(created);
+        GroupEntity foundEntity = initGroupFacade().findEntityByGroup(created);
 
         assertThat(foundEntity).isNotNull();
         assertThat(foundEntity.getGroupName()).isEqualTo(created.getGroupName());
