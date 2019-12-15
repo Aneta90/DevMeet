@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import lombok.*;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;

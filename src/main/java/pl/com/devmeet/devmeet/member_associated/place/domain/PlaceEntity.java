@@ -2,12 +2,14 @@ package pl.com.devmeet.devmeet.member_associated.place.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.MeetingEntity;
-import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.poll_associated.place_vote.domain.PlaceVoteEntity;
 

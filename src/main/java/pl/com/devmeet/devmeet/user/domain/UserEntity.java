@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
 @Data
 @NoArgsConstructor

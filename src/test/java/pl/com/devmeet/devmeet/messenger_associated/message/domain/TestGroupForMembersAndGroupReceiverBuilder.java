@@ -38,7 +38,6 @@ class TestGroupForMembersAndGroupReceiverBuilder {
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")
-                .messenger(null)
                 .membersLimit(5)
                 .memberCounter(6)
                 .meetingCounter(1)

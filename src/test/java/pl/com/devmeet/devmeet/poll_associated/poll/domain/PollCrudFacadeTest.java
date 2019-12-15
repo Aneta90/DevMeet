@@ -21,7 +21,7 @@ import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollUnsupportedOperationException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -50,7 +50,6 @@ public class PollCrudFacadeTest {
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")
-                .messenger(null)
                 .membersLimit(5)
                 .memberCounter(6)
                 .meetingCounter(1)

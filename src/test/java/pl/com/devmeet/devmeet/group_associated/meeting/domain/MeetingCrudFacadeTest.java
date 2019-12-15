@@ -64,7 +64,6 @@ public class MeetingCrudFacadeTest {
         groupDto = new GroupDto().builder()
                 .groupName("Dancing group")
                 .description("We dance only salsa")
-                .meetings(meetingDtosList)
                 .isActive(true)
                 .build();
 

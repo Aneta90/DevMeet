@@ -10,9 +10,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
  * Time: 22:20
  */
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-
 @SpringComponent
 class UserLoginLayout extends VerticalLayout {
 }

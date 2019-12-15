@@ -1,11 +1,12 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeet.messenger_associated.messenger.MessengerFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;

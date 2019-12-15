@@ -10,7 +10,6 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
-import java.util.PrimitiveIterator;
 import java.util.UUID;
 
 @Data

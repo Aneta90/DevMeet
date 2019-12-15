@@ -12,7 +12,10 @@ import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_e
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeet.member_associated.member.domain.*;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
@@ -21,9 +24,6 @@ import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundExce
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-
-import static org.joda.time.DateTime.now;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)

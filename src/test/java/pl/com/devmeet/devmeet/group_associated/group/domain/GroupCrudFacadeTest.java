@@ -2,7 +2,6 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ public class GroupCrudFacadeTest {
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")
-                .messenger(null)
                 .membersLimit(5)
                 .memberCounter(6)
                 .meetingCounter(1)

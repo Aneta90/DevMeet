@@ -1,7 +1,6 @@
 package pl.com.devmeet.devmeet.group_associated.meeting.domain;
 
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingAlreadyExistsException;
 
 public class MeetingCrudCreator implements CrudEntityCreator<MeetingDto, MeetingEntity> {

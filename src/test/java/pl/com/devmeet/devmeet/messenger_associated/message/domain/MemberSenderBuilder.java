@@ -11,7 +11,6 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
-import pl.com.devmeet.devmeet.user.domain.UserEntity;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 
 /**

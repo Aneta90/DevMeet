@@ -1,6 +1,8 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;

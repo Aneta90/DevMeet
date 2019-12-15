@@ -1,6 +1,9 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;

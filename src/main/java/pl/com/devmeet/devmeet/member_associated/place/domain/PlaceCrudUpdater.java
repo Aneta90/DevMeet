@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
@@ -31,7 +30,7 @@ class PlaceCrudUpdater implements CrudEntityUpdater<PlaceDto, PlaceEntity> {
     }
 
     private PlaceDto checkMember(PlaceDto oldDto, PlaceDto newDto) throws PlaceNotFoundException {
-        if (oldDto.getMember().getNick() == newDto.getMember().getNick())
+        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
             return newDto;
         throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
     }

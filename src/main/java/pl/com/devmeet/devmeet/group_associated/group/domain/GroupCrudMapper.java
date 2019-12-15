@@ -1,9 +1,5 @@
 package pl.com.devmeet.devmeet.group_associated.group.domain;
 
-import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,10 +7,11 @@ class GroupCrudMapper {
 
     public static GroupDto map(GroupEntity entity) {
         return entity != null ? new GroupDto().builder()
+                .id(entity.getId())
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
                 .description(entity.getDescription())
-                .messenger(MessengerCrudFacade.map(entity.getMessenger()))
+//                .messenger(MessengerCrudFacade.map(entity.getMessenger()))
                 .membersLimit(entity.getMembersLimit())
                 .memberCounter(entity.getMemberCounter())
                 .meetingCounter(entity.getMeetingCounter())
@@ -29,7 +26,7 @@ class GroupCrudMapper {
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
                 .description(dto.getDescription())
-                .messenger(MessengerCrudFacade.map(dto.getMessenger()))
+//                .messenger(MessengerCrudFacade.map(dto.getMessenger()))
                 .membersLimit(dto.getMembersLimit())
                 .memberCounter(dto.getMemberCounter())
                 .meetingCounter(dto.getMeetingCounter())
@@ -41,13 +38,13 @@ class GroupCrudMapper {
 
     public static List<GroupDto> mapDtoList(List<GroupEntity> entities) {
         return entities.stream()
-                .map(entity -> map(entity))
+                .map(GroupCrudMapper::map)
                 .collect(Collectors.toList());
     }
 
     public static List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
         return dtos.stream()
-                .map(dto -> map(dto))
+                .map(GroupCrudMapper::map)
                 .collect(Collectors.toList());
     }
 }

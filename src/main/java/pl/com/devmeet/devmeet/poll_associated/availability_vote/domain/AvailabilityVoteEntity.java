@@ -8,7 +8,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceEntity;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollEntity;
 
 import javax.persistence.*;

@@ -2,7 +2,6 @@ package pl.com.devmeet.devmeet.member_associated.member.domain;
 
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
-import pl.com.devmeet.devmeet.user.domain.UserCrudInterface;
 
 import java.util.List;
 import java.util.stream.Collectors;

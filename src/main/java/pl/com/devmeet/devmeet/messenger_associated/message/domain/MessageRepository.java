@@ -1,10 +1,7 @@
 package pl.com.devmeet.devmeet.messenger_associated.message.domain;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 
 import java.util.List;

@@ -4,7 +4,6 @@ import pl.com.devmeet.devmeet.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
-import pl.com.devmeet.devmeet.user.registration.UserRegistration;
 
 /**
  * Created by IntelliJ IDEA.

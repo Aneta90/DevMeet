@@ -1,7 +1,9 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import org.assertj.core.api.Assertions;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

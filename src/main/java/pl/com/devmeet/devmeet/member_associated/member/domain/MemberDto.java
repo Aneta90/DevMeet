@@ -1,6 +1,5 @@
 package pl.com.devmeet.devmeet.member_associated.member.domain;
 
-import lombok.Getter;
 import lombok.*;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;

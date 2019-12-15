@@ -19,30 +19,35 @@ import java.util.stream.Stream;
 @Route
 class Main extends VerticalLayout {
 
+
     public Main() {
 
         Image imageLogo = new Image("https://dummyimage.com/36x36/000/fff", "logo");
         imageLogo.getStyle().set("borderRadius", "30%");
 
+        Icon groupIcon = new Icon(VaadinIcon.GROUP);
+        groupIcon.setSize("45px");
+        Icon userIcon = new Icon(VaadinIcon.USER);
+        userIcon.setSize("45px");
         Tab tabHome = new Tab(imageLogo);
-        Tab tabH2 = new Tab("Tab two");
-        Tab tabUser = new Tab(new Icon(VaadinIcon.USER));
+        Tab tabGroup = new Tab(groupIcon);
+        Tab tabUser = new Tab(userIcon);
 
         Div page1 = new Div();
         page1.add("Home");
         Div page2 = new Div();
-        page2.setText("Page#2");
+        page2.setText("groups");
         page2.setVisible(false);
         Div page3 = new Div();
-        page3.setText("user");
+        page3.setText("users");
         page3.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
 
         tabsToPages.put(tabHome, page1);
-        tabsToPages.put(tabH2, page2);
+        tabsToPages.put(tabGroup, page2);
         tabsToPages.put(tabUser, page3);
-        Tabs tabsHorizontal = new Tabs(tabHome, tabH2, tabUser);
+        Tabs tabsHorizontal = new Tabs(tabHome, tabGroup, tabUser);
         Div pages = new Div(page1, page2, page3);
         Set<Component> pagesShown = Stream.of(page1)
                 .collect(Collectors.toSet());

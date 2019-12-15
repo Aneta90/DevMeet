@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerEntity;
 
 import javax.persistence.*;
