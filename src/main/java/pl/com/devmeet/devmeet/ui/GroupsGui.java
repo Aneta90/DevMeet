@@ -13,8 +13,8 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route
-class Group extends VerticalLayout {
+@Route("groups")
+class GroupsGui extends VerticalLayout {
 
     private GroupCrudFacade group;
     private List<GroupDto> groupList;
@@ -23,7 +23,7 @@ class Group extends VerticalLayout {
     private H1 header;
     private Grid<GroupDto> groupGrid;
 
-    public Group(GroupCrudFacade group) {
+    public GroupsGui(GroupCrudFacade group) {
         this.group = group;
         groupList = new ArrayList<>();
         groupList = group.findAll();
