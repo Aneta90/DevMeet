@@ -45,6 +45,15 @@ class GroupsGui extends VerticalLayout {
 
         refreshGrid(groupList);
 
+        radioButtonGroup.addValueChangeListener(e -> {
+            if (e.getValue().equals("active"))
+                groupList = group.findByActive(true);
+            else if (e.getValue().equals("not active"))
+                groupList = group.findByActive(false);
+            else groupList = group.findAll();
+            refreshGrid(groupList);
+        });
+
         add(header, radioButtonGroup, groupGrid);
 
     }

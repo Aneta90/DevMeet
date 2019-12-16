@@ -82,6 +82,10 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         else return mapDtoList(findAllEntities());
     }
 
+    public List<GroupDto> findByActive(Boolean isActive) {
+        return mapDtoList(groupCrudRepository.findAllByActive(isActive));
+    }
+
     public GroupEntity findEntityById(Long id) throws GroupNotFoundException {
         return initFinder().findById(id);
     }

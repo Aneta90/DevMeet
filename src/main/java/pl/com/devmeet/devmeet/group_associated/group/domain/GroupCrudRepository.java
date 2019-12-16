@@ -17,4 +17,7 @@ public interface GroupCrudRepository extends PagingAndSortingRepository<GroupEnt
             "or lower(g.description) like lower(concat('%',:search,'%'))")
     List<GroupEntity> findAllBySearchText(String search);
 
+    @Query("select g from GroupEntity g where g.isActive=:isActive")
+    List<GroupEntity> findAllByActive(Boolean isActive);
+
 }
