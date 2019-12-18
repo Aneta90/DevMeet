@@ -22,8 +22,9 @@ class Main extends VerticalLayout {
 
     public Main() {
 
-        Image imageLogo = new Image("https://dummyimage.com/36x36/000/fff", "logo");
-        imageLogo.getStyle().set("borderRadius", "30%");
+        //https://stackoverflow.com/questions/57553973/where-should-i-place-my-vaadin-10-static-files/
+        Image imageLogo = new Image("img/logo.png", "logo");
+        imageLogo.getStyle().set("borderRadius", "5%");
 
         Icon groupIcon = new Icon(VaadinIcon.GROUP);
         groupIcon.setSize("45px");
