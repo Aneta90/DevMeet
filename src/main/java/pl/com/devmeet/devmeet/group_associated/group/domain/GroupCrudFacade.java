@@ -3,16 +3,21 @@ package pl.com.devmeet.devmeet.group_associated.group.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.*;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntity> {
@@ -20,16 +25,22 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     private GroupCrudRepository groupCrudRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
 
     @Autowired
-    public GroupCrudFacade(GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public GroupCrudFacade(GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.groupCrudRepository = groupCrudRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
     }
 
     private GroupMemberFinder initMemberFinder() {
-        return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
+        return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository));
+    }
+
+    private GroupMessengerCreator initMessengerCreator() {
+        return new GroupMessengerCreator(new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository));
     }
 
     private GroupCrudSaver initSaver() {
@@ -40,6 +51,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return GroupCrudCreator.builder()
                 .groupCrudFinder(initFinder())
                 .groupCrudSaver(initSaver())
+                .groupMessengerCreator(initMessengerCreator())
                 .build();
     }
 
@@ -65,7 +77,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
     @Override
-    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException {
+    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return map(initCreator().createEntity(dto));
     }
 

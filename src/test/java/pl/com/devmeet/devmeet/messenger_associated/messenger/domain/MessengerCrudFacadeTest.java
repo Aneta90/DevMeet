@@ -92,11 +92,11 @@ public class MessengerCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository);
     }
 
     private GroupCrudFacade initGroupFacade() {
-        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private boolean initTestDB() {
@@ -112,14 +112,14 @@ public class MessengerCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(firstTestMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(firstTestGroupDto));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 

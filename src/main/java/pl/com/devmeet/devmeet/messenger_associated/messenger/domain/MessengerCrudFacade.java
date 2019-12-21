@@ -2,7 +2,6 @@ package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
@@ -42,11 +41,11 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     }
 
     private MessengerMemberFinder initMemberFinder() {
-        return new MessengerMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
+        return new MessengerMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private MessengerGroupFinder initGroupFinder() {
-        return new MessengerGroupFinder(new GroupCrudFacade(groupRepository, memberRepository, userRepository));
+        return new MessengerGroupFinder(new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository));
     }
 
     private MessengerCrudSaver initSaver() {

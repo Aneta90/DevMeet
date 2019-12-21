@@ -128,11 +128,11 @@ public class MessageCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private MessengerCrudFacade initMessengerCrudFacade() {
@@ -160,21 +160,21 @@ public class MessageCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(memberSender));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
             memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(memberReceiver));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupAndReceiverGroup));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 

@@ -2,10 +2,13 @@ package pl.com.devmeet.devmeet.user.user_member_connector;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -21,7 +24,7 @@ class MemberFinder {
     @NonNull
     private MemberCrudFacade memberCrudFacade;
 
-    public MemberDto addNewMember(UserDto userDto, String memberNickname) throws UserNotFoundException, MemberAlreadyExistsException {
+    public MemberDto addNewMember(UserDto userDto, String memberNickname) throws UserNotFoundException, MemberAlreadyExistsException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return memberCrudFacade
                 .add(MemberDto.builder()
                         .user(userDto)

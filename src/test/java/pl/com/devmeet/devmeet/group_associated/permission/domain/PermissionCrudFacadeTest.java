@@ -20,6 +20,9 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -37,6 +40,8 @@ public class PermissionCrudFacadeTest {
     private MemberRepository memberRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
 
     private PermissionCrudFacade permissionCrudFacade;
     private GroupCrudFacade groupCrudFacade;
@@ -94,15 +99,15 @@ public class PermissionCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private PermissionCrudFacade initPermissionCrudFacade() {
-        return new PermissionCrudFacade(permissionCrudRepository, groupCrudRepository, memberRepository, userRepository);
+        return new PermissionCrudFacade(permissionCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private boolean initTestDB() {
@@ -119,9 +124,7 @@ public class PermissionCrudFacadeTest {
             groupEntity = groupCrudFacade
                     .findEntityByGroup(groupCrudFacade
                             .add(testGroupDto));
-        } catch (GroupNotFoundException e) {
-            e.printStackTrace();
-        } catch (GroupAlreadyExistsException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
@@ -131,11 +134,7 @@ public class PermissionCrudFacadeTest {
             memberEntity = memberCrudFacade
                     .findEntity(memberCrudFacade
                             .add(testMemberDto));
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        } catch (MemberAlreadyExistsException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
@@ -154,7 +153,7 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void GROUP_CRUD_FACADE_WR() throws GroupAlreadyExistsException, GroupNotFoundException {
+    public void GROUP_CRUD_FACADE_WR() throws GroupAlreadyExistsException, GroupNotFoundException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
         GroupCrudFacade groupFacade = initGroupCrudFacade();
         GroupEntity groupEntity = groupFacade.findEntityByGroup(groupFacade.add(testGroupDto));
 
@@ -162,7 +161,7 @@ public class PermissionCrudFacadeTest {
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         MemberCrudFacade memberFacade = initMemberCrudFacade();
         initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberFacade.findEntity(memberFacade.add(testMemberDto));

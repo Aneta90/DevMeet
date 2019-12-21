@@ -3,14 +3,14 @@ package pl.com.devmeet.devmeet.member_associated.availability.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityAlreadyExistsException;
-import pl.com.devmeet.devmeet.domain_utils.exceptions.EntityNotFoundException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -24,43 +24,47 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
     private AvailabilityCrudRepository availabilityRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
+    private GroupCrudRepository groupCrudRepository;
 
     @Autowired
-    public AvailabilityCrudFacade(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public AvailabilityCrudFacade(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
         this.availabilityRepository = availabilityRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
+        this.groupCrudRepository = groupCrudRepository;
     }
 
     private AvailabilityMemberFinder initMemberFinder() {
-        return  new AvailabilityMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
+        return AvailabilityMemberFinder.builder()
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository))
                 .build();
     }
 
-
     private AvailabilityCrudCreator initCreator() {
-        return new AvailabilityCrudCreator().builder()
+        return AvailabilityCrudCreator.builder()
                 .availabilityCrudFinder(initFinder())
                 .availabilityCrudSaver(initSaver())
                 .build();
     }
 
     private AvailabilityCrudSaver initSaver() {
-        return new AvailabilityCrudSaver().builder()
+        return AvailabilityCrudSaver.builder()
                 .availabilityCrudRepository(availabilityRepository)
                 .memberFinder(initMemberFinder())
                 .build();
     }
+
     private AvailabilityCrudFinder initFinder() {
-        return new AvailabilityCrudFinder().builder()
+        return AvailabilityCrudFinder.builder()
                 .availabilityRepository(availabilityRepository)
                 .memberFinder(initMemberFinder())
                 .build();
     }
 
     private AvailabilityCrudUpdater initUpdater() {
-        return new AvailabilityCrudUpdater().builder()
+        return AvailabilityCrudUpdater.builder()
                 .availabilityCrudFinder(initFinder())
                 .availabilityCrudSaver(initSaver())
                 .build();
@@ -68,7 +72,7 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
 
     private AvailabilityCrudDeleter initDeleter() {
 
-        return new AvailabilityCrudDeleter().builder()
+        return AvailabilityCrudDeleter.builder()
                 .availabilityCrudFinder(initFinder())
                 .availabilityCrudSaver(initSaver())
                 .build();

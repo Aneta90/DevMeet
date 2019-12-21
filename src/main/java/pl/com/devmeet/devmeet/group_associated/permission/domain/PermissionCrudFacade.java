@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.group_associated.permission.domain.status_and_exce
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -24,29 +25,31 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     private GroupCrudRepository groupRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
 
     @Autowired
-    public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.permissionRepository = permissionRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
     }
 
     private PermissionGroupFinder initGroupFinder() {
-        return new PermissionGroupFinder().builder()
-                .groupCrudFacade(new GroupCrudFacade(groupRepository, memberRepository, userRepository))
+        return  PermissionGroupFinder.builder()
+                .groupCrudFacade(new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository))
                 .build();
     }
 
     private PermissionMemberFinder initMemberFinder() {
-        return new PermissionMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
+        return PermissionMemberFinder.builder()
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository))
                 .build();
     }
 
     private PermissionCrudSaver initSaver() {
-        return new PermissionCrudSaver().builder()
+        return  PermissionCrudSaver.builder()
                 .permissionCrudRepository(permissionRepository)
                 .groupFinder(initGroupFinder())
                 .memberFinder(initMemberFinder())
@@ -54,7 +57,7 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     }
 
     private PermissionCrudFinder initFinder() {
-        return new PermissionCrudFinder().builder()
+        return  PermissionCrudFinder.builder()
                 .permissionRepository(permissionRepository)
                 .groupFinder(initGroupFinder())
                 .memberFinder(initMemberFinder())
@@ -62,21 +65,21 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     }
 
     private PermissionCrudCreator initCreator() {
-        return new PermissionCrudCreator().builder()
+        return  PermissionCrudCreator.builder()
                 .permissionCrudFinder(initFinder())
                 .permissionCrudSaver(initSaver())
                 .build();
     }
 
     private PermissionCrudUpdater initUpdater() {
-        return new PermissionCrudUpdater().builder()
+        return  PermissionCrudUpdater.builder()
                 .permissionCrudFinder(initFinder())
                 .permissionCrudSaver(initSaver())
                 .build();
     }
 
     private PermissionCrudDeleter initDeleter() {
-        return new PermissionCrudDeleter().builder()
+        return  PermissionCrudDeleter.builder()
                 .permissionCrudFinder(initFinder())
                 .permissionCrudSaver(initSaver())
                 .build();

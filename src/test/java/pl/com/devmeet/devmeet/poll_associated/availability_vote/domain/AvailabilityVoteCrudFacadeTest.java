@@ -26,6 +26,9 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.*;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollCrudFacade;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.PollCrudRepository;
@@ -56,6 +59,8 @@ public class AvailabilityVoteCrudFacadeTest {
     private PollCrudRepository pollCrudRepository;
     @Autowired
     private AvailabilityVoteCrudRepository availabilityVoteRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
 
     private UserCrudFacade userCrudFacade;
     private MemberCrudFacade memberCrudFacade;
@@ -171,19 +176,19 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository);
     }
 
     private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository);
+        return new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository);
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository);
+        return new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private AvailabilityVoteCrudFacade initVoteCrudFacade() {
@@ -193,7 +198,8 @@ public class AvailabilityVoteCrudFacadeTest {
                 groupRepository,
                 availabilityRepository,
                 memberRepository,
-                userRepository);
+                userRepository,
+                messengerRepository);
     }
 
     private boolean initTestDB() {
@@ -210,14 +216,14 @@ public class AvailabilityVoteCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDtoFirst));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
             memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDtoSecond));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
@@ -238,7 +244,7 @@ public class AvailabilityVoteCrudFacadeTest {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupDto));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
