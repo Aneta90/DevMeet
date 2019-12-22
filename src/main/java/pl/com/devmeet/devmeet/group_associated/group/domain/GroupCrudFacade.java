@@ -14,6 +14,7 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCru
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -37,10 +38,6 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
 
     private GroupMemberFinder initMemberFinder() {
         return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository));
-    }
-
-    private GroupMessengerCreator initMessengerCreator() {
-        return new GroupMessengerCreator(new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository));
     }
 
     private GroupCrudSaver initSaver() {
@@ -69,11 +66,24 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
                 .build();
     }
 
-    private GroupCrudDeleter initDeleter() {
-        return GroupCrudDeleter.builder()
+    private GroupCrudDeactivator initDeleter() {
+        return GroupCrudDeactivator.builder()
                 .groupCrudFinder(initFinder())
                 .groupCrudSaver(initSaver())
+                .groupMessengerDeactivator(initMessengerDeactivator())
                 .build();
+    }
+
+    private MessengerCrudFacade initMessengerFacade(){
+        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
+    }
+
+    private GroupMessengerCreator initMessengerCreator() {
+        return new GroupMessengerCreator(initMessengerFacade());
+    }
+
+    private GroupMessengerDeactivator initMessengerDeactivator(){
+        return new GroupMessengerDeactivator(initMessengerFacade());
     }
 
     @Override
@@ -116,7 +126,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
     @Override
-    public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException {
+    public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, MessengerAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
 

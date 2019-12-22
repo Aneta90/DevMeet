@@ -14,6 +14,7 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCru
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
@@ -36,8 +37,16 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         this.groupCrudRepository = groupCrudRepository;
     }
 
+    private MessengerCrudFacade initMessengerFacade() {
+        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
+    }
+
     private MemberMessengerCreator initMessengerCreator() {
-        return new MemberMessengerCreator(new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository));
+        return new MemberMessengerCreator(initMessengerFacade());
+    }
+
+    private MemberMessengerDeactivator initMessengerDeactivator() {
+        return new MemberMessengerDeactivator(initMessengerFacade());
     }
 
     private MemberUserFinder initUserFinder() {
@@ -56,13 +65,17 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         return MemberCrudCreator.builder()
                 .memberFinder(initFinder())
                 .saver(initSaver())
-                .memberMessengerCreator(initMessengerCreator())
                 .memberUserFinder(initUserFinder())
+                .memberMessengerCreator(initMessengerCreator())
                 .build();
     }
 
-    private MemberCrudDeleter initDeleter() {
-        return new MemberCrudDeleter(initFinder(), initSaver());
+    private MemberCrudDeactivator initDeleter() {
+        return MemberCrudDeactivator.builder()
+                .memberCrudFinder(initFinder())
+                .memberCrudSaver(initSaver())
+                .memberMessengerDeactivator(initMessengerDeactivator())
+                .build();
     }
 
     private MemberCrudUpdater initUpdater() {
@@ -90,7 +103,7 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
     }
 
     @Override
-    public MemberDto delete(MemberDto dto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
+    public MemberDto delete(MemberDto dto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException, MessengerAlreadyExistsException, MessengerNotFoundException, GroupNotFoundException {
         return map(initDeleter().delete(dto));
     }
 

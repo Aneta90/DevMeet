@@ -6,10 +6,13 @@ import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.message.domain.MessageDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerInfoStatusEnum;
@@ -77,17 +80,35 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
                 .build();
     }
 
+    public MessengerDto addToMember(MemberDto memberDto) throws UserNotFoundException, MessengerArgumentNotSpecified, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
+        return add(MessengerDto.builder()
+                .member(memberDto)
+                .build());
+    }
+
+    public MessengerDto addToGroup(GroupDto groupDto) throws UserNotFoundException, MessengerArgumentNotSpecified, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
+        return add(MessengerDto.builder()
+                .group(groupDto)
+                .build());
+    }
+
+    @Deprecated
     @Override
     public MessengerDto add(MessengerDto messengerDto) throws MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return map(initCreator().createEntity(messengerDto));
     }
 
-    public MessengerDto find(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
-        return map(findEntity(messengerDto));
+    public MessengerDto findByMember(MemberDto memberDto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException {
+        return map(findEntityByMember(memberDto));
     }
 
-    public List<MessengerDto> findAll(MessengerDto dto) throws MessengerNotFoundException {
-        return mapToDtos(findEntities(dto));
+    public MessengerDto findByGroup(GroupDto groupDto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException {
+        return map(findEntityByGroup(groupDto));
+    }
+
+    @Deprecated
+    public MessengerDto find(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
+        return map(findEntity(messengerDto));
     }
 
     @Override
@@ -95,14 +116,38 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
         throw new CrudException(MessengerInfoStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
+    public MessengerEntity findEntityByMember(MemberDto memberDto) throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException {
+        MessengerDto messengerDto = MessengerDto.builder()
+                .member(memberDto)
+                .build();
+        return findEntity(messengerDto);
+    }
+
+    public MessengerEntity findEntityByGroup(GroupDto groupDto) throws UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, GroupNotFoundException {
+        MessengerDto messengerDto = MessengerDto.builder()
+                .group(groupDto)
+                .build();
+        return findEntity(messengerDto);
+    }
+
+    @Deprecated
     public MessengerEntity findEntity(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return initFinder().findEntity(messengerDto);
     }
 
-    public List<MessengerEntity> findEntities(MessengerDto dto) throws MessengerNotFoundException {
-        return initFinder().findEntities(dto);
+    public MessengerDto deactivateMembersMessenger(MemberDto memberDto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
+        return delete(MessengerDto.builder()
+                .member(memberDto)
+                .build());
     }
 
+    public MessengerDto deactivateGroupsMessenger(GroupDto groupDto) throws UserNotFoundException, MessengerNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
+        return delete(MessengerDto.builder()
+                .group(groupDto)
+                .build());
+    }
+
+    @Deprecated
     @Override
     public MessengerDto delete(MessengerDto messengerDto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerNotFoundException, MessengerAlreadyExistsException {
         return map(deleterInit().delete(messengerDto));

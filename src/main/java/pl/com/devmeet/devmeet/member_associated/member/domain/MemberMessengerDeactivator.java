@@ -7,23 +7,23 @@ import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_excepti
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
-import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Kamil Ptasinski
- * Date: 21.12.2019
- * Time: 21:46
+ * Date: 22.12.2019
+ * Time: 22:05
  */
 
 @RequiredArgsConstructor
-class MemberMessengerCreator {
+class MemberMessengerDeactivator {
 
     @NonNull
     private MessengerCrudFacade messengerCrudFacade;
 
-    public MessengerDto createMessenger(MemberDto memberDto) throws UserNotFoundException, MessengerArgumentNotSpecified, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
-        return messengerCrudFacade.addToMember(memberDto);
+    public MessengerDto deactivateMessenger(MemberEntity memberEntity) throws UserNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerNotFoundException, MemberNotFoundException {
+        return messengerCrudFacade.deactivateMembersMessenger(MemberCrudFacade.map(memberEntity));
     }
 }
