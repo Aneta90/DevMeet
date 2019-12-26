@@ -1,7 +1,9 @@
 package pl.com.devmeet.devmeet.messenger_associated.messenger.domain;
 
 import org.assertj.core.api.Assertions;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -137,7 +139,7 @@ public class MessengerCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_create_non_existing_messenger_for_MEMBER_THEN_create_new_messenger() throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerNotFoundException {
+    public void WHEN_create_MEMBER_THEN_create_messenger_for_MEMBER_and_return_create_new_messenger() throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerNotFoundException {
         initTestDB();
         MessengerDto created = initMessengerFacade().findByMember(firstTestMemberDto);
 
@@ -151,7 +153,7 @@ public class MessengerCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_create_non_existing_messenger_for_GROUP_THEN_create_new_messenger() throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerNotFoundException {
+    public void WHEN_create_GROUP_THEN_create_messenger_for_GROUP_and_return_create_new_messenger() throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerNotFoundException {
         initTestDB();
         MessengerDto created = initMessengerFacade().findByGroup(firstTestGroupDto);
 
@@ -170,7 +172,7 @@ public class MessengerCrudFacadeTest {
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
 
         try {
-            messengerCrudFacade.add(firstTestMemberMessenger);
+            messengerCrudFacade.addToMember(firstTestMemberDto);
             Assert.fail();
 
         } catch (MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException ex) {
@@ -185,11 +187,11 @@ public class MessengerCrudFacadeTest {
 
     @Test
     public void WHEN_try_to_create_existing_messenger_for_GROUP_THEN_return_MessengerAlreadyExistsException() {
-//        initTestDB();
+        initTestDB();
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
 
         try {
-            messengerCrudFacade.add(firstTestGroupMessenger);
+            messengerCrudFacade.addToGroup(firstTestGroupDto);
             Assert.fail();
 
         } catch (MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException ex) {
@@ -203,11 +205,27 @@ public class MessengerCrudFacadeTest {
     }
 
     @Test
+    public void WHEN_found_messenger_for_MEMBER_THEN_return_messenger() throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException {
+        initTestDB();
+        MessengerDto messengerDto = initMessengerFacade().findByMember(firstTestMemberDto);
+
+        assertThat(messengerDto).isNotNull();
+    }
+
+    @Test
+    public void WHEN_found_messenger_for_GROUP_THEN_return_messenger() throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException {
+        initTestDB();
+        MessengerDto messengerDto = initMessengerFacade().findByGroup(firstTestGroupDto);
+
+        assertThat(messengerDto).isNotNull();
+    }
+
+    @Test
     public void WHEN_try_to_find_MEMBER_messenger_which_does_not_exist_THEN_return_MessengerNotFoundException() {
         initTestDB();
 
         try {
-            initMessengerFacade().find(firstTestMemberMessenger);
+            initMessengerFacade().findByMember(firstTestMemberDto);
 
         } catch (GroupNotFoundException | UserNotFoundException | MemberNotFoundException e) {
             e.printStackTrace();
@@ -225,7 +243,7 @@ public class MessengerCrudFacadeTest {
         initTestDB();
 
         try {
-            initMessengerFacade().find(firstTestGroupMessenger);
+            initMessengerFacade().findByGroup(firstTestGroupDto);
 
         } catch (GroupNotFoundException | UserNotFoundException | MemberNotFoundException e) {
             e.printStackTrace();
@@ -243,13 +261,7 @@ public class MessengerCrudFacadeTest {
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
         MessengerDto deleted;
 
-        try {
-            messengerCrudFacade.add(firstTestMemberMessenger);
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
-            Assert.fail();
-        }
-
-        deleted = messengerCrudFacade.delete(firstTestMemberMessenger);
+        deleted = messengerCrudFacade.deactivateMembersMessenger(firstTestMemberDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isFalse();
@@ -261,13 +273,7 @@ public class MessengerCrudFacadeTest {
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
         MessengerDto deleted;
 
-        try {
-            messengerCrudFacade.add(firstTestGroupMessenger);
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
-            Assert.fail();
-        }
-
-        deleted = messengerCrudFacade.delete(firstTestGroupMessenger);
+        deleted = messengerCrudFacade.deactivateGroupsMessenger(firstTestGroupDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isFalse();
@@ -277,13 +283,6 @@ public class MessengerCrudFacadeTest {
     public void WHEN_try_to_delete_non_existing_MEMBER_messenger_then_throw_EntityNotFoundException() {
         initTestDB();
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
-
-        try {
-            messengerCrudFacade.add(firstTestMemberMessenger);
-
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
-            Assert.fail();
-        }
 
         try {
             messengerCrudFacade.delete(firstTestMemberMessenger);
@@ -310,13 +309,6 @@ public class MessengerCrudFacadeTest {
     public void WHEN_try_to_delete_non_existing_GROUP_messenger_then_throw_EntityNotFoundException() {
         initTestDB();
         MessengerCrudFacade messengerCrudFacade = initMessengerFacade();
-
-        try {
-            messengerCrudFacade.add(firstTestGroupMessenger);
-
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException e) {
-            Assert.fail();
-        }
 
         try {
             messengerCrudFacade.delete(firstTestGroupMessenger);

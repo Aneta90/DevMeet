@@ -178,35 +178,11 @@ public class MessageCrudFacadeTest {
             e.printStackTrace();
         }
 
-        MessengerEntity memberSenderMessengerEntity = null;
-        try {
-            memberSenderMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersSenderMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        MessengerEntity memberReceiverMessengerEntity = null;
-        try {
-            memberReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersReceiverMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        MessengerEntity groupReceiverMessengerEntity = null;
-        try {
-            groupReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(groupsReceiverMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
-            e.printStackTrace();
-        }
-
         return userEntityFirst != null
                 && userEntitySecond != null
                 && memberEntityFirst != null
                 && memberEntitySecond != null
-                && groupEntity != null
-                && memberSenderMessengerEntity != null
-                && memberReceiverMessengerEntity != null
-                && groupReceiverMessengerEntity != null;
+                && groupEntity != null;
     }
 
     private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, String message, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
