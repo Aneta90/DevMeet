@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Route("groups")
 class GroupsGui extends VerticalLayout {
@@ -47,9 +48,13 @@ class GroupsGui extends VerticalLayout {
 
         radioButtonGroup.addValueChangeListener(e -> {
             if (e.getValue().equals("active"))
-                groupList = group.findByActive(true);
+                groupList = group.findAll().stream()
+                        .filter(GroupDto::isActive)
+                        .collect(Collectors.toList());
             else if (e.getValue().equals("not active"))
-                groupList = group.findByActive(false);
+                groupList = group.findAll().stream()
+                        .filter(groupDto -> !groupDto.isActive())
+                        .collect(Collectors.toList());
             else groupList = group.findAll();
             refreshGrid(groupList);
         });

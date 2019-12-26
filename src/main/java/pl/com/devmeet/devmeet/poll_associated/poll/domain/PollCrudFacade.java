@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeet.poll_associated.poll.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
