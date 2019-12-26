@@ -4,12 +4,14 @@ package pl.com.devmeet.devmeet.member_associated.place.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeet.domain_utils.CrudFacadeInterface;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -23,43 +25,48 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
+    private GroupCrudRepository groupCrudRepository;
 
     @Autowired
-    public PlaceCrudFacade(PlaceCrudRepository placeRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public PlaceCrudFacade(PlaceCrudRepository placeRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
+        this.groupCrudRepository = groupCrudRepository;
     }
 
     private PlaceMemberFinder initMemberFinder() {
-        return  new PlaceMemberFinder().builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository))
+        return PlaceMemberFinder.builder()
+                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository))
                 .build();
     }
 
 
     private PlaceCrudCreator initCreator() {
-        return new PlaceCrudCreator().builder()
+        return PlaceCrudCreator.builder()
                 .placeCrudFinder(initFinder())
                 .placeCrudSaver(initSaver())
                 .build();
     }
 
     private PlaceCrudSaver initSaver() {
-        return new PlaceCrudSaver().builder()
+        return PlaceCrudSaver.builder()
                 .placeCrudRepository(placeRepository)
                 .memberFinder(initMemberFinder())
                 .build();
     }
+
     private PlaceCrudFinder initFinder() {
-        return new PlaceCrudFinder().builder()
+        return PlaceCrudFinder.builder()
                 .placeRepository(placeRepository)
                 .memberFinder(initMemberFinder())
                 .build();
     }
 
     private PlaceCrudUpdater initUpdater() {
-        return new PlaceCrudUpdater().builder()
+        return PlaceCrudUpdater.builder()
                 .placeCrudFinder(initFinder())
                 .placeCrudSaver(initSaver())
                 .build();
@@ -67,7 +74,7 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
     private PlaceCrudDeleter initDeleter() {
 
-        return new PlaceCrudDeleter().builder()
+        return PlaceCrudDeleter.builder()
                 .placeCrudFinder(initFinder())
                 .placeCrudSaver(initSaver())
                 .build();

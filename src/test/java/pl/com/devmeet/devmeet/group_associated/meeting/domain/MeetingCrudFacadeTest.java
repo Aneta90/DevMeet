@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingAlreadyExistsException;
 import pl.com.devmeet.devmeet.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
@@ -20,6 +21,9 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceCrudRepository;
 import pl.com.devmeet.devmeet.member_associated.place.domain.PlaceDto;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -42,10 +46,13 @@ public class MeetingCrudFacadeTest {
     private PlaceCrudRepository placeCrudRepository;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private MessengerRepository messengerRepository;
 
     private GroupCrudFacade groupCrudFacade;
     private MeetingCrudFacade meetingCrudFacade;
@@ -103,7 +110,7 @@ public class MeetingCrudFacadeTest {
         return initMeetingCrudFacade().add(secondMeeting);
     }
 
-    private GroupDto createGroup() throws GroupAlreadyExistsException {
+    private GroupDto createGroup() throws GroupAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return initGroupCruFacade().add(groupDto);
     }
 
@@ -113,11 +120,11 @@ public class MeetingCrudFacadeTest {
 
 
     private GroupCrudFacade initGroupCruFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private PlaceCrudFacade initPlaceCrudFacade() {
-        return new PlaceCrudFacade(placeCrudRepository, memberRepository, userRepository);
+        return new PlaceCrudFacade(placeCrudRepository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private MeetingCrudFacade initMeetingCrudFacade() {
@@ -163,7 +170,7 @@ public class MeetingCrudFacadeTest {
     }
 
     @Test
-    public void when_try_to_readAll_meetings_for_given_group_then_readAll() throws MeetingNotFoundException, GroupAlreadyExistsException, MeetingAlreadyExistsException {
+    public void when_try_to_readAll_meetings_for_given_group_then_readAll() throws MeetingNotFoundException, GroupAlreadyExistsException, MeetingAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
 
         GroupDto groupDto = createGroup();
         MeetingDto createdMeetingDto = createMeeting();
@@ -202,7 +209,7 @@ public class MeetingCrudFacadeTest {
 
         MeetingDto oldMeetingDto = createMeeting();
 
-        MeetingDto newDto = new MeetingDto().builder()
+        MeetingDto newDto = MeetingDto.builder()
                 .meetingNumber(2)
                 .beginTime(DateTime.now())
                 .endTime(DateTime.now().plusHours(4))
@@ -248,7 +255,7 @@ public class MeetingCrudFacadeTest {
     }
 
     @Test
-    public void findEntities() throws MeetingNotFoundException, GroupAlreadyExistsException, MeetingAlreadyExistsException {
+    public void findEntities() throws MeetingNotFoundException, GroupAlreadyExistsException, MeetingAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         GroupDto groupDto = createGroup();
         MeetingDto createdMeetingDto = createMeeting();
         MeetingDto createdSecondDto = createSecondMeeting();

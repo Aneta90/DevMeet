@@ -74,8 +74,8 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
                 .build();
     }
 
-    private MessageCrudDeleter initDeleter() {
-        return MessageCrudDeleter.builder()
+    private MessageCrudDeactivator initDeleter() {
+        return MessageCrudDeactivator.builder()
                 .messageCrudSaver(initSaver())
                 .messageCrudFinder(initFinder())
                 .build();

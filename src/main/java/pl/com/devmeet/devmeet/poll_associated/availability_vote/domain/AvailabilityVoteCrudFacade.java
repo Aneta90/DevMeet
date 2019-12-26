@@ -11,6 +11,7 @@ import pl.com.devmeet.devmeet.member_associated.availability.domain.status_and_e
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteAlreadyExistsException;
 import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteException;
 import pl.com.devmeet.devmeet.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteFoundButNotActiveException;
@@ -32,33 +33,29 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     private AvailabilityCrudRepository availabilityRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
 
     @Autowired
-    public AvailabilityVoteCrudFacade(AvailabilityVoteCrudRepository availabilityVoteRepository,
-                                      PollCrudRepository pollCrudRepository,
-                                      GroupCrudRepository groupRepository,
-                                      AvailabilityCrudRepository availabilityRepository,
-                                      MemberRepository memberRepository,
-                                      UserRepository userRepository) {
-
+    public AvailabilityVoteCrudFacade(AvailabilityVoteCrudRepository availabilityVoteRepository, PollCrudRepository pollCrudRepository, GroupCrudRepository groupRepository, AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.availabilityVoteRepository = availabilityVoteRepository;
         this.pollCrudRepository = pollCrudRepository;
         this.groupRepository = groupRepository;
         this.availabilityRepository = availabilityRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
     }
 
     private AvailabilityVotePollFinder initPollFinder() {
-        return new AvailabilityVotePollFinder(new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository));
+        return new AvailabilityVotePollFinder(new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository));
     }
 
     private AvailabilityVoteMemberFinder initMemberFinder() {
-        return new AvailabilityVoteMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
+        return new AvailabilityVoteMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private AvailabilityVoteAvailabilityFinder initAvailabilityFinder() {
-        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository));
+        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private AvailabilityVoteCrudSaver initVoteSaver() {

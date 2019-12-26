@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeet.domain_utils.CrudEntityFinder;
+import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
@@ -47,6 +48,11 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
         throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_MEMBER_OR_GROUP.toString());
     }
 
+    @Override
+    public List<MessengerEntity> findEntities(MessengerDto dto) throws CrudException {
+        return null;
+    }
+
     public MemberDto checkMemberIsNotNull(MessengerDto messengerDto) {
         try {
             return messengerDto.getMember();
@@ -87,33 +93,6 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
             return foundMessenger.get();
 
         throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGER_NOT_FOUND_BY_GROUP.toString());
-    }
-
-    @Override
-    public List<MessengerEntity> findEntities(MessengerDto dto) throws MessengerNotFoundException {
-        GroupEntity foundGroup;
-        GroupDto groupDto = checkGroupIsNotNull(dto);
-
-        if (groupDto != null) {
-            try {
-                foundGroup = findGroup(groupDto);
-                return findAllGroupMembersMessengers(foundGroup);
-
-            } catch (GroupNotFoundException e) {
-                throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGERS_OF_MEMBERS_NOT_FOUND.toString());
-            }
-        }
-
-        throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_GROUP.toString());
-    }
-
-    private List<MessengerEntity> findAllGroupMembersMessengers(GroupEntity groupEntity) throws MessengerNotFoundException {
-        Optional<List<MessengerEntity>> foundMessengers = messengerRepository.findAllByGroup(groupEntity);
-
-        if (foundMessengers.isPresent())
-            return foundMessengers.get();
-
-        throw new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGERS_OF_MEMBERS_NOT_FOUND.toString());
     }
 
     @Override

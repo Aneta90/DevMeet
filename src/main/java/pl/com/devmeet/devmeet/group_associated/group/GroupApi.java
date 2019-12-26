@@ -1,17 +1,22 @@
 package pl.com.devmeet.devmeet.group_associated.group;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupDto;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -28,42 +33,23 @@ class GroupApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto>> getAllOrFiltered(@RequestParam(required = false) String searchText) {
-        return new ResponseEntity<>(group.findBySearchText(searchText), HttpStatus.OK);
+    public ResponseEntity<List<GroupDto>> getGroups(@RequestParam(required = false) String searchText) throws GroupNotFoundException, GroupAlreadyExistsException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
+
+        GroupDto testGroup = GroupDto.builder()
+                .groupName("Java test group")
+                .website("www.testWebsite.com")
+                .description("Welcome to test group")
+                .messenger(null)
+                .membersLimit(5)
+                .memberCounter(6)
+                .meetingCounter(1)
+                .creationTime(null)
+                .modificationTime(null)
+                .isActive(false)
+                .build();
+
+        group.add(testGroup);
+        return new ResponseEntity<>(group.findAll(), HttpStatus.OK); //new GroupDto to be removed
     }
 
-    @SneakyThrows
-    @GetMapping("{id}")
-    public ResponseEntity<GroupDto> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(group.findById(id), HttpStatus.OK);
-    }
-
-    @SneakyThrows
-    @PostMapping
-    public ResponseEntity<GroupDto> add(@RequestBody GroupDto newGroup) {
-        this.group.add(newGroup);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newGroup.getId())
-                .toUri();
-        return ResponseEntity.created(uri).body(newGroup);
-    }
-
-    @SneakyThrows
-    @PutMapping("/{id}")
-    public ResponseEntity<GroupDto> update(@PathVariable Long id,
-                                           @RequestBody GroupDto updatedGroup) {
-        if (!id.equals(updatedGroup.getId()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
-        group.update(group.findById(id), updatedGroup);
-        return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
-    }
-
-    @SneakyThrows
-    @DeleteMapping("/{id}")
-    public HttpStatus deactivateById(@PathVariable Long id) {
-        group.delete(group.findById(id));
-        return HttpStatus.OK;
-    }
 }

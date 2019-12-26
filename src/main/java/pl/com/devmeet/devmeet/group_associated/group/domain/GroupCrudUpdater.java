@@ -35,6 +35,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
                 .build());
     }
 
+    //FIXME w grupie nazwa moze sie zmieniac, wiec ten fragment jest bez sensu
     private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup) throws GroupFoundButNotActiveException {
         if (oldGroup.isActive())
             return oldGroup;

@@ -8,10 +8,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberFoundButNotActiveException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -22,9 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MemberCrudFacadeTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
+    @Autowired
+    private GroupCrudRepository groupCrudRepository;
 
     UserDto testUserDto;
     MemberDto testMemberDto;
@@ -56,12 +66,12 @@ public class MemberCrudFacadeTest {
         return new UserCrudFacade(userRepository);
     }
 
-    private MemberDto createMember() throws UserNotFoundException, MemberAlreadyExistsException {
+    private MemberDto createMember() throws UserNotFoundException, MemberAlreadyExistsException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return initMemberCrudFacade().add(testMemberDto);
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private UserEntity initTestDatabaseByAddingUser() {
@@ -79,7 +89,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_creating_non_existing_member_THEN_create_new_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
+    public void WHEN_creating_non_existing_member_THEN_create_new_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         UserEntity createdUser = initTestDatabaseByAddingUser();
         MemberDto member = createMember();
         MemberEntity memberEntity = initMemberCrudFacade().findEntity(testMemberDto);
@@ -100,7 +110,7 @@ public class MemberCrudFacadeTest {
 
         try {
             createdMember = createMember();
-        } catch (UserNotFoundException | MemberAlreadyExistsException e) {
+        } catch (UserNotFoundException | MemberAlreadyExistsException | GroupNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             Assert.fail();
         }
 
@@ -111,11 +121,13 @@ public class MemberCrudFacadeTest {
             assertThat(e)
                     .isInstanceOf(MemberAlreadyExistsException.class)
                     .hasMessage(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
+        } catch (MessengerAlreadyExistsException | MemberNotFoundException | GroupNotFoundException | MessengerArgumentNotSpecified e) {
+            Assert.fail();
         }
     }
 
     @Test
-    public void WHEN_find_existing_member_THEN_return_memberDto() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
+    public void WHEN_find_existing_member_THEN_return_memberDto() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         initTestDatabaseByAddingUser();
         UserDto foundUser = initUserCrudFacade().read(testUserDto);
         createMember();
@@ -143,7 +155,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_member_exists_THEN_return_true() throws UserNotFoundException, MemberAlreadyExistsException {
+    public void WHEN_member_exists_THEN_return_true() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         initTestDatabaseByAddingUser();
         createMember();
 
@@ -158,7 +170,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_member_THEN_updated_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, MemberFoundButNotActiveException {
+    public void WHEN_try_to_update_existing_member_THEN_updated_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, MemberFoundButNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         initTestDatabaseByAddingUser();
         UserDto foundUser = initUserCrudFacade().read(testUserDto);
         MemberDto createdMember = createMember();
@@ -185,7 +197,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, MemberFoundButNotActiveException {
+    public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, MemberFoundButNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, MessengerNotFoundException {
         initTestDatabaseByAddingUser();
         memberCrudFacade.add(testMemberDto);
         memberCrudFacade.delete(testMemberDto);
@@ -215,7 +227,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_existing_member_THEN_delete_member() throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException {
+    public void WHEN_try_to_delete_existing_member_THEN_delete_member() throws MemberFoundButNotActiveException, MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, MessengerNotFoundException {
         initTestDatabaseByAddingUser();
         createMember();
 
@@ -224,7 +236,7 @@ public class MemberCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_non_existing_member_THEN_throw_EntityNotFoundException() throws UserNotFoundException, MemberFoundButNotActiveException {
+    public void WHEN_try_to_delete_non_existing_member_THEN_throw_EntityNotFoundException() throws UserNotFoundException, MemberFoundButNotActiveException, MessengerAlreadyExistsException, MessengerNotFoundException, GroupNotFoundException {
         initTestDatabaseByAddingUser();
 
         try {

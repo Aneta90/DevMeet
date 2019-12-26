@@ -10,7 +10,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeet.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.*;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -26,6 +32,8 @@ public class GroupCrudFacadeTest {
     private MemberRepository memberRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
 
     private GroupDto testGroup;
 
@@ -46,15 +54,15 @@ public class GroupCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupFacade() {
-        return new GroupCrudFacade(groupRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private GroupDto createGroup() throws GroupAlreadyExistsException {
+    private GroupDto createGroup() throws GroupAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return initGroupFacade().add(testGroup);
     }
 
     @Test
-    public void WHEN_create_not_exist_group_THEN_return_group() throws GroupAlreadyExistsException {
+    public void WHEN_create_not_exist_group_THEN_return_group() throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         GroupDto created = createGroup();
 
         assertThat(created).isNotNull();
@@ -66,7 +74,7 @@ public class GroupCrudFacadeTest {
     public void WHEN_create_exist_group_THEN_return_IllegalArgumentException_group_already_exists() {
         try {
             createGroup();
-        } catch (GroupAlreadyExistsException e) {
+        } catch (GroupAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             Assert.fail();
         }
 
@@ -77,11 +85,13 @@ public class GroupCrudFacadeTest {
             assertThat(e)
                     .isInstanceOf(GroupAlreadyExistsException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
+        } catch (MessengerAlreadyExistsException | UserNotFoundException | MemberNotFoundException | GroupNotFoundException | MessengerArgumentNotSpecified e) {
+            e.printStackTrace();
         }
     }
 
     @Test
-    public void WHEN_create_exist_group_but_not_active_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException {
+    public void WHEN_create_exist_group_but_not_active_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException, MessengerNotFoundException {
         GroupDto createdFirst = createGroup();
         GroupCrudFacade groupCrudFacade = initGroupFacade();
         GroupDto deletedFirst = groupCrudFacade.delete(testGroup);
@@ -103,7 +113,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_found_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException {
+    public void WHEN_found_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
         assertThat(createGroup()).isNotNull();
         assertThat(initGroupFacade().findEntityByGroup(testGroup)).isNotNull();
     }
@@ -121,7 +131,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void findAll() throws GroupAlreadyExistsException {
+    public void findAll() throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         createGroup();
         List<GroupDto> foundGroups = initGroupFacade().findAll();
         int groupsSize = foundGroups.size();
@@ -130,7 +140,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_group_THEN_return_group() throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException, GroupAlreadyExistsException {
+    public void WHEN_try_to_update_existing_group_THEN_return_group() throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException, GroupAlreadyExistsException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
         GroupDto group = createGroup();
         GroupDto update = modifiedTestGroup(testGroup);
 
@@ -161,7 +171,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_delete_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException {
+    public void WHEN_delete_existing_group_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException, MessengerNotFoundException {
         GroupDto group = createGroup();
         GroupDto deleted = initGroupFacade().delete(group);
 
@@ -171,7 +181,7 @@ public class GroupCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_delete_not_existing_group_THEN_return_return_EntityNotFoundException_group_not_found() throws GroupFoundButNotActiveException {
+    public void WHEN_try_to_delete_not_existing_group_THEN_return_return_EntityNotFoundException_group_not_found() throws GroupFoundButNotActiveException, UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
         try {
             initGroupFacade().delete(testGroup);
         } catch (GroupNotFoundException e) {
@@ -183,7 +193,7 @@ public class GroupCrudFacadeTest {
 
 
     @Test
-    public void findEntity() throws GroupAlreadyExistsException, GroupNotFoundException {
+    public void findEntity() throws GroupAlreadyExistsException, GroupNotFoundException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
         GroupDto created = createGroup();
         GroupEntity foundEntity = initGroupFacade().findEntityByGroup(created);
 

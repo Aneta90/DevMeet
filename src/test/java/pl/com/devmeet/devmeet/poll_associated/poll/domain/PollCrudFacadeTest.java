@@ -15,11 +15,16 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollAlreadyExistsException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollCrudStatusEnum;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollUnsupportedOperationException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,6 +41,8 @@ public class PollCrudFacadeTest {
     private MemberRepository memberRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
 
     private PollCrudFacade pollCrudFacade;
     private GroupCrudFacade groupCrudFacade;
@@ -68,11 +75,11 @@ public class PollCrudFacadeTest {
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(pollCrudRepository, groupCrudRepository, memberRepository, userRepository);
+        return new PollCrudFacade(pollCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private boolean initTestDB() {
@@ -83,9 +90,7 @@ public class PollCrudFacadeTest {
             groupEntity = groupCrudFacade
                     .findEntityByGroup(groupCrudFacade
                             .add(testGroupDto));
-        } catch (GroupNotFoundException e) {
-            e.printStackTrace();
-        } catch (GroupAlreadyExistsException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 

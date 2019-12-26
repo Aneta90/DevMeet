@@ -12,16 +12,8 @@ import java.util.UUID;
 @Repository
 public interface MessengerRepository extends PagingAndSortingRepository<MessengerEntity, UUID> {
 
-//    @Query("SELECT m FROM MessengerEntity m where m.group.groupName = ?1")
-//    Optional<MessengerEntity> findMessengerByGroup(String groupName);
-//
-//    @Query("SELECT m FROM MessengerEntity m where m.messengerName = ?1")
-//    MessengerEntity findByMessengerName(String messengerName);
-
     Optional<MessengerEntity> findByGroup(GroupEntity groupEntity);
 
     Optional<MessengerEntity> findByMember(MemberEntity memberEntity);
-
-    Optional<List<MessengerEntity>> findAllByGroup(GroupEntity groupEntity);
 }
 

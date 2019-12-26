@@ -128,11 +128,11 @@ public class MessageCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository);
+        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private MessengerCrudFacade initMessengerCrudFacade() {
@@ -160,42 +160,21 @@ public class MessageCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(memberSender));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
             memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(memberReceiver));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupAndReceiverGroup));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-
-        MessengerEntity memberSenderMessengerEntity = null;
-        try {
-            memberSenderMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersSenderMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        MessengerEntity memberReceiverMessengerEntity = null;
-        try {
-            memberReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(membersReceiverMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        MessengerEntity groupReceiverMessengerEntity = null;
-        try {
-            groupReceiverMessengerEntity = messengerCrudFacade.findEntity(messengerCrudFacade.add(groupsReceiverMessenger));
-        } catch (MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberNotFoundException | UserNotFoundException | GroupNotFoundException | MessengerNotFoundException e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
@@ -203,10 +182,7 @@ public class MessageCrudFacadeTest {
                 && userEntitySecond != null
                 && memberEntityFirst != null
                 && memberEntitySecond != null
-                && groupEntity != null
-                && memberSenderMessengerEntity != null
-                && memberReceiverMessengerEntity != null
-                && groupReceiverMessengerEntity != null;
+                && groupEntity != null;
     }
 
     private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, String message, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {

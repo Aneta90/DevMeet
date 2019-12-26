@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
@@ -18,6 +20,9 @@ import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptio
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
 import pl.com.devmeet.devmeet.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.*;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -37,6 +42,10 @@ public class PlaceCrudFacadeTest {
     private MemberRepository memberRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MessengerRepository messengerRepository;
+    @Autowired
+    private GroupCrudRepository groupCrudRepository;
 
     private PlaceCrudFacade placeCrudFacade;
     private MemberCrudFacade memberCrudFacade;
@@ -82,11 +91,11 @@ public class PlaceCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository);
+        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
     private PlaceCrudFacade initPlaceCrudFacade() {
-        return new PlaceCrudFacade(repository, memberRepository, userRepository);
+        return new PlaceCrudFacade(repository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
 
@@ -101,11 +110,7 @@ public class PlaceCrudFacadeTest {
         try {
             memberEntity = memberCrudFacade
                     .findEntity(memberCrudFacade.add(testMemberDto));
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        } catch (MemberAlreadyExistsException e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
@@ -122,7 +127,7 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
         initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));

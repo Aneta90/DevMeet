@@ -1,9 +1,12 @@
 package pl.com.devmeet.devmeet.user.user_member_connector;
 
+import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.UserDto;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 import pl.com.devmeet.devmeet.user.user_member_connector.status_and_exceptions.CreateNewMemberException;
@@ -34,7 +37,7 @@ public class UserMemberConnector {
         return foundMember;
     }
 
-    public MemberDto createNewMemberForUser(UserDto userDto, String memberNickname) throws CreateNewMemberException {
+    public MemberDto createNewMemberForUser(UserDto userDto, String memberNickname) throws CreateNewMemberException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         MemberDto createdMember = null;
         checkMemberNickname(memberNickname);
         try {

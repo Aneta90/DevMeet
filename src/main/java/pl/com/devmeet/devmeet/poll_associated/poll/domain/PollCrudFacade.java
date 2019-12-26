@@ -7,6 +7,7 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeet.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollAlreadyExistsException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeet.poll_associated.poll.domain.status_and_exceptions.PollUnsupportedOperationException;
@@ -21,17 +22,20 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     private GroupCrudRepository groupCrudRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
 
-    public PollCrudFacade(PollCrudRepository pollCrudRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    @Autowired
+    public PollCrudFacade(PollCrudRepository pollCrudRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.pollCrudRepository = pollCrudRepository;
         this.groupCrudRepository = groupCrudRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
     }
 
     private PollGroupFinder initGroupFinder() {
         return new PollGroupFinder().builder()
-                .groupCrudFacade(new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository))
+                .groupCrudFacade(new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository))
                 .build();
     }
 

@@ -9,7 +9,14 @@ import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exception
 import pl.com.devmeet.devmeet.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeet.member_associated.member.domain.MemberRepository;
+import pl.com.devmeet.devmeet.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerCrudFacade;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.domain.MessengerRepository;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeet.user.domain.UserRepository;
+import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -19,16 +26,18 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     private GroupCrudRepository groupCrudRepository;
     private MemberRepository memberRepository;
     private UserRepository userRepository;
+    private MessengerRepository messengerRepository;
 
     @Autowired
-    public GroupCrudFacade(GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public GroupCrudFacade(GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.groupCrudRepository = groupCrudRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.messengerRepository = messengerRepository;
     }
 
     private GroupMemberFinder initMemberFinder() {
-        return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository));
+        return new GroupMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository));
     }
 
     private GroupCrudSaver initSaver() {
@@ -39,6 +48,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return GroupCrudCreator.builder()
                 .groupCrudFinder(initFinder())
                 .groupCrudSaver(initSaver())
+                .groupMessengerCreator(initMessengerCreator())
                 .build();
     }
 
@@ -56,15 +66,28 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
                 .build();
     }
 
-    private GroupCrudDeleter initDeleter() {
-        return GroupCrudDeleter.builder()
+    private GroupCrudDeactivator initDeleter() {
+        return GroupCrudDeactivator.builder()
                 .groupCrudFinder(initFinder())
                 .groupCrudSaver(initSaver())
+                .groupMessengerDeactivator(initMessengerDeactivator())
                 .build();
     }
 
+    private MessengerCrudFacade initMessengerFacade(){
+        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
+    }
+
+    private GroupMessengerCreator initMessengerCreator() {
+        return new GroupMessengerCreator(initMessengerFacade());
+    }
+
+    private GroupMessengerDeactivator initMessengerDeactivator(){
+        return new GroupMessengerDeactivator(initMessengerFacade());
+    }
+
     @Override
-    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException {
+    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return map(initCreator().createEntity(dto));
     }
 
@@ -76,22 +99,9 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
         return mapDtoList(findAllEntities());
     }
 
-    public List<GroupDto> findBySearchText(String searchText) {
-        if (searchText != null)
-            return mapDtoList(groupCrudRepository.findAllBySearchText(searchText));
-        else return mapDtoList(findAllEntities());
-    }
 
-    public List<GroupDto> findByActive(Boolean isActive) {
-        return mapDtoList(groupCrudRepository.findAllByActive(isActive));
-    }
-
-    public GroupEntity findEntityById(Long id) throws GroupNotFoundException {
+    public GroupEntity findById(Long id) throws GroupNotFoundException {
         return initFinder().findById(id);
-    }
-
-    public GroupDto findById(Long id) throws GroupNotFoundException { //może zwracać Optional<GroupDto> zamiast rzucać wyjątki???
-        return map(findEntityById(id));
     }
 
     public GroupEntity findEntityByGroup(GroupDto groupDto) throws GroupNotFoundException {
@@ -116,7 +126,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
     @Override
-    public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException {
+    public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, MessengerAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
 

@@ -17,7 +17,7 @@ import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundExce
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class MessageCrudDeleter implements CrudEntityDeleter<MessageDto, MessageEntity> {
+class MessageCrudDeactivator implements CrudEntityDeleter<MessageDto, MessageEntity> {
 
     private MessageCrudFinder messageCrudFinder;
     private MessageCrudSaver messageCrudSaver;
