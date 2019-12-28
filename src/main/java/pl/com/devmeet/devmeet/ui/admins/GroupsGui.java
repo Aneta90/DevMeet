@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.ui;
+package pl.com.devmeet.devmeet.ui.admins;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;

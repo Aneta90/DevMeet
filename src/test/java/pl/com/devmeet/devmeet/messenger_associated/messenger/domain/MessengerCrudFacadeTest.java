@@ -29,8 +29,6 @@ import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundExce
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-//TODO refaktoring testów - teraz Member i Group tworzą się od razu z Messengerem, więc trzeba to uwzględnić w testach...
-
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class MessengerCrudFacadeTest {

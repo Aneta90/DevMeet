@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.ui;
+package pl.com.devmeet.devmeet.ui.admins;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -19,12 +19,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Route
+@Route("admin")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
-class Main extends VerticalLayout {
+class MainViewAdmin extends VerticalLayout{
 
 
-    Main() {
+    MainViewAdmin() {
 
         showTabs();
 

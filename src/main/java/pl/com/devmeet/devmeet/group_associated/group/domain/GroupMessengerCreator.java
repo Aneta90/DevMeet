@@ -10,13 +10,6 @@ import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptio
 import pl.com.devmeet.devmeet.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeet.user.domain.status_and_exceptions.UserNotFoundException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 21.12.2019
- * Time: 20:52
- */
-
 @RequiredArgsConstructor
 class GroupMessengerCreator {
 
@@ -24,8 +17,6 @@ class GroupMessengerCreator {
     private MessengerCrudFacade messengerCrudFacade;
 
     public MessengerDto createMessenger(GroupDto groupDto) throws UserNotFoundException, MessengerArgumentNotSpecified, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException {
-        return messengerCrudFacade.add(MessengerDto.builder()
-                .group(groupDto)
-                .build());
+        return messengerCrudFacade.addToGroup(groupDto);
     }
 }

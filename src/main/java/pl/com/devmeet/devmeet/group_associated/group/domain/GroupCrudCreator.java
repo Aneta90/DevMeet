@@ -22,7 +22,6 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
     private GroupCrudFinder groupCrudFinder;
     private GroupMessengerCreator groupMessengerCreator;
 
-    //TODO dodać automatyczne tworzenie Messengera po utworzeniu grupy <- DONE
     @Override
     public GroupEntity createEntity(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         GroupEntity group;
