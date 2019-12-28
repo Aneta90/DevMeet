@@ -7,13 +7,12 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import pl.com.devmeet.devmeet.ui.normal_users.DevMeetUserRouteClass;
 import pl.com.devmeet.devmeet.ui.normal_users.MainViewNormalUser;
 
 @Route(value = "messengerview", layout = MainViewNormalUser.class)
 @PageTitle("Messenger")
 @CssImport("styles/views/normal/messenger/messenger-view.css")
-public class MessengerView  extends Div implements DevMeetUserRouteClass, AfterNavigationObserver {
+public class MessengerView  extends Div implements AfterNavigationObserver {
 
     private final String divId = "messenger-view";
 

@@ -12,8 +12,8 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 class MainView extends HorizontalLayout {
 
-    private Button normalUserButton = new Button("Normal User");
-    private Button adminButton = new Button("admin");
+    private Button normalUserButton = new Button("Normal User", new Icon("lumo", "clock"));
+    private Button adminButton = new Button("admin", VaadinIcon.VAADIN_H.create());
 
     public MainView() {
 

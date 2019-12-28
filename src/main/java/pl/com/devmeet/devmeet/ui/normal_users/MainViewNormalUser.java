@@ -22,7 +22,7 @@ import java.util.Optional;
 @Route("normal")
 @JsModule("./styles/views/normal/shared-styles.js")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
-public class MainViewNormalUser extends AppLayout implements DevMeetUserRouteClass {
+public class MainViewNormalUser extends AppLayout {
 
     private final Tabs menu;
 
