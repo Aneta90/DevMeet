@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Route("groups")
+//@Route("groups")
 class GroupsGui extends VerticalLayout {
 
     private GroupCrudFacade group;

@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeet.ui.normal_users.group_view;
+package pl.com.devmeet.devmeet.ui.normal_users.messenger_view;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -9,17 +9,17 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import pl.com.devmeet.devmeet.ui.normal_users.MainViewNormalUser;
 
-@Route(value = "groupsview", layout = MainViewNormalUser.class)
-@PageTitle("GroupsView")
-@CssImport("styles/views/normal/groups/groups-view.css")
-public class GroupsView extends Div implements AfterNavigationObserver {
+@Route(value = "messengerview", layout = MainViewNormalUser.class)
+@PageTitle("Messenger")
+//@CssImport("styles/views/normal/messenger/messenger-view.css")
+public class MessengerView  extends Div implements AfterNavigationObserver {
 
-    private final String divId = "groups-view";
+    private final String divId = "messenger-view";
 
-    public GroupsView() {
+    public MessengerView() {
         setId(divId);
 
-        Text text = new Text("Group view");
+        Text text = new Text("Messenger view");
         add(text);
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Route("normal")
-@JsModule("./styles/views/normal/shared-styles.js")
+//@JsModule("./styles/views/normal/shared-styles.js")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 public class MainViewNormalUser extends AppLayout {
 
@@ -41,8 +41,8 @@ public class MainViewNormalUser extends AppLayout {
 
     private static Tab[] getAvailableTabs() {
         final List<Tab> tabs = new ArrayList<>();
-        tabs.add(createTab("Groups", GroupsView.class));
-        tabs.add(createTab("Messenger", MessengerView.class));
+//        tabs.add(createTab("Groups", GroupsView.class));
+//        tabs.add(createTab("Messenger", MessengerView.class));
         return tabs.toArray(new Tab[tabs.size()]);
     }
 
@@ -53,7 +53,7 @@ public class MainViewNormalUser extends AppLayout {
 
     private static Tab createTab(Component content) {
         final Tab tab = new Tab();
-        tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
+//        tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
         tab.add(content);
         return tab;
     }
