@@ -16,28 +16,34 @@ class UserCrudFinder {
 
     private UserRepository repository;
 
-    public UserEntity findEntityByEmail(UserDto dto) throws UserNotFoundException {
+    public UserEntity findByEmail(String email) throws UserNotFoundException {
         Optional<UserEntity> foundUser = Optional.empty();
-        if (dto != null) {
-            String email = dto.getEmail();
+        if (!email.isEmpty())
+            foundUser = repository.findByEmail(email);
 
-            if (!email.isEmpty())
-                foundUser = repository.findByEmailAndPassword(email, dto.getPassword());
+        if (foundUser.isPresent())
+            return foundUser.get();
 
-            if (foundUser.isPresent())
-                return foundUser.get();
-        }
         throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
     }
 
-    public List<UserEntity> findAllEntities(){
+    public UserEntity find(UserDto dto) throws UserNotFoundException {
+        String email = "";
+
+        if (dto != null)
+            email = dto.getEmail();
+
+        return findByEmail(email);
+    }
+
+    public List<UserEntity> findAllEntities() {
         return repository.findAll();
     }
 
     @Deprecated
     public boolean isExist(UserDto dto) {
         try {
-            return findEntityByEmail(dto) != null;
+            return find(dto) != null;
         } catch (UserNotFoundException e) {
             return false;
         }

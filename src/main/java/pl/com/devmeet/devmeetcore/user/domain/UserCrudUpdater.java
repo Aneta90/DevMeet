@@ -16,25 +16,45 @@ class UserCrudUpdater {
     private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
+    public UserEntity updateEmail(UserDto oldDto, String email) throws UserNotFoundException {
+        UserEntity found = userFinder.find(oldDto);
+
+        if (!email.isEmpty()) {
+            found.setEmail(email);
+            found.setModificationTime(DateTime.now());
+        }
+        return saveUserEntity(found);
+    }
+
+    public UserEntity updatePassword(UserDto oldDto, String password) throws UserNotFoundException {
+        UserEntity found = userFinder.find(oldDto);
+
+        if (!password.isEmpty()) {
+            found.setPassword(password);
+            found.setModificationTime(DateTime.now());
+        }
+        return saveUserEntity(found);
+    }
+
     public UserEntity update(UserDto newDto, UserDto oldDto) throws UserNotFoundException, UserFoundButNotActive {
-        UserEntity found = userFinder.findEntityByEmail(oldDto);
+        UserEntity found = userFinder.find(oldDto);
 
         if (found.isActive())
-            return saveUserEntity(updateUser(newDto, found));
+            return saveUserEntity(updateAllowedParameters(newDto, found));
 
         throw new UserFoundButNotActive(UserCrudStatusEnum.USER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
-    private UserEntity updateUser(UserDto updatedUser, UserEntity user) {
+    private UserEntity updateAllowedParameters(UserDto updatedUser, UserEntity user) {
         String email = updatedUser.getEmail();
         String password = updatedUser.getPassword();
         boolean modification = false;
 
-        if (email != null && !email.equals("")) {
+        if (email.isEmpty()) {
             user.setEmail(updatedUser.getEmail());
             modification = true;
         }
-        if (password != null && !password.equals("")) {
+        if (!password.isEmpty()) {
             user.setPassword(updatedUser.getPassword());
             modification = true;
         }

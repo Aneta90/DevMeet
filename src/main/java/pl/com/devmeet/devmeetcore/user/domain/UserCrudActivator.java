@@ -17,7 +17,7 @@ class UserCrudActivator {
     private UserCrudFinder userFinder;
 
     public UserEntity activate(UserDto dto) throws UserNotFoundException, UserAlreadyActiveException {
-        UserEntity found = userFinder.findEntityByEmail(dto);
+        UserEntity found = userFinder.find(dto);
 
         if (!found.isActive()) {
             found.setActive(true);

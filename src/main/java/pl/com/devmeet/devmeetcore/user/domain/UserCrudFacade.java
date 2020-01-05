@@ -68,11 +68,16 @@ public class UserCrudFacade implements CrudFacadeInterface<UserDto, UserEntity> 
     }
 
     public UserEntity findEntityByEmail(UserDto dto) throws UserNotFoundException {
-        return initFinder().findEntityByEmail(dto);
+        return initFinder().find(dto);
     }
 
-    public UserDto findByEmail(UserDto dto) throws UserNotFoundException {
-        return map(initFinder().findEntityByEmail(dto));
+    public UserDto findByEmail(String email) throws UserNotFoundException {
+        return map(initFinder().findByEmail(email));
+    }
+
+    @Deprecated
+    public UserDto find(UserDto dto) throws UserNotFoundException {
+        return map(initFinder().find(dto));
     }
 
     public List<UserDto> findAll() {
@@ -87,6 +92,10 @@ public class UserCrudFacade implements CrudFacadeInterface<UserDto, UserEntity> 
 
     public UserDto activation(UserDto dto) throws UserAlreadyActiveException, UserNotFoundException {
         return map(initActivator().activate(dto));
+    }
+
+    public UserDto updatePassword(UserDto oldDto, String password) throws UserNotFoundException {
+        return map(initUpdater().updatePassword(oldDto, password));
     }
 
     @Override

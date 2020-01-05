@@ -17,7 +17,7 @@ class UserCrudDeleter {
     private UserCrudFinder userFinder;
 
     public UserEntity delete(UserDto dto) throws UserNotFoundException, UserFoundButNotActive {
-        UserEntity found = userFinder.findEntityByEmail(dto);
+        UserEntity found = userFinder.find(dto);
 
         if (found.isActive()) {
             found.setActive(false);

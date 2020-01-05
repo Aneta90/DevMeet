@@ -37,6 +37,7 @@ import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollEntity;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_exceptions.PollAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
@@ -205,8 +206,18 @@ public class AvailabilityVoteCrudFacadeTest {
         pollCrudFacade = initPollCrudFacade();
         voteCrudFacade = initVoteCrudFacade();
 
-        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.create(testUserDtoFirst, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.create(testUserDtoSecond, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntityFirst = null;
+        try {
+            userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.add(testUserDtoFirst));
+        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+        UserEntity userEntitySecond = null;
+        try {
+            userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.add(testUserDtoSecond));
+        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            e.printStackTrace();
+        }
 
         MemberEntity memberEntityFirst = null;
         try {

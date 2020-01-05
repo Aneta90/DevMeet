@@ -21,7 +21,7 @@ class UserCrudCreator {
         boolean userActive;
 
         try {
-            user = userFinder.findEntityByEmail(dto);
+            user = userFinder.find(dto);
 
             userActive = user.isActive();
 

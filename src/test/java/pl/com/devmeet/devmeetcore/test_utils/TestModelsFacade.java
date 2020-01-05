@@ -11,12 +11,6 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.Messenge
 import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 30.11.2019
- * Time: 13:31
- */
 @Getter
 @NoArgsConstructor
 public class TestModelsFacade {
@@ -46,23 +40,23 @@ public class TestModelsFacade {
 
     public UserDto initFirstUser(){
         return UserDto.builder()
-                .login(DefaultUserLoginTypeEnum.EMAIL)
+//                .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test1@test1.pl")
-                .phone("221234567")
+//                .phone("221234567")
                 .password("testPass1")
                 .isActive(true)
-                .loggedIn(true)
+//                .loggedIn(true)
                 .build();
     }
 
     public UserDto initSecondUser(){
         return UserDto.builder()
-                .login(DefaultUserLoginTypeEnum.EMAIL)
+//                .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test@test.pl")
-                .phone("221234567")
+//                .phone("221234567")
                 .password("testPass")
                 .isActive(true)
-                .loggedIn(true)
+//                .loggedIn(true)
                 .build();
     }
 
