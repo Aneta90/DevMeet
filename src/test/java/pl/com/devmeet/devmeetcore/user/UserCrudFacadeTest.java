@@ -22,17 +22,11 @@ public class UserCrudFacadeTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserCrudFacade userFacade;
-    private UserDto testDto;
-
-    @Before
-    public void setUp() {
-        testDto = UserDto.builder()
+    private UserDto testDto = UserDto.builder()
                 .email("test@test.pl")
                 .password("testPass")
                 .isActive(true)
                 .build();
-    }
 
     private UserCrudFacade initFacade() {
         return new UserCrudFacade(userRepository);
@@ -44,25 +38,13 @@ public class UserCrudFacadeTest {
 
     @Test
     public void WHEN_create_new_not_existing_user_THEN_return_UserDto() throws UserAlreadyExistsException {
-        UserDto created = userFacade.add(testDto);
+        UserDto created = createTestUser();
 
         assertThat(created).isNotNull();
         assertThat(created.getCreationTime()).isNotNull();
         assertThat(created.getModificationTime()).isNull();
         assertThat(created.isActive()).isFalse();
     }
-//
-//    @Test
-//    public void WHEN_try_to_create_new_user_with_no_defined_login_THEN_return_IllegalArgumentException() {
-//        try {
-//            userFacade.add(testDto);
-//            Assert.fail();
-//        } catch ( CrudException e) {
-//            assertThat(e)
-//                    .isInstanceOf(UserNotFoundException.class)
-//                    .hasMessage(User);
-//        }
-//    }
 
     @Test
     public void WHEN_try_to_create_user_that_already_exist_THEN_return_UserAlreadyExistsException() throws UserAlreadyExistsException {
@@ -81,14 +63,14 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_find_existing_user_THEN_return_UserDto() throws UserAlreadyExistsException, UserNotFoundException {
         createTestUser();
-        UserDto found = userFacade.find(testDto);
+        UserDto found = initFacade().find(testDto);
         assertThat(found).isNotNull();
     }
 
     @Test
     public void WHEN_try_to_find_user_who_does_not_exist_THEN_return_UserNotFoundException() {
         try {
-            userFacade.find(testDto);
+            initFacade().find(testDto);
             Assert.fail();
         } catch (CrudException e) {
             assertThat(e)
@@ -100,18 +82,18 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_user_exists_THEN_return_true() throws UserAlreadyExistsException {
         createTestUser();
-        assertThat(userFacade.isExist(testDto)).isTrue();
+        assertThat(initFacade().isExist(testDto)).isTrue();
     }
 
     @Test
     public void WHEN_user_not_exists_THEN_return_false() {
-        assertThat(userFacade.isExist(testDto)).isFalse();
+        assertThat(initFacade().isExist(testDto)).isFalse();
     }
 
     @Test
     public void WHEN_activate_user_RETURN_UserDto() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
         UserDto created = createTestUser();
-        UserDto activated = userFacade.activation(testDto);
+        UserDto activated = initFacade().activation(testDto);
 
         assertThat(created).isNotNull();
 
@@ -122,6 +104,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_activate_activated_user_THEN_return_UserAlreadyActiveException() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
         createTestUser();
+        UserCrudFacade userFacade = initFacade();
         userFacade.activation(testDto);
 
         try {
@@ -137,7 +120,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_activate_not_existing_user_THEN_return_UserNotFoundException() {
         try {
-            userFacade.activation(testDto);
+            initFacade().activation(testDto);
             Assert.fail();
         } catch (CrudException e) {
             assertThat(e)
@@ -155,6 +138,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_activated_existing_user_THEN_return_UserDto() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException, UserFoundButNotActive {
         UserDto created = createTestUser();
+        UserCrudFacade userFacade = initFacade();
         UserDto activated = userFacade.activation(testDto);
         UserDto updated = userFacade.update(userToUpdate(), created);
 
@@ -166,7 +150,7 @@ public class UserCrudFacadeTest {
     public void WHEN_try_to_update_not_activated_user_THEN_return_UserFoundButNotActiveException() throws UserAlreadyExistsException, UserNotFoundException {
         UserDto created = createTestUser();
         try {
-            userFacade.update(userToUpdate(), created);
+            initFacade().update(userToUpdate(), created);
             Assert.fail();
         } catch (CrudException e) {
             assertThat(e)
@@ -178,7 +162,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_not_existing_user_THEN_return_IllegalArgumentException() {
         try {
-            userFacade.update(userToUpdate(), null);
+            initFacade().update(userToUpdate(), null);
             Assert.fail();
         } catch (CrudException e) {
             assertThat(e)
@@ -190,10 +174,11 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_delete_existing_and_activated_user_THEN_return_UserDto() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException, UserFoundButNotActive {
         createTestUser();
+        UserCrudFacade userFacade = initFacade();
         userFacade.activation(testDto);
         UserDto deleted = userFacade.delete(testDto);
 
-        assertThat(deleted.isActive()).isTrue();
+        assertThat(deleted.isActive()).isFalse();
         assertThat(deleted.getModificationTime()).isNotNull();
     }
 
@@ -201,7 +186,7 @@ public class UserCrudFacadeTest {
     public void WHEN_try_to_delete_existing_but_not_activated_user_THEN_return_UserFoundButNotActive() throws UserAlreadyExistsException, UserNotFoundException {
         createTestUser();
         try {
-            userFacade.delete(testDto);
+            initFacade().delete(testDto);
             Assert.fail();
         } catch (UserFoundButNotActive e) {
             assertThat(e)
@@ -213,7 +198,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_delete_not_existing_user_THEN_return_UserNotFoundException() throws UserFoundButNotActive {
         try {
-            userFacade.delete(testDto);
+            initFacade().delete(testDto);
         } catch (CrudException e) {
             assertThat(e)
                     .isInstanceOf(UserNotFoundException.class)
