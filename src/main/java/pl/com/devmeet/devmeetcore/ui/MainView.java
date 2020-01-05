@@ -18,7 +18,7 @@ class MainView extends VerticalLayout {
 
     private Text normUserInfoText = new Text("Creating a test user for testing views");
     private Text adminUserInfoText = new Text("Administration tools");
-    private Text changeThemeInfoText = new Text("You can change theme");
+    private Text changeThemeInfoText = new Text("Change theme");
 
     public MainView() {
         Div normUserLine = new Div();
