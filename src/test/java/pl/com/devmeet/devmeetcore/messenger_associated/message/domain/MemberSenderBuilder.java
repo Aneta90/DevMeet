@@ -42,12 +42,9 @@ class MemberSenderBuilder {
 
     private void initUser() {
         this.userDto = UserDto.builder()
-                .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test@test.pl")
-                .phone("221234567")
                 .password("testPass")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
     }
 

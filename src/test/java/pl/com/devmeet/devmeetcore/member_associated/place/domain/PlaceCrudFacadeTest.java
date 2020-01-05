@@ -24,6 +24,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.Messenge
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
@@ -61,10 +62,8 @@ public class PlaceCrudFacadeTest {
 
         testUserDto = new UserDto().builder()
                 .email("mailik@gmail.com")
-                .phone("567566456")
                 .password("multiPass")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
 
         testMemberDto = new MemberDto().builder()
@@ -103,8 +102,13 @@ public class PlaceCrudFacadeTest {
         userCrudFacade = initUserCrudFacade();
         memberCrudFacade = initMemberCrudFacade();
 
-        UserEntity testUser = userCrudFacade
-                .findEntityByEmail(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
+        UserEntity testUser = null;
+        try {
+            testUser = userCrudFacade
+                    .findEntityByEmail(userCrudFacade.add(testUserDto));
+        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            e.printStackTrace();
+        }
 
         MemberEntity memberEntity = null;
         try {
@@ -119,17 +123,17 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void USER_CRUD_FACADE_WR() {
+    public void USER_CRUD_FACADE_WR() throws UserNotFoundException, UserAlreadyExistsException {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
-        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
+        UserDto testUser = userCrudFacade.add(testUserDto);
         UserEntity userEntity = userCrudFacade.findEntityByEmail(testUser);
         assertThat(userEntity).isNotNull();
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
-        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
+        initUserCrudFacade().add(testUserDto);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }

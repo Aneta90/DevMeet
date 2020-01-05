@@ -19,6 +19,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,10 +46,8 @@ public class MemberCrudFacadeTest {
     public void setUp() {
         testUserDto = UserDto.builder()
                 .email("test@test.pl")
-                .phone("221234567")
                 .password("testPass")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
 
         testMemberDto = MemberDto.builder()
@@ -77,9 +76,14 @@ public class MemberCrudFacadeTest {
     private UserEntity initTestDatabaseByAddingUser() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
 
-        return userCrudFacade
-                .findEntityByEmail(userCrudFacade
-                        .create(testUserDto, DefaultUserLoginTypeEnum.EMAIL));
+        try {
+            return userCrudFacade
+                    .findEntityByEmail(userCrudFacade
+                            .add(testUserDto));
+        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Test

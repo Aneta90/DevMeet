@@ -31,6 +31,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -153,8 +154,15 @@ public class MessageCrudFacadeTest {
         groupCrudFacade = initGroupCrudFacade();
         messengerCrudFacade = initMessengerCrudFacade();
 
-        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.create(firstUser, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.create(secondUser, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntityFirst = null;
+        UserEntity userEntitySecond = null;
+        try {
+            userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.add(firstUser));
+            userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.add(secondUser));
+        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+
 
         MemberEntity memberEntityFirst = null;
         try {

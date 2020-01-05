@@ -25,6 +25,8 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerInfoStatusEnum;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -55,9 +57,7 @@ public class MessengerCrudFacadeTest {
     public void setUp() {
 
         this.firstTestUserDto = UserDto.builder()
-                .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test1@test1.pl")
-                .phone("221234567")
                 .password("testPass1")
                 .build();
 
@@ -107,9 +107,18 @@ public class MessengerCrudFacadeTest {
         GroupCrudFacade groupCrudFacade = initGroupFacade();
 
 
-        userCrudFacade.activation(
-                userCrudFacade.create(firstTestUserDto, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(firstTestUserDto);
+        try {
+            userCrudFacade.activation(
+                    userCrudFacade.add(firstTestUserDto));
+        } catch (UserAlreadyActiveException | UserAlreadyExistsException | UserNotFoundException e) {
+            e.printStackTrace();
+        }
+        UserEntity userEntityFirst = null;
+        try {
+            userEntityFirst = userCrudFacade.findEntityByEmail(firstTestUserDto);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
 
         MemberEntity memberEntityFirst = null;
         try {

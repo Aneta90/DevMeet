@@ -34,24 +34,24 @@ class UserService {
                 .collect(Collectors.toList());
     }
 
-    List<UserDto> findByPhone(String phone) {
-        return repository.findByPhone(phone)
-                .stream()
-                .map(UserMapper::toDto)
-                .collect(Collectors.toList());
-    }
+//    List<UserDto> findByPhone(String phone) {
+//        return repository.findByPhone(phone)
+//                .stream()
+//                .map(UserMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
 
     Optional<UserDto> findByEmail(String email) {
         return repository.findByEmail(email)
                 .map(UserMapper::toDto);
     }
 
-    List<UserDto> findAllByEmailAndPhone(String text) {
-        return repository.findAllByEmailAndPhone(text)
-                .stream()
-                .map(UserMapper::toDto)
-                .collect(Collectors.toList());
-    }
+//    List<UserDto> findAllByEmailAndPhone(String text) {
+//        return repository.findAllByEmailAndPhone(text)
+//                .stream()
+//                .map(UserMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
 
     List<UserDto> findAllByIsActive(Boolean isActive) {
         return repository.findAllByIsActive(isActive)

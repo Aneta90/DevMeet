@@ -24,12 +24,12 @@ class UserApi {
 
     // get
 
-    @GetMapping
-    public List<UserDto> getFiltered(@RequestParam(required = false) String searchEmalOrPhone) {
-        if (searchEmalOrPhone != null)
-            return userService.findAllByEmailAndPhone(searchEmalOrPhone);
-        else return userService.findAll();
-    }
+//    @GetMapping
+//    public List<UserDto> getFiltered(@RequestParam(required = false) String searchEmalOrPhone) {
+//        if (searchEmalOrPhone != null)
+//            return userService.findAllByEmailAndPhone(searchEmalOrPhone);
+//        else return userService.findAll();
+//    }
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getById(@PathVariable Long id) {

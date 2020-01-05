@@ -11,17 +11,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    Optional<UserEntity> findByPhoneAndPassword(String phone, String password);
+//    Optional<UserEntity> findByPhoneAndPassword(String phone, String password);
 
     Optional<UserEntity> findByEmailAndPassword(String email, String password);
 
     Optional<UserEntity> findByEmail(String email);
 
-    List<UserEntity> findByPhone(String phone);
+//    List<UserEntity> findByPhone(String phone);
 
-    @Query("select u from UserEntity u where lower(u.email) like lower(concat('%', :search, '%') )" +
-            "or u.phone like concat('%', :search, '%') ")
-    List<UserEntity> findAllByEmailAndPhone(String search);
+//    @Query("select u from UserEntity u where lower(u.email) like lower(concat('%', :search, '%') )" +
+//            "or u.phone like concat('%', :search, '%') ")
+//    List<UserEntity> findAllByEmailAndPhone(String search);
 
     @Query(value = "SELECT * FROM users WHERE users.is_active = :isActive", nativeQuery = true)
     List<UserEntity> findAllByIsActive(@Param("isActive") Boolean isActive);

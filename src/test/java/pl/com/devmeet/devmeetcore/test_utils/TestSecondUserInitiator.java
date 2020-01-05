@@ -4,13 +4,11 @@ import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 30.11.2019
- * Time: 12:46
- */
+
 class TestSecondUserInitiator implements TestObjectInitiator<UserRepository, UserCrudFacade, UserDto> {
 
     private UserRepository repository;
@@ -26,9 +24,9 @@ class TestSecondUserInitiator implements TestObjectInitiator<UserRepository, Use
     }
 
     @Override
-    public UserDto initAndSaveTestObject() {
+    public UserDto initAndSaveTestObject() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
         UserCrudFacade userCrudFacade = initFacade();
-        userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
+        userCrudFacade.add(testUserDto);
         return userCrudFacade.activation(testUserDto);
     }
 }

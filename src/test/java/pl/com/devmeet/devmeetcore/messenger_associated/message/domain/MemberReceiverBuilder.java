@@ -9,16 +9,8 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
-import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 27.11.2019
- * Time: 23:04
- */
 
 @Builder
 @AllArgsConstructor
@@ -42,12 +34,9 @@ class MemberReceiverBuilder {
 
     private void initUser() {
         this.userDto = UserDto.builder()
-                .login(DefaultUserLoginTypeEnum.EMAIL)
                 .email("test1@test1.pl")
-                .phone("221234567")
                 .password("testPass1")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
     }
 

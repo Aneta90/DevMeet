@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
-import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
@@ -202,7 +201,7 @@ public class UserCrudFacadeTest {
     public void WHEN_try_to_delete_existing_but_not_activated_user_THEN_return_UserFoundButNotActive() throws UserAlreadyExistsException, UserNotFoundException {
         createTestUser();
         try {
-            UserDto deleted = userFacade.delete(testDto);
+            userFacade.delete(testDto);
             Assert.fail();
         } catch (UserFoundButNotActive e) {
             assertThat(e)
@@ -217,8 +216,8 @@ public class UserCrudFacadeTest {
             userFacade.delete(testDto);
         } catch (CrudException e) {
             assertThat(e)
-            .isInstanceOf(UserNotFoundException.class)
-            .hasMessage(UserCrudStatusEnum.USER_NOT_FOUND.toString());
+                    .isInstanceOf(UserNotFoundException.class)
+                    .hasMessage(UserCrudStatusEnum.USER_NOT_FOUND.toString());
         }
 
     }

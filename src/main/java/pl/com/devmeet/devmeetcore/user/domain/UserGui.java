@@ -38,8 +38,9 @@ class UserGui extends VerticalLayout {
         header1 = new H1("devmeet app - user");
         comboBoxIsActive = new ComboBox<>("Activated");
         comboBoxIsActive.setItems("yes", "no");
-        comboBoxIsActive.addValueChangeListener(e -> filterUserList());
-        textFieldEmailorPhone = new TextField("Email or Phone", e -> filterUserList());
+//        comboBoxIsActive.addValueChangeListener();
+//        textFieldEmailorPhone = new TextField("Email or Phone", e -> filterUserList());
+        textFieldEmailorPhone = new TextField("Email or Phone");
         textFieldEmailorPhone.setPlaceholder("filter");
         textFieldEmailorPhone.setValueChangeMode(ValueChangeMode.EAGER);
         textFieldEmailorPhone.setClearButtonVisible(true);
@@ -62,18 +63,18 @@ class UserGui extends VerticalLayout {
         add(header1, filtersLayout, userGrid);
     }
 
-    private void filterUserList() {
-        if (comboBoxIsActive.getValue() != null) {
-            if (comboBoxIsActive.getValue().equals("yes"))
-                userList = service.findAllByIsActive(true);
-            if (comboBoxIsActive.getValue().equals("no"))
-                userList = service.findAllByIsActive(false);
-        } else if (textFieldEmailorPhone.getValue() != null
-                && !textFieldEmailorPhone.getValue().isEmpty()) {
-            userList = service.findAllByEmailAndPhone(textFieldEmailorPhone.getValue());
-        } else userList = service.findAll();
-        refreshGrid(userList);
-    }
+//    private void filterUserList() {
+//        if (comboBoxIsActive.getValue() != null) {
+//            if (comboBoxIsActive.getValue().equals("yes"))
+//                userList = service.findAllByIsActive(true);
+//            if (comboBoxIsActive.getValue().equals("no"))
+//                userList = service.findAllByIsActive(false);
+//        } else if (textFieldEmailorPhone.getValue() != null
+//                && !textFieldEmailorPhone.getValue().isEmpty()) {
+//            userList = service.findAllByEmailAndPhone(textFieldEmailorPhone.getValue());
+//        } else userList = service.findAll();
+//        refreshGrid(userList);
+//    }
 
     private void refreshGrid(List<UserDto> userList) {
         userGrid.setItems(userList);

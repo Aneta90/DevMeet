@@ -1,6 +1,10 @@
 package pl.com.devmeet.devmeetcore.test_utils;
 
 
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Kamil Ptasinski
@@ -38,6 +42,6 @@ interface TestObjectInitiator <R, F, D> {
      *
      * @return the DTO
      */
-    D initAndSaveTestObject();
+    D initAndSaveTestObject() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException;
 
 }
