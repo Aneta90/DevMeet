@@ -104,7 +104,7 @@ public class PlaceCrudFacadeTest {
         memberCrudFacade = initMemberCrudFacade();
 
         UserEntity testUser = userCrudFacade
-                .findEntity(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
+                .findEntityByEmail(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
 
         MemberEntity memberEntity = null;
         try {
@@ -122,7 +122,7 @@ public class PlaceCrudFacadeTest {
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
         UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
-        UserEntity userEntity = userCrudFacade.findEntity(testUser);
+        UserEntity userEntity = userCrudFacade.findEntityByEmail(testUser);
         assertThat(userEntity).isNotNull();
     }
 

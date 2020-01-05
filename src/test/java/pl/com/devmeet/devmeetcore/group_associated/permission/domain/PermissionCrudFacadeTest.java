@@ -115,7 +115,7 @@ public class PermissionCrudFacadeTest {
         memberCrudFacade = initMemberCrudFacade();
 
         UserEntity testUser = userCrudFacade
-                .findEntity(userCrudFacade
+                .findEntityByEmail(userCrudFacade
                         .create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
 
         GroupEntity groupEntity = null;
@@ -146,7 +146,7 @@ public class PermissionCrudFacadeTest {
     public void USER_CRUD_FACADE_WR() {
         UserCrudFacade userFacade = initUserCrudFacade();
         UserDto testUser = userFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE);
-        UserEntity userEntity = userFacade.findEntity(testUser);
+        UserEntity userEntity = userFacade.findEntityByEmail(testUser);
 
         assertThat(userEntity).isNotNull();
     }

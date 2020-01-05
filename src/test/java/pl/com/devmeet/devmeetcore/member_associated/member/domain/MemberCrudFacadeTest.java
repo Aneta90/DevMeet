@@ -78,7 +78,7 @@ public class MemberCrudFacadeTest {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
 
         return userCrudFacade
-                .findEntity(userCrudFacade
+                .findEntityByEmail(userCrudFacade
                         .create(testUserDto, DefaultUserLoginTypeEnum.EMAIL));
     }
 
@@ -129,7 +129,7 @@ public class MemberCrudFacadeTest {
     @Test
     public void WHEN_find_existing_member_THEN_return_memberDto() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         initTestDatabaseByAddingUser();
-        UserDto foundUser = initUserCrudFacade().read(testUserDto);
+        UserDto foundUser = initUserCrudFacade().findByEmail(testUserDto);
         createMember();
 
         MemberDto foundMemberDto = memberCrudFacade.find(testMemberDto);
@@ -172,7 +172,7 @@ public class MemberCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_existing_member_THEN_updated_member() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, MemberFoundButNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
         initTestDatabaseByAddingUser();
-        UserDto foundUser = initUserCrudFacade().read(testUserDto);
+        UserDto foundUser = initUserCrudFacade().findByEmail(testUserDto);
         MemberDto createdMember = createMember();
 
         MemberDto updatedMember = memberCrudFacade.update(testMemberDto, updateTestMemberDto(testMemberDto));

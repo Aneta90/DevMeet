@@ -24,14 +24,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private DefaultUserLoginTypeEnum login;
+//    private DefaultUserLoginTypeEnum login;
 
     private String password;
 
    // @Column(unique = true)
     private String email;
 
-    private String phone;
+//    private String phone;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;
@@ -45,11 +45,11 @@ public class UserEntity {
     private DateTime modificationTime;
 
     private boolean isActive;
-
-    private boolean loggedIn;
-
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonDeserialize(using = DateTimeDeserializer.class)
-    private DateTime loginTime;
+//
+//    private boolean loggedIn;
+//
+//    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+//    @JsonDeserialize(using = DateTimeDeserializer.class)
+//    private DateTime loginTime;
 
 }

@@ -12,17 +12,16 @@ import org.joda.time.DateTime;
 @Builder
 public class UserDto {
 
-    private Long id;
-    private DefaultUserLoginTypeEnum login;
-    private String phone;
+//    private DefaultUserLoginTypeEnum login;
+//    private String phone;
     private String email;
     private String password;
 
     private DateTime creationTime;
     private DateTime modificationTime;
 
-    private boolean loggedIn;
-    private DateTime loginTime;
+//    private boolean loggedIn;
+//    private DateTime loginTime;
 
     private boolean isActive;
 }

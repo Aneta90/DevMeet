@@ -1,53 +1,35 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserFoundButNotActive;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class UserCrudUpdater {
 
     private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
-    private String userNotFoundMessage = "User not found";
+    public UserEntity update(UserDto newDto, UserDto oldDto) throws UserNotFoundException, UserFoundButNotActive {
+        UserEntity found = userFinder.findEntityByEmail(oldDto);
 
-    public UserCrudUpdater(UserRepository repository) {
-        this.userSaver = new UserCrudSaver(repository);
-        this.userFinder = new UserCrudFinder(repository);
-    }
+        if (found.isActive())
+            return saveUserEntity(updateUser(newDto, found));
 
-    public UserDto update(UserDto newDto, UserDto oldDto) {
-        UserEntity found;
-
-        if (oldDto != null && newDto != null) {
-            try {
-                found = userFinder.findEntity(oldDto);
-
-                if (found.isActive())
-                    return saveUserEntity(updateUser(newDto, found));
-
-            } catch (IllegalArgumentException e) {
-                userNotFound();
-            }
-        } else
-            userNotFound();
-
-        return null;
+        throw new UserFoundButNotActive(UserCrudStatusEnum.USER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
     private UserEntity updateUser(UserDto updatedUser, UserEntity user) {
-        DefaultUserLoginTypeEnum login = updatedUser.getLogin();
-        String phone = updatedUser.getPhone();
         String email = updatedUser.getEmail();
         String password = updatedUser.getPassword();
         boolean modification = false;
 
-        if (login != null) {
-            user.setLogin(updatedUser.getLogin());
-            modification = true;
-        }
-        if (phone != null && !phone.equals("")) {
-            user.setPhone(updatedUser.getPhone());
-            modification = true;
-        }
         if (email != null && !email.equals("")) {
             user.setEmail(updatedUser.getEmail());
             modification = true;
@@ -63,11 +45,7 @@ class UserCrudUpdater {
         return user;
     }
 
-    private void userNotFound() {
-        throw new IllegalArgumentException(userNotFoundMessage);
-    }
-
-    private UserDto saveUserEntity(UserEntity entity) {
+    private UserEntity saveUserEntity(UserEntity entity) {
         return userSaver.saveEntity(entity);
     }
 }

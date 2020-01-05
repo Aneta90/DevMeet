@@ -84,18 +84,14 @@ public class AvailabilityVoteCrudFacadeTest {
 
         testUserDtoFirst = UserDto.builder()
                 .email("user1@test.pl")
-                .phone("221234567")
                 .password("testPass")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
 
         testUserDtoSecond = UserDto.builder()
                 .email("1resu@test.pl")
-                .phone("765432122")
                 .password("passTest")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
 
         testMemberDtoFirst = MemberDto.builder()
@@ -209,8 +205,8 @@ public class AvailabilityVoteCrudFacadeTest {
         pollCrudFacade = initPollCrudFacade();
         voteCrudFacade = initVoteCrudFacade();
 
-        UserEntity userEntityFirst = userCrudFacade.findEntity(userCrudFacade.create(testUserDtoFirst, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntitySecond = userCrudFacade.findEntity(userCrudFacade.create(testUserDtoSecond, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.create(testUserDtoFirst, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.create(testUserDtoSecond, DefaultUserLoginTypeEnum.EMAIL));
 
         MemberEntity memberEntityFirst = null;
         try {

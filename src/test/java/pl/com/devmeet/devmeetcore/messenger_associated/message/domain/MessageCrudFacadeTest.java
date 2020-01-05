@@ -153,8 +153,8 @@ public class MessageCrudFacadeTest {
         groupCrudFacade = initGroupCrudFacade();
         messengerCrudFacade = initMessengerCrudFacade();
 
-        UserEntity userEntityFirst = userCrudFacade.findEntity(userCrudFacade.create(firstUser, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntitySecond = userCrudFacade.findEntity(userCrudFacade.create(secondUser, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.create(firstUser, DefaultUserLoginTypeEnum.EMAIL));
+        UserEntity userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.create(secondUser, DefaultUserLoginTypeEnum.EMAIL));
 
         MemberEntity memberEntityFirst = null;
         try {

@@ -63,11 +63,9 @@ class UserService {
     // add
 
     UserDto add(UserDto user) {
-        if (user.getId() == null
-                && user.getLogin() != null
-                && user.getPassword() != null
+        if (user.getPassword() != null
                 && user.getEmail() != null) { // add more ifs statements if required
-            checkEmailDuplication(user);
+//            checkEmailDuplication(user);
             user.setActive(false);
             user.setCreationTime(DateTime.now());
             return mapAndSave(user);
@@ -76,22 +74,22 @@ class UserService {
     }
 
     // update
-    UserDto update(UserDto user) {
-        Optional<UserEntity> first = repository.findById(user.getId());
-        if (first.isPresent()) {
-            if (user.getEmail() == null) {
-                user.setEmail(first.get().getEmail());
-            } else checkEmailDuplication(user);
-            if (user.getPassword() == null) user.setPassword(first.get().getPassword());
-            if (user.getLogin() == null) user.setLogin(first.get().getLogin());
-            if (user.getPhone() == null) user.setPhone(first.get().getPhone());
-            user.setCreationTime(first.get().getCreationTime());
-            user.setModificationTime(DateTime.now());
-            return mapAndSave(user);
-        } else
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Resource with id (" + user.getId() + ") Not found");
-    }
+//    UserDto update(UserDto user) {
+//        Optional<UserEntity> first = repository.findById(user.getId());
+//        if (first.isPresent()) {
+//            if (user.getEmail() == null) {
+//                user.setEmail(first.get().getEmail());
+//            } else checkEmailDuplication(user);
+//            if (user.getPassword() == null) user.setPassword(first.get().getPassword());
+//            if (user.getLogin() == null) user.setLogin(first.get().getLogin());
+//            if (user.getPhone() == null) user.setPhone(first.get().getPhone());
+//            user.setCreationTime(first.get().getCreationTime());
+//            user.setModificationTime(DateTime.now());
+//            return mapAndSave(user);
+//        } else
+//            throw new ResponseStatusException(HttpStatus.CONFLICT,
+//                    "Resource with id (" + user.getId() + ") Not found");
+//    }
 
     // delete
 
@@ -110,15 +108,15 @@ class UserService {
         UserEntity savedUser = repository.save(userEntity);
         return UserMapper.toDto(savedUser);
     }
-
-    private void checkEmailDuplication(UserDto user) {
-        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
-        if (userByEmail.isPresent()) {
-            if (!userByEmail.get().getId().equals(user.getId()))
-                throw new ResponseStatusException(HttpStatus.CONFLICT,
-                        "Email: " + user.getEmail() + " already assigned for user id = " + userByEmail.get().getId());
-        }
-    }
+//
+//    private void checkEmailDuplication(UserDto user) {
+//        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
+//        if (userByEmail.isPresent()) {
+//            if (!userByEmail.get().getId().equals(userByEmail.get().))
+//                throw new ResponseStatusException(HttpStatus.CONFLICT,
+//                        "Email: " + user.getEmail() + " already assigned for user id = " + userByEmail.get().getId());
+//        }
+//    }
 
 
 }

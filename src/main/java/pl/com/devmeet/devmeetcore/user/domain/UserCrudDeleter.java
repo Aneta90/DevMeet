@@ -1,38 +1,33 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserFoundButNotActive;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class UserCrudDeleter {
 
     private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
-    private String userNotFoundMessage = "User not found";
+    public UserEntity delete(UserDto dto) throws UserNotFoundException, UserFoundButNotActive {
+        UserEntity found = userFinder.findEntityByEmail(dto);
 
-    public UserCrudDeleter(UserRepository repository) {
-        this.userSaver = new UserCrudSaver(repository);
-        this.userFinder = new UserCrudFinder(repository);
-    }
-
-    public boolean delete(UserDto dto) {
-        UserEntity found;
-
-        try {
-            found = userFinder.findEntity(dto);
-
-            if (found.isActive()) {
-                found.setActive(false);
-                found.setModificationTime(DateTime.now());
-
-                return saveUserEntity(found) != null;
-            }
-        } catch (IllegalArgumentException e) {
-            return false;
+        if (found.isActive()) {
+            found.setActive(false);
+            found.setModificationTime(DateTime.now());
+            return saveUserEntity(found);
         }
-        return false;
+        throw new UserFoundButNotActive(UserCrudStatusEnum.USER_FOUND_BUT_NOT_ACTIVE.toString());
     }
 
-    private UserDto saveUserEntity(UserEntity entity) {
+    private UserEntity saveUserEntity(UserEntity entity) {
         return userSaver.saveEntity(entity);
     }
 }

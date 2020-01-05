@@ -25,7 +25,7 @@ class MemberUserFinder {
         UserEntity userEntity;
 
         try {
-            userEntity = userCrudFacade.findEntity(dto);
+            userEntity = userCrudFacade.findEntityByEmail(dto);
             if(userEntity != null)
                 return userEntity;
         }catch (IllegalArgumentException e){

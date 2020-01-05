@@ -109,7 +109,7 @@ public class MessengerCrudFacadeTest {
 
         userCrudFacade.activation(
                 userCrudFacade.create(firstTestUserDto, DefaultUserLoginTypeEnum.EMAIL));
-        UserEntity userEntityFirst = userCrudFacade.findEntity(firstTestUserDto);
+        UserEntity userEntityFirst = userCrudFacade.findEntityByEmail(firstTestUserDto);
 
         MemberEntity memberEntityFirst = null;
         try {
