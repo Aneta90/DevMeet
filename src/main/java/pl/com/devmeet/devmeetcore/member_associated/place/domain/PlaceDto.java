@@ -14,6 +14,8 @@ import java.util.List;
 @Getter
 public class PlaceDto {
 
+    //todo - wyrugować typy obiektowe z tego Dto.
+    // Membera można zidetyfikować po polu String user.email ???
     private MemberDto member;
 
     private String placeName;
@@ -21,7 +23,7 @@ public class PlaceDto {
     private String website;
     private String location;
 
- //   private AvailabilityDto availability;
+    //   private AvailabilityDto availability;
 
     private List<PlaceVoteEntity> placeVotes;
 

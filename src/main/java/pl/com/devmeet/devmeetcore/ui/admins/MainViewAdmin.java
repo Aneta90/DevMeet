@@ -23,28 +23,26 @@ import java.util.stream.Stream;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 class MainViewAdmin extends VerticalLayout{
 
-
     MainViewAdmin() {
-
         showTabs();
-
     }
 
     private void showTabs() {
-        //https://stackoverflow.com/questions/57553973/where-should-i-place-my-vaadin-10-static-files/
-        Image imageLogo = new Image("img/logo.png", "logo");
-        imageLogo.getStyle().set("borderRadius", "5%");
 
-        Icon groupIcon = new Icon(VaadinIcon.GROUP);
-        groupIcon.setSize("45px");
-        Icon userIcon = new Icon(VaadinIcon.USER);
-        userIcon.setSize("45px");
+        Image imageLogo = getLogo();
+        Icon placeIcon = getIcon(VaadinIcon.WORKPLACE);
+        Icon groupIcon = getIcon(VaadinIcon.GROUP);
+        Icon userIcon = getIcon(VaadinIcon.USER);
+
         Tab tabHome = new Tab(imageLogo);
+        Tab tabPlace = new Tab(placeIcon);
         Tab tabGroup = new Tab(groupIcon);
         Tab tabUser = new Tab(userIcon);
 
         Div pageHome = new Div();
         pageHome.add("Home");
+        Div pagePlaces = new Div();
+        pagePlaces.setVisible(false);
         Div pageGroups = new Div();
         pageGroups.setText("groups");
         pageGroups.setVisible(false);
@@ -53,12 +51,12 @@ class MainViewAdmin extends VerticalLayout{
         pageUsers.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
-
         tabsToPages.put(tabHome, pageHome);
+        tabsToPages.put(tabPlace, pagePlaces);
         tabsToPages.put(tabGroup, pageGroups);
         tabsToPages.put(tabUser, pageUsers);
-        Tabs tabsHorizontal = new Tabs(tabHome, tabGroup, tabUser);
-        Div pages = new Div(pageHome, pageGroups, pageUsers);
+        Tabs tabsHorizontal = new Tabs(tabHome, tabPlace, tabGroup, tabUser);
+        Div pages = new Div(pageHome, pagePlaces, pageGroups, pageUsers);
         Set<Component> pagesShown = Stream.of(pageHome)
                 .collect(Collectors.toSet());
 
@@ -69,16 +67,31 @@ class MainViewAdmin extends VerticalLayout{
             selectedPage.setVisible(true);
             pagesShown.add(selectedPage);
 
+            if (selectedPage.equals(pagePlaces))
+                UI.getCurrent().navigate("admin/places");
 
             if (selectedPage.equals(pageGroups))
-                UI.getCurrent().navigate("groups");
+                UI.getCurrent().navigate("admin/groups");
 
             if (selectedPage.equals(pageUsers))
-                UI.getCurrent().navigate("users");
+                UI.getCurrent().navigate("admin/users");
 
 
         });
 
         add(tabsHorizontal, pages);
+    }
+
+    private Icon getIcon(VaadinIcon play) {
+        Icon placeIcon = new Icon(play);
+        placeIcon.setSize("45px");
+        return placeIcon;
+    }
+
+    private Image getLogo() {
+        //https://stackoverflow.com/questions/57553973/where-should-i-place-my-vaadin-10-static-files/
+        Image imageLogo = new Image("img/logo.png", "logo");
+        imageLogo.getStyle().set("borderRadius", "5%");
+        return imageLogo;
     }
 }
