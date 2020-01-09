@@ -20,3 +20,8 @@ VALUES (1, 1),
        (2, 3)
 ;
 
+INSERT INTO places(creation_time, description, is_active, location, place_name, website, member_id)
+VALUES ('2019-01-01 00:00:00', 'openspace koło Metra Politechniki', true, 'Rektorska 4, 00-614 Warszawa',
+        'Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej', 'cziitt.pw.edu.pl', 1),
+       ('2019-01-01 00:00:00', 'Google Campus Warsaw', true, 'Plac Konesera 03-736 Warszawa (+48) 22 128 44 38',
+        'Google for Startups – Koneser', 'https://www.campus.co/warsaw', 2);

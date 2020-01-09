@@ -11,6 +11,7 @@ import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exce
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,12 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
             return placeEntities.get();
         else
             throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACES_NOT_FOUND.toString());
+    }
+
+    public List<PlaceEntity> findAllEntities() {
+        List<PlaceEntity> entities = new ArrayList<>();
+        placeRepository.findAll().forEach(entities::add);
+        return entities;
     }
 
     private Optional<List<PlaceEntity>> findPlaces(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException {

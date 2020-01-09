@@ -90,8 +90,8 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
         return map(initFinder().findEntity(dto));
     }
 
-    public List<PlaceDto> findAll(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
-        return mapDtoList(initFinder().findEntities(dto));
+    public List<PlaceDto> findAll() {
+        return mapDtoList(initFinder().findAllEntities());
     }
 
     @Override
@@ -110,6 +110,10 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
     public List<PlaceEntity> findEntities(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return initFinder().findEntities(dto);
+    }
+
+    public List<PlaceEntity> findAllEntities() {
+        return initFinder().findAllEntities();
     }
 
     public static PlaceDto map(PlaceEntity entity) {

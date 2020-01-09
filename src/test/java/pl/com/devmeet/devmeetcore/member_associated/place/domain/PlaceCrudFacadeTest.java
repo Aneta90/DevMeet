@@ -203,7 +203,7 @@ public class PlaceCrudFacadeTest {
         List<PlaceDto> found;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         placeCrudFacade.add(testPlaceDto);
-        found = placeCrudFacade.findAll(testPlaceDto);
+        found = placeCrudFacade.findAll();
         assertThat(found).isNotNull();
     }
 

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.MeetingEntity;
@@ -15,7 +14,6 @@ import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.PlaceVoteEnt
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 
 @Data
@@ -27,11 +25,9 @@ import java.util.UUID;
 
 public class PlaceEntity {
 
-    @javax.persistence.Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID Id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;

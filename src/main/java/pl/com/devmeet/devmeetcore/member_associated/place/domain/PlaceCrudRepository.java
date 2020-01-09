@@ -6,11 +6,12 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface PlaceCrudRepository extends PagingAndSortingRepository<PlaceEntity, UUID> {
+public interface PlaceCrudRepository extends PagingAndSortingRepository<PlaceEntity, Long> {
 
 
     Optional<PlaceEntity> findByMember(MemberEntity member);
-    Optional<List<PlaceEntity>> findAllByMember(MemberEntity member);}
+
+    Optional<List<PlaceEntity>> findAllByMember(MemberEntity member);
+}
