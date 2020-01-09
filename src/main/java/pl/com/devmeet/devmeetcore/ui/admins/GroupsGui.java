@@ -6,14 +6,14 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.router.Route;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-//@Route("groups")
+@Route("admin/groups")
 class GroupsGui extends VerticalLayout {
 
     private GroupCrudFacade group;
@@ -47,13 +47,9 @@ class GroupsGui extends VerticalLayout {
 
         radioButtonGroup.addValueChangeListener(e -> {
             if (e.getValue().equals("active"))
-                groupList = group.findAll().stream()
-                        .filter(GroupDto::isActive)
-                        .collect(Collectors.toList());
+                groupList = group.findByActive(true);
             else if (e.getValue().equals("not active"))
-                groupList = group.findAll().stream()
-                        .filter(groupDto -> !groupDto.isActive())
-                        .collect(Collectors.toList());
+                groupList = group.findByActive(false);
             else groupList = group.findAll();
             refreshGrid(groupList);
         });

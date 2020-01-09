@@ -100,7 +100,7 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     }
 
 
-    public GroupEntity findById(Long id) throws GroupNotFoundException {
+    public GroupEntity findEntityById(Long id) throws GroupNotFoundException {
         return initFinder().findById(id);
     }
 
@@ -145,4 +145,20 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     public static List<GroupEntity> mapEntityList(List<GroupDto> dtos) {
         return GroupCrudMapper.mapEntityList(dtos);
     }
+
+    public List<GroupDto> findBySearchText(String searchText) {
+        if (searchText != null)
+            return mapDtoList(groupCrudRepository.findAllBySearchText(searchText));
+        else return mapDtoList(findAllEntities());
+    }
+
+    public List<GroupDto> findByActive(Boolean isActive) {
+        return mapDtoList(groupCrudRepository.findAllByActive(isActive));
+    }
+
+    public GroupDto findById(Long id) throws GroupNotFoundException { // todo - może zwracać Optional<GroupDto> zamiast rzucać wyjątki???
+        return map(findEntityById(id));
+    }
+
+
 }
