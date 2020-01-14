@@ -2,8 +2,9 @@ package pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain;
 
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.status_and_exceptions.PlaceVoteAlreadyExistsException;
 
-public class PlaceVoteCrudCreator implements CrudEntityCreator {
+public class PlaceVoteCrudCreator implements CrudEntityCreator<PlaceVoteDto, PlaceVoteEntity> {
 
     private PlaceVoteCrudFinder placeVoteCrudFinder;
     private PlaceVoteCrudSaver placeVoteCrudSaver;
@@ -14,7 +15,14 @@ public class PlaceVoteCrudCreator implements CrudEntityCreator {
     }
 
     @Override
-    public Object createEntity(Object dto) throws CrudException {
-        return null;
+    public PlaceVoteEntity createEntity(PlaceVoteDto dto) throws CrudException {
+        PlaceVoteEntity placeVoteEntity;
+
+        if (placeVoteCrudFinder.isExist(dto)) {
+            throw new PlaceVoteAlreadyExistsException("PlaceVote already exsits");
+        } else {
+            placeVoteEntity = placeVoteCrudSaver.saveEntity(PlaceVoteCrudFacade.map(dto));
+            return placeVoteEntity;
+        }
     }
 }

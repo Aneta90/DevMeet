@@ -15,34 +15,42 @@ public class PlaceVoteCrudFacade implements CrudFacadeInterface <PlaceVoteDto, P
         this.placeVoteRepository = placeVoteRepository;
     }
 
-    private PlaceVoteCrudCreator placeVoteCrudCreator () {
+    private PlaceVoteCrudCreator initCreator () {
         return new PlaceVoteCrudCreator(placeVoteRepository);
     }
 
-    private PlaceVoteCrudFinder placeVoteCrudFinder(){
+    private PlaceVoteCrudFinder initFinder(){
         return new PlaceVoteCrudFinder(placeVoteRepository);
     }
 
-    private PlaceVoteCrudUpdater placeVoteCrudUpdater(){
+    private PlaceVoteCrudUpdater initUpdater(){
         return new PlaceVoteCrudUpdater(placeVoteRepository);
     }
 
-    private PlaceVoteCrudDeleter placeVoteCrudDeleter(){
+    private PlaceVoteCrudDeleter initDeleter(){
         return new PlaceVoteCrudDeleter(placeVoteRepository);
     }
 
     @Override
     public PlaceVoteDto add(PlaceVoteDto dto) throws CrudException {
-        return null;
+        return map(initCreator().createEntity(dto));
     }
 
     @Override
     public PlaceVoteDto update(PlaceVoteDto oldDto, PlaceVoteDto newDto) throws CrudException {
-        return null;
+        return map(initUpdater().updateEntity(oldDto,newDto));
     }
 
     @Override
     public PlaceVoteDto delete(PlaceVoteDto dto) throws CrudException {
         return null;
+    }
+
+    public static PlaceVoteDto map(PlaceVoteEntity placeVoteEntity){
+        return PlaceVoteMapper.map(placeVoteEntity);
+    }
+
+    public static PlaceVoteEntity map(PlaceVoteDto placeVoteDto){
+        return PlaceVoteMapper.map(placeVoteDto);
     }
 }

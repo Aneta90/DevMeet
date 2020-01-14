@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntitySaver;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 
-public class PlaceVoteCrudSaver implements CrudEntitySaver {
+public class PlaceVoteCrudSaver implements CrudEntitySaver<PlaceVoteEntity, PlaceVoteEntity> {
 
     private PlaceVoteRepository placeVoteRepository;
 
@@ -12,7 +12,7 @@ public class PlaceVoteCrudSaver implements CrudEntitySaver {
     }
 
     @Override
-    public Object saveEntity(Object entity) throws CrudException {
-        return null;
+    public PlaceVoteEntity saveEntity(PlaceVoteEntity entity) throws CrudException {
+        return placeVoteRepository.save(entity);
     }
 }
