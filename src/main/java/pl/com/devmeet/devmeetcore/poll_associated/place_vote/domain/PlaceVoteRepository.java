@@ -5,6 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,11 +13,14 @@ import java.util.UUID;
 public interface PlaceVoteRepository extends PagingAndSortingRepository<PlaceVoteEntity, UUID> {
 
     @Query("SELECT p from PlaceVoteEntity p where p.place.placeName = ?1")
-    Optional<PlaceVoteEntity> findByPlace(String placeName);
+    Optional<List<PlaceVoteEntity>> findByPlace(String placeName);
 
     @Query("SELECT p from PlaceVoteEntity p where p.poll = ?1")
-    Optional<PlaceVoteEntity> findByPoll(PollEntity poll);
+    Optional<List<PlaceVoteEntity>> findByPoll(PollEntity poll);
 
     @Query("SELECT p from PlaceVoteEntity p where p.member.name = ?1")
-    Optional<PlaceVoteEntity> findByMember(String memberName);
+    Optional <List<PlaceVoteEntity>> findByMember(String memberName);
+
+    @Query("SELECT p from PlaceVoteEntity p where p.isActive =: isActive")
+    Optional <List<PlaceVoteEntity>> findAllActive(Boolean isActive);
 }

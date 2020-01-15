@@ -2,14 +2,15 @@ package pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain;
 
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityFinder;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
+import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.status_and_exceptions.PlaceVoteNotFoundException;
+import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudFacade;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PlaceVoteCrudFinder implements CrudEntityFinder <PlaceVoteDto,PlaceVoteEntity> {
+public class PlaceVoteCrudFinder implements CrudEntityFinder<PlaceVoteDto, PlaceVoteEntity> {
 
     private PlaceVoteRepository placeVoteRepository;
-
 
     public PlaceVoteCrudFinder(PlaceVoteRepository placeVoteRepository) {
         this.placeVoteRepository = placeVoteRepository;
@@ -20,25 +21,46 @@ public class PlaceVoteCrudFinder implements CrudEntityFinder <PlaceVoteDto,Place
         return null; //??
     }
 
-    public Optional<PlaceVoteEntity> findEntityByPlace(PlaceVoteDto dto){
-        return placeVoteRepository.findByPlace(dto.getPlace().getPlaceName());
+    public List<PlaceVoteEntity> findEntityByPlace(PlaceVoteDto dto) throws PlaceVoteNotFoundException {
+        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByPlace(dto.getPlace().getPlaceName());
+        if (placeVoteEntity.isPresent()) {
+            return placeVoteEntity.get();
+        } else {
+            throw new PlaceVoteNotFoundException("PlaceVote is not in database");
+        }
     }
 
-    public Optional<PlaceVoteEntity> findEntityByPoll(PlaceVoteDto dto){
-         return placeVoteRepository.findByPoll(dto.getPoll());
+    public List<PlaceVoteEntity> findEntityByPoll(PlaceVoteDto dto) throws PlaceVoteNotFoundException {
+        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByPoll(PollCrudFacade.map(dto.getPoll()));
+        if (placeVoteEntity.isPresent()) {
+            return placeVoteEntity.get();
+        } else {
+            throw new PlaceVoteNotFoundException("PlaceVote not found in our database");
+        }  ///DO SPRAWDZENIA
     }
 
-    public Optional<PlaceVoteEntity> findEntityByMemberId(PlaceVoteDto dto){
-        return placeVoteRepository.findByMember(dto.getMember().getNick());
+    public List<PlaceVoteEntity> findEntityByMemberNick(String memberNick) throws PlaceVoteNotFoundException {
+        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByMember(memberNick);
+        if (placeVoteEntity.isPresent()) {
+            return placeVoteEntity.get();
+        } else {
+            throw new PlaceVoteNotFoundException("PlaceVote is not found in our database");
+        }
     }
 
     @Override
-    public List <PlaceVoteEntity> findEntities(PlaceVoteDto dto) throws CrudException {
-        return null;
+    public List<PlaceVoteEntity> findEntities(PlaceVoteDto dto) throws CrudException {
+        Optional<List<PlaceVoteEntity>> placeVoteEntityList = placeVoteRepository.findAllActive(dto.isActive());
+        if (placeVoteEntityList.isPresent()) {
+            return placeVoteEntityList.get();
+        } else {
+            throw new PlaceVoteNotFoundException("PlaceVote not found in our database");
+        }
     }
 
     @Override
     public boolean isExist(PlaceVoteDto dto) {
-        return false;
+        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByMember(dto.getMember().getNick());
+        return placeVoteEntity.isPresent();
     }
 }
