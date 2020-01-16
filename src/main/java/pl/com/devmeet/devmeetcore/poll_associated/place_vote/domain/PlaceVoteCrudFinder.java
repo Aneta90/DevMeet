@@ -40,7 +40,7 @@ public class PlaceVoteCrudFinder implements CrudEntityFinder<PlaceVoteDto, Place
     }
 
     public List<PlaceVoteEntity> findEntityByMemberNick(String memberNick) throws PlaceVoteNotFoundException {
-        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByMember(memberNick);
+        Optional<List<PlaceVoteEntity>> placeVoteEntity = placeVoteRepository.findByMember(memberNick); // chyba jednak pojedynczy PlaceVoteEntity, bo jak member chce zagłosować na kilka miejsc to musi stworzyć kilka placeVotów
         if (placeVoteEntity.isPresent()) {
             return placeVoteEntity.get();
         } else {

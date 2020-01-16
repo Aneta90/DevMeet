@@ -19,7 +19,7 @@ public class PlaceVoteCrudCreator implements CrudEntityCreator<PlaceVoteDto, Pla
         PlaceVoteEntity placeVoteEntity;
 
         if (placeVoteCrudFinder.isExist(dto)) {
-            throw new PlaceVoteAlreadyExistsException("PlaceVote already exsits");
+            throw new PlaceVoteAlreadyExistsException("PlaceVote already exists");
         } else {
             placeVoteEntity = placeVoteCrudSaver.saveEntity(PlaceVoteCrudFacade.map(dto));
             return placeVoteEntity;

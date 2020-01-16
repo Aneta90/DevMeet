@@ -18,8 +18,8 @@ public interface PlaceVoteRepository extends PagingAndSortingRepository<PlaceVot
     @Query("SELECT p from PlaceVoteEntity p where p.poll = ?1")
     Optional<List<PlaceVoteEntity>> findByPoll(PollEntity poll);
 
-    @Query("SELECT p from PlaceVoteEntity p where p.member.name = ?1")
-    Optional <List<PlaceVoteEntity>> findByMember(String memberName);
+    @Query("SELECT p from PlaceVoteEntity p where p.member.nick = ?1")
+    Optional <List<PlaceVoteEntity>> findByMember(String memberNick);
 
     @Query("SELECT p from PlaceVoteEntity p where p.isActive =: isActive")
     Optional <List<PlaceVoteEntity>> findAllActive(Boolean isActive);
