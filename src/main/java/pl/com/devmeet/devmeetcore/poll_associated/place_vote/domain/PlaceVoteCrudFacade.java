@@ -38,9 +38,13 @@ public class PlaceVoteCrudFacade implements CrudFacadeInterface<PlaceVoteDto, Pl
         return map(initCreator().createEntity(dto));
     }
 
-   // public PlaceVoteDto find(PlaceVoteDto placeVoteDto) throws CrudException {
-   //     return map(findEntity(placeVoteDto));
-   // }
+    public boolean doesExist(PlaceVoteDto placeVoteDto) {
+        return initFinder().isExist(placeVoteDto);
+    }
+
+    // public PlaceVoteDto find(PlaceVoteDto placeVoteDto) throws CrudException {
+    //     return map(findEntity(placeVoteDto));
+    // }
 
     public List<PlaceVoteEntity> findEntity(PlaceVoteDto placeVoteDto) throws CrudException {
         return initFinder().findEntityByMemberNick(placeVoteDto.getMember().getNick());
@@ -53,7 +57,7 @@ public class PlaceVoteCrudFacade implements CrudFacadeInterface<PlaceVoteDto, Pl
 
     @Override
     public PlaceVoteDto delete(PlaceVoteDto dto) throws CrudException {
-        return null;
+        return map(initDeleter().deleteEntityByNickAndPlace(dto.getMember().getNick(), dto.getPlace().getPlaceName()));
     }
 
     public static PlaceVoteDto map(PlaceVoteEntity placeVoteEntity) {

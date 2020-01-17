@@ -18,7 +18,7 @@ public class PlaceVoteCrudFinder implements CrudEntityFinder<PlaceVoteDto, Place
 
     @Override
     public PlaceVoteEntity findEntity(PlaceVoteDto dto) throws CrudException {
-        return null; //?? Jak wyciągnąć PlaceVote skoro nie ma ID w dto?
+        return null; //?? Jak wyciągnąć PlaceVote skoro nie ma ID w dto ani żadnego pola,które go identyfikuje?
     }
 
     public List<PlaceVoteEntity> findEntityByPlace(PlaceVoteDto dto) throws PlaceVoteNotFoundException {
