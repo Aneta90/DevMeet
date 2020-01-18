@@ -50,7 +50,7 @@ public class PlaceVoteCrudFacadeTest {
 
         placeDto = new PlaceDto();
         placeDto.setMember(memberDto);
-        placeDto.setPlaceName("Mc Donalds"); //nie wiem dlaczego nie mogę zrobić tego za pomocą Lomboka
+        placeDto.setPlaceName("Mc Donalds");
 
         PlaceDto placeDto1 = new PlaceDto();
         placeDto1.setMember(memberDto);
@@ -77,6 +77,7 @@ public class PlaceVoteCrudFacadeTest {
                 .build();
     }
 
+
     private PlaceVoteCrudFacade initPlaceVoteCrudFacade() {
         return new PlaceVoteCrudFacade(placeVoteRepository);
     }
@@ -88,7 +89,7 @@ public class PlaceVoteCrudFacadeTest {
     @Test
     public void WHEN_creating_non_existing_place_vote_then_return_place_vote() throws CrudException {
         PlaceVoteDto placeVoteDto = createPlaceVote();
-        List<PlaceVoteEntity> placeVoteEntity = initPlaceVoteCrudFacade().findEntity(placeVoteDto);
+        List<PlaceVoteEntity> placeVoteEntity = initPlaceVoteCrudFacade().findEntityByMember(placeVoteDto);
 
         assertThat(placeVoteEntity).isNotNull();
         assertThat(placeVoteEntity.get(0).getPlace().getPlaceName()).isEqualTo("Mc Donalds");
@@ -102,11 +103,18 @@ public class PlaceVoteCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_find_existing_placeVote_then_return_placeVote() throws CrudException {
+    public void WHEN_find_existing_placeVote_by_member_then_return_placeVote() throws CrudException {
 
         PlaceVoteDto placeVoteDto = createPlaceVote();
-        List<PlaceVoteEntity> placeVoteDtos = initPlaceVoteCrudFacade().findEntity(placeVoteDto);
-        assertThat(placeVoteDtos.get(0).getPlace().getPlaceName()).isEqualTo("Mc Donalds");
+        List<PlaceVoteEntity> placeVoteEntities = initPlaceVoteCrudFacade().findEntityByMember(placeVoteDto);
+        assertThat(placeVoteEntities.get(0).getPlace().getPlaceName()).isEqualTo("Mc Donalds");
+    }
+
+    @Test
+    public void WHEN_find_existing_placeVote_by_place_then_return_placeVote() throws CrudException {
+        PlaceVoteDto placeVoteDto = createPlaceVote();
+        List<PlaceVoteEntity> placeVoteEntities = initPlaceVoteCrudFacade().findEntityByPlace(placeVoteDto);
+        assertThat(placeVoteEntities.get(0).getPlace().getPlaceName()).isEqualTo("Mc Donalds");
     }
 
     @Test(expected = PlaceVoteNotFoundException.class)
@@ -117,7 +125,7 @@ public class PlaceVoteCrudFacadeTest {
         placeVoteDto.setMember(memberDto);
         placeVoteDto.setPlace(placeDto);
         placeVoteDto.setPoll(pollDto);
-        initPlaceVoteCrudFacade().findEntity(placeVoteDto);
+        initPlaceVoteCrudFacade().findEntityByMember(placeVoteDto);
     }
 
     @Test
@@ -146,14 +154,8 @@ public class PlaceVoteCrudFacadeTest {
 
     @Test
     public void delete() throws CrudException {
-        PlaceVoteDto placeVoteDto = new PlaceVoteDto();
-        placeVoteDto.setActive(true);
-        placeVoteDto.setMember(memberDto);
-        placeVoteDto.setPoll(pollDto);
-        placeVoteDto.setPlace(placeDto);
-        placeVoteDto.setCreationTime(DateTime.now());
-        PlaceVoteDto createdPlaceVote = initPlaceVoteCrudFacade().add(placeVoteDto);
-        placeVoteDto = initPlaceVoteCrudFacade().delete(createdPlaceVote);
+        PlaceVoteDto placeVoteDto = createPlaceVote();
+        initPlaceVoteCrudFacade().delete(placeVoteDto);
         assertThat(placeVoteDto.isActive()).isEqualTo(false);
     }
 }

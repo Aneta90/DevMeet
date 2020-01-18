@@ -14,7 +14,7 @@ public interface CrudFacadeInterface<D, E> {
 
     D delete(D dto) throws CrudException;
 
-//    E findEntity(D dto) throws CrudException;
+//    E findEntityByMember(D dto) throws CrudException;
 //
 //    List<E> findEntities(D dto) throws CrudException;
 }

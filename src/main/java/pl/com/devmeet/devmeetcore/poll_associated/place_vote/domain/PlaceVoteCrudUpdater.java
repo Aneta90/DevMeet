@@ -11,12 +11,12 @@ public class PlaceVoteCrudUpdater implements CrudEntityUpdater<PlaceVoteDto, Pla
     private PlaceVoteCrudFinder placeVoteCrudFinder;
     private PlaceVoteCrudSaver placeVoteCrudSaver;
 
-    public PlaceVoteCrudUpdater(PlaceVoteRepository placeVoteRepository) {
+    PlaceVoteCrudUpdater(PlaceVoteRepository placeVoteRepository) {
         this.placeVoteCrudFinder = new PlaceVoteCrudFinder(placeVoteRepository);
         this.placeVoteCrudSaver = new PlaceVoteCrudSaver(placeVoteRepository);
     }
 
-    public PlaceVoteEntity findOldEntity(String memberNick, String placeName) throws PlaceVoteNotFoundException {
+    private PlaceVoteEntity findOldEntity(String memberNick, String placeName) throws PlaceVoteNotFoundException {
         List<PlaceVoteEntity> placeVoteEntityList = placeVoteCrudFinder.findEntityByMemberNick(memberNick);
 
         return placeVoteEntityList.stream().filter(a -> a.getPlace().getPlaceName().equals(placeName)).findFirst().get();
@@ -38,11 +38,7 @@ public class PlaceVoteCrudUpdater implements CrudEntityUpdater<PlaceVoteDto, Pla
     @Override
     public PlaceVoteEntity updateEntity(PlaceVoteDto oldDto, PlaceVoteDto newDto) throws CrudException {
         PlaceVoteEntity placeVoteEntity = findOldEntity(oldDto.getMember().getNick(), oldDto.getPlace().getPlaceName());
-        if (placeVoteEntity != null) {
-            updateAllParameters(placeVoteEntity, mapToEntity(newDto));
-        } else {
-            throw new PlaceVoteNotFoundException("PlaceVote is not found in our database");
-        }
+        updateAllParameters(placeVoteEntity, mapToEntity(newDto));
         return placeVoteCrudSaver.saveEntity(updateAllParameters(placeVoteEntity, mapToEntity(newDto)));
     }
 }

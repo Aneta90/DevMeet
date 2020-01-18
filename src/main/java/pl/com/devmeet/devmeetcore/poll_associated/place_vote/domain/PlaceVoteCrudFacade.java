@@ -13,7 +13,7 @@ public class PlaceVoteCrudFacade implements CrudFacadeInterface<PlaceVoteDto, Pl
     private PlaceVoteRepository placeVoteRepository;
 
     @Autowired
-    public PlaceVoteCrudFacade(PlaceVoteRepository placeVoteRepository) {
+    PlaceVoteCrudFacade(PlaceVoteRepository placeVoteRepository) {
         this.placeVoteRepository = placeVoteRepository;
     }
 
@@ -38,26 +38,25 @@ public class PlaceVoteCrudFacade implements CrudFacadeInterface<PlaceVoteDto, Pl
         return map(initCreator().createEntity(dto));
     }
 
-    public boolean doesExist(PlaceVoteDto placeVoteDto) {
+    boolean doesExist(PlaceVoteDto placeVoteDto) {
         return initFinder().isExist(placeVoteDto);
     }
 
-    // public PlaceVoteDto find(PlaceVoteDto placeVoteDto) throws CrudException {
-    //     return map(findEntity(placeVoteDto));
-    // }
-
-    public List<PlaceVoteEntity> findEntity(PlaceVoteDto placeVoteDto) throws CrudException {
+    List<PlaceVoteEntity> findEntityByMember(PlaceVoteDto placeVoteDto) throws CrudException {
         return initFinder().findEntityByMemberNick(placeVoteDto.getMember().getNick());
-    }  // do poprawy - czy nie powinno być String memberNick?
+    }
+
+    List<PlaceVoteEntity> findEntityByPlace(PlaceVoteDto placeVoteDto) throws CrudException {
+        return initFinder().findEntityByPlace(placeVoteDto.getPlace().getPlaceName());
+    }
 
     @Override
     public PlaceVoteDto update(PlaceVoteDto oldDto, PlaceVoteDto newDto) throws CrudException {
         return map(initUpdater().updateEntity(oldDto, newDto));
     }
 
-    @Override
     public PlaceVoteDto delete(PlaceVoteDto dto) throws CrudException {
-        return map(initDeleter().deleteEntityByNickAndPlace(dto.getMember().getNick(), dto.getPlace().getPlaceName()));
+        return initDeleter().delete(dto);
     }
 
     public static PlaceVoteDto map(PlaceVoteEntity placeVoteEntity) {
